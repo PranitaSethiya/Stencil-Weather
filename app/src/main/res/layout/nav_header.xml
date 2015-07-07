@@ -34,7 +34,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="45dp"
-        android:background="?attr/selectableItemBackground"
+        android:background="@drawable/item_background_circle"
         android:clickable="true"
         android:src="@drawable/ic_settings"/>
 
@@ -45,7 +45,7 @@
         android:padding="15dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:background="?attr/selectableItemBackground"
+        android:background="@drawable/item_background_circle"
         android:clickable="true"
         android:src="@drawable/ic_dots_vertical"/>
 
