@@ -65,12 +65,12 @@
                     android:layout_below="@+id/llLocation"/>
 
 
-            <ListView
+            <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_below="@+id/llLocation"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/llSettings"
-                android:entries="@array/test_enteries" />
+                android:id="@+id/rvLocation"
+                android:layout_above="@+id/llSettings" />
 
             <View
                 android:layout_width="match_parent"

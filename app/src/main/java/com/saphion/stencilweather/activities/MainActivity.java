@@ -16,6 +16,9 @@
 
 package com.saphion.stencilweather.activities;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -29,12 +32,17 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.saphion.stencilweather.R;
+import com.saphion.stencilweather.activities.adapters.RecyclerViewAdapter;
+import com.saphion.stencilweather.activities.utilities.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +89,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.ivMenu).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPopupMenu(view);
+            }
+        });
+
 //        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 //        tabLayout.setupWithViewPager(viewPager);
     }
@@ -111,15 +126,28 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupDrawerContent(NavigationView navigationView) {
 
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                menuItem.setChecked(true);
-                mDrawerLayout.closeDrawers();
-                return true;
-            }
-        });
+//        navigationView.setNavigationItemSelectedListener(
+//                new NavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(MenuItem menuItem) {
+//                menuItem.setChecked(true);
+//                mDrawerLayout.closeDrawers();
+//                return true;
+//            }
+//        });
+
+        RecyclerView rv = (RecyclerView) findViewById(R.id.rvLocation);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+
+        ArrayList<String> items = new ArrayList<>();
+        items.add("Pune");
+//        items.add("Dehradun");
+//        items.add("New Delhi");
+//        items.add("Riverside");
+//        items.add("New York");
+//        items.add("Los Angeles");
+
+        rv.setAdapter(new RecyclerViewAdapter(getBaseContext(), items, items, MainActivity.this));
     }
 
     static class Adapter extends FragmentPagerAdapter {
@@ -149,5 +177,51 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitles.get(position);
         }
+    }
+
+
+    private void showPopupMenu(View view) {
+
+        // Retrieve the clicked item from view's tag
+        final int item = (Integer) view.getTag();
+
+        // Create a PopupMenu, giving it the clicked view for an anchor
+        PopupMenu popup = new PopupMenu(MainActivity.this, view);
+
+        // Inflate our menu resource into the PopupMenu's Menu
+        popup.getMenuInflater().inflate(R.menu.navbar_actions, popup.getMenu());
+
+
+        // Set a listener so we are notified if a menu item is clicked
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+
+
+                switch (menuItem.getItemId()) {
+                    case R.id.action_about:
+//                        startActivity(new Intent(getBaseContext(), AboutClass.class));
+//                        overridePendingTransition(R.anim.slide_in_left,
+//                                R.anim.slide_out_right);
+                        finish();
+                        return true;
+                    case R.id.action_morebydev:
+                        startActivity(new Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://play.google.com/store/apps/developer?id=sachin+shinde")));
+                        return true;
+                    case R.id.action_rate:
+                        Utils.launchMarket(getBaseContext(), getPackageName());
+                        return true;
+                    case R.id.action_share:
+                        startActivity(Utils.createShareIntent());
+                        return true;
+                }
+                return false;
+            }
+        });
+
+        // Finally show the PopupMenu
+        popup.show();
     }
 }

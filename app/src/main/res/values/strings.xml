@@ -33,4 +33,10 @@
 
     </array>
 
+    <string name="settings">Settings</string>
+    <string name="gopro">Go Pro</string>
+    <string name="rate">Rate</string>
+    <string name="share">Share</string>
+    <string name="morebydev">More By Developer</string>
+    <string name="about">About</string>
 </resources>
