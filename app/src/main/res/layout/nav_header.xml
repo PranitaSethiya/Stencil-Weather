@@ -6,7 +6,8 @@
     android:layout_height="130dp"
     android:background="@drawable/nav_background"
     android:paddingLeft="16dp"
-
+    android:backgroundTintMode="src_over"
+    android:backgroundTint="#99512DA8"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:orientation="horizontal"
     android:gravity="bottom">
@@ -14,7 +15,7 @@
     <com.devspark.robototextview.widget.RobotoTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Stencil Weather"
+        android:text="@string/app_name"
         android:layout_alignParentBottom="true"
         android:textColor="#fff"
         android:textSize="22sp"
@@ -33,7 +34,9 @@
         android:tint="#fff"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginRight="45dp"
+        android:layout_marginEnd="45dp"
         android:background="@drawable/item_background_circle"
         android:clickable="true"
         android:src="@drawable/ic_settings"/>
@@ -44,6 +47,7 @@
         android:tint="#fff"
         android:padding="15dp"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:background="@drawable/item_background_circle"
         android:clickable="true"

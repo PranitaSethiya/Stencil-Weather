@@ -1,3 +1,36 @@
 <resources>
     <string name="app_name">Stencil Weather</string>
+
+
+    <array name="test_enteries">
+
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+        <item>ABCD EFGH</item>
+
+    </array>
+
 </resources>
