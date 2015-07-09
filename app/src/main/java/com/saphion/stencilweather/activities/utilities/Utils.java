@@ -1,8 +1,5 @@
 package com.saphion.stencilweather.activities.utilities;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -11,32 +8,12 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Environment;
-import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.speech.tts.TextToSpeech;
-import android.support.v7.app.AlertDialog;
-import android.text.Html;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
-import android.text.style.URLSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.sachinshinde.wordlearner.R;
-import com.sachinshinde.wordlearner.module.Meaning;
-import com.sachinshinde.wordlearner.module.SubWords;
-import com.sachinshinde.wordlearner.module.Word;
+import com.saphion.stencilweather.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,7 +26,6 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
@@ -59,10 +35,6 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 /**
  * Created by sachin on 21/10/14.
@@ -413,7 +385,7 @@ public class Utils {
 
         intent.putExtra(
                 Intent.EXTRA_TEXT,
-                "Checkout this Amazing App\nWord Learner\nGet it now from Playstore\n"
+                "Checkout this Amazing App\n" + mContext.getString(R.string.app_name) + "\nGet it now from Playstore\n"
                         + Uri.parse("http://play.google.com/store/apps/details?id="
                         + mContext.getPackageName()));
 

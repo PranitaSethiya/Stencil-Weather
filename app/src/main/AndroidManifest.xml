@@ -4,7 +4,7 @@
     <application android:allowBackup="true" android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher" android:theme="@style/Theme.DesignDemo">
 
-        <activity android:name=".activities.MainActivity">
+        <activity android:name=".activities.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />

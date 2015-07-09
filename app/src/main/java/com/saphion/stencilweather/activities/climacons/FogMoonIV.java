@@ -4,7 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.graphics.DashPathEffect;
+import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
@@ -16,12 +18,12 @@ import com.saphion.stencilweather.R;
 public class FogMoonIV extends ImageView {
 
 	int height, width;
-	Bitmap cloud, drop, sun;
+	Bitmap cloud, drop, sun, cloud_color;
 	int angle = 0;
 	Path path1, path2, path3;
 	Paint mPaint = new Paint();
 	PathMeasure pm1, pm2, pm3;
-	Paint mPaint1, mPaint2, mPaint3;
+	Paint mPaint1, mPaint2, mPaint3, mPaint4;
 	float curr1 = 0, curr2 = 40, curr3 = 20;
 	float len = 0;
 	float[] tan = new float[2];
@@ -31,13 +33,15 @@ public class FogMoonIV extends ImageView {
 		super(context);
 	}
 
-	public FogMoonIV(Context context, int height, int width) {
+	public FogMoonIV(Context context, int height, int width, int color) {
 		super(context);
 		this.height = height;
 		this.width = width;
 		sun = BitmapFactory.decodeResource(getResources(), R.drawable.moon);
 		cloud = BitmapFactory.decodeResource(getResources(),
 				R.drawable.cloud_fog_black);
+		cloud_color = BitmapFactory.decodeResource(getResources(),
+				R.drawable.cloud_fog_black_cut);
 		drop = BitmapFactory
 				.decodeResource(getResources(), R.drawable.fog_line);
 		int mheight = (int) (width * 0.056);
@@ -51,7 +55,15 @@ public class FogMoonIV extends ImageView {
 		mPaint3 = new Paint();
 		mPaint3.setAntiAlias(true);
 
+		mPaint4 = new Paint();
+		mPaint4.setAntiAlias(true);
+
+		ColorFilter filter = new LightingColorFilter(color, 0);
+		mPaint4.setColorFilter(filter);
+
 		cloud = Bitmap.createScaledBitmap(cloud, (int) (width), (int) (height),
+				true);
+		cloud_color = Bitmap.createScaledBitmap(cloud_color, (int) (width), (int) (height),
 				true);
 
 		path1 = new Path();
@@ -95,8 +107,12 @@ public class FogMoonIV extends ImageView {
 		canvas.drawBitmap(sun, width - (float) (sun.getWidth() * 1.3),
 				(float) (sun.getHeight() * 0.35), mPaint);
 
-		canvas.drawBitmap(cloud, (width - cloud.getWidth()) / 2,
+        canvas.drawBitmap(cloud_color, (width - cloud.getWidth()) / 2,
+                (height - cloud.getHeight()) / 2, mPaint4);
+
+        canvas.drawBitmap(cloud, (width - cloud.getWidth()) / 2,
 				(height - cloud.getHeight()) / 2, mPaint);
+
 
 		inc1 = setinc(mPaint1.getAlpha(), inc1);
 		inc2 = (setinc(mPaint2.getAlpha(), inc2));

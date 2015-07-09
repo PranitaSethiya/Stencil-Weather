@@ -26,4 +26,6 @@ dependencies {
     compile 'com.android.support:cardview-v7:22.2.0'
     compile 'com.android.support:recyclerview-v7:22.2.0'
     compile 'com.github.johnkil.android-robototextview:robototextview:2.4.0'
+    compile 'me.relex:circleindicator:1.1.5@aar'
+    compile 'com.google.code.gson:gson:2.3'
 }

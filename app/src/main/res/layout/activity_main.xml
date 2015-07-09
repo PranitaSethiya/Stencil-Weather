@@ -24,10 +24,16 @@
             android:layout_marginTop="130dp"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:id="@+id/llLocation"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal">
+
                 <LinearLayout
-                    android:id="@+id/llLocation"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:orientation="horizontal">
@@ -54,7 +60,28 @@
                         app:textWeight="normal" />
 
 
+
+
                 </LinearLayout>
+
+                <View
+                    android:layout_width="0.2dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorDivider"/>
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/ivMyLocation"
+                    android:padding="10dp"
+                    android:clickable="true"
+                    android:tint="@color/main_button_blue_normal"
+                    android:background="@drawable/item_background_circle"
+                    android:src="@drawable/ic_map_marker"/>
+
+
+            </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"

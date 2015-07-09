@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
@@ -14,6 +16,7 @@ import com.saphion.stencilweather.R;
 
 public class MistSunIV extends ImageView {
 
+	private Bitmap cloud_color;
 	int height, width;
 	Bitmap cloud, drop, sun;
 	int angle = 0;
@@ -21,6 +24,7 @@ public class MistSunIV extends ImageView {
 	Path cPath;
 	PathMeasure pm;
 	Paint mPaint1 = new Paint();
+	Paint mPaint2 = new Paint();
 	float curr1 = 0;
 	float len;
 	float[] tan = new float[2];
@@ -30,13 +34,15 @@ public class MistSunIV extends ImageView {
 		super(context);
 	}
 
-	public MistSunIV(Context context, int height, int width) {
+	public MistSunIV(Context context, int height, int width, int color) {
 		super(context);
 		this.height = height;
 		this.width = width;
 		sun = BitmapFactory.decodeResource(getResources(), R.drawable.sun);
 		cloud = BitmapFactory.decodeResource(getResources(),
 				R.drawable.cloud_mist);
+		cloud_color = BitmapFactory.decodeResource(getResources(),
+				R.drawable.cloud_mist_cut);
 		drop = BitmapFactory.decodeResource(getResources(),
 				R.drawable.drop_small);
 		int mheight = (int) (width * 0.3038);
@@ -44,8 +50,15 @@ public class MistSunIV extends ImageView {
 				true);
 		mPaint.setAntiAlias(true);
 		mPaint1.setAntiAlias(true);
+		mPaint2.setAntiAlias(true);
+
+        ColorFilter filter = new LightingColorFilter(color, 0);
+        mPaint2.setColorFilter(filter);
 
 		cloud = Bitmap.createScaledBitmap(cloud, (int) (width), (int) (height),
+				true);
+
+        cloud_color = Bitmap.createScaledBitmap(cloud_color, (int) (width), (int) (height),
 				true);
 
 		sun = Bitmap.createScaledBitmap(sun, (int) (width * 0.65),
@@ -73,8 +86,12 @@ public class MistSunIV extends ImageView {
 		mPaint1.setAlpha(setval(curr1));
 		pm.getPosTan((float) (len * curr1), pts, tan);
 
-		canvas.drawBitmap(cloud, (width - cloud.getWidth()) / 2,
+        canvas.drawBitmap(cloud_color, (width - cloud.getWidth()) / 2,
+                (height - cloud.getHeight()) / 2, mPaint2);
+
+        canvas.drawBitmap(cloud, (width - cloud.getWidth()) / 2,
 				(height - cloud.getHeight()) / 2, mPaint);
+
 
 		canvas.drawBitmap(drop, pts[0] - drop.getWidth() / 2,
 				pts[1] - drop.getHeight() / 2, mPaint1);

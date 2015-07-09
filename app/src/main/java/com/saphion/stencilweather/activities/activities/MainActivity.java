@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-package com.saphion.stencilweather.activities;
+package com.saphion.stencilweather.activities.activities;
 
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -36,16 +33,21 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.saphion.stencilweather.R;
 import com.saphion.stencilweather.activities.adapters.RecyclerViewAdapter;
+import com.saphion.stencilweather.activities.fragments.WeatherFragment;
 import com.saphion.stencilweather.activities.utilities.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import me.relex.circleindicator.CircleIndicator;
 
 /**
  * TODO
@@ -53,6 +55,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
+    ArrayList<Integer> colors = new ArrayList<>();
+    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,19 +79,28 @@ public class MainActivity extends AppCompatActivity {
             setupDrawerContent(navigationView);
         }
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        Random random = new Random();
+        colors.add((0xff000000 | random.nextInt(0x00ffffff)));
+        colors.add((0xff000000 | random.nextInt(0x00ffffff)));
+        colors.add((0xff000000 | random.nextInt(0x00ffffff)));
+        colors.add((0xff000000 | random.nextInt(0x00ffffff)));
+
+
+        setToolBarColor(colors.get(0));
+
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
         if (viewPager != null) {
             setupViewPager(viewPager);
         }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         findViewById(R.id.ivMenu).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +112,14 @@ public class MainActivity extends AppCompatActivity {
 //        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 //        tabLayout.setupWithViewPager(viewPager);
     }
+
+    public void setToolBarColor(int color){
+        try {
+            findViewById(R.id.appbar).setBackgroundColor(color);
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(color));
+        }catch(Exception ex){}
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -118,10 +139,33 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-//        adapter.addFragment(new CheeseListFragment(), "Category 1");
-//        adapter.addFragment(new CheeseListFragment(), "Category 2");
-//        adapter.addFragment(new CheeseListFragment(), "Category 3");
+
+        for(int i = 0 ; i < colors.size() ; i++)
+            adapter.addFragment(WeatherFragment.newInstance(colors.get(i)).setContext(MainActivity.this), "" + i);
+
         viewPager.setAdapter(adapter);
+
+        CircleIndicator defaultIndicator = (CircleIndicator) findViewById(R.id.indicator_default);
+//        DemoPagerAdapter defaultPagerAdapter = new DemoPagerAdapter(getSupportFragmentManager(), getBaseContext());
+//        viewPager.setAdapter(defaultPagerAdapter);
+        defaultIndicator.setViewPager(viewPager);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                    setToolBarColor(colors.get(position));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -141,13 +185,20 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<String> items = new ArrayList<>();
         items.add("Pune");
-//        items.add("Dehradun");
-//        items.add("New Delhi");
-//        items.add("Riverside");
+        items.add("Dehradun");
+        items.add("New Delhi");
+        items.add("Riverside");
 //        items.add("New York");
 //        items.add("Los Angeles");
 
         rv.setAdapter(new RecyclerViewAdapter(getBaseContext(), items, items, MainActivity.this));
+
+
+    }
+
+    public void setViewPagerPosition(int viewPagerPosition) {
+        viewPager.setCurrentItem(viewPagerPosition, true);
+        mDrawerLayout.closeDrawers();
     }
 
     static class Adapter extends FragmentPagerAdapter {
@@ -182,11 +233,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void showPopupMenu(View view) {
 
-        // Retrieve the clicked item from view's tag
-        final int item = (Integer) view.getTag();
 
         // Create a PopupMenu, giving it the clicked view for an anchor
-        PopupMenu popup = new PopupMenu(MainActivity.this, view);
+        PopupMenu popup = new PopupMenu(MainActivity.this, view, Gravity.END);
 
         // Inflate our menu resource into the PopupMenu's Menu
         popup.getMenuInflater().inflate(R.menu.navbar_actions, popup.getMenu());
@@ -203,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
 //                        startActivity(new Intent(getBaseContext(), AboutClass.class));
 //                        overridePendingTransition(R.anim.slide_in_left,
 //                                R.anim.slide_out_right);
-                        finish();
+//                        finish();
                         return true;
                     case R.id.action_morebydev:
                         startActivity(new Intent(
@@ -214,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
                         Utils.launchMarket(getBaseContext(), getPackageName());
                         return true;
                     case R.id.action_share:
-                        startActivity(Utils.createShareIntent());
+                        startActivity(Utils.createShareIntent(getBaseContext()));
                         return true;
                 }
                 return false;

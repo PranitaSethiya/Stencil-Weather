@@ -5,7 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.DashPathEffect;
+import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
@@ -18,12 +20,12 @@ import com.saphion.stencilweather.R;
 public class IcySunIV extends ImageView {
 
 	int height, width;
-	Bitmap cloud, drop, sun;
+	Bitmap cloud, drop, sun, cloud_color;
 	int angle = 0;
 	Path path1, path2, path3;
 	Paint mPaint = new Paint();
 	PathMeasure pm1, pm2, pm3;
-	Paint mPaint1, mPaint2, mPaint3;
+	Paint mPaint1, mPaint2, mPaint3, mPaint4;
 	float curr1 = 0, curr2 = 50, curr3 = 25;
 	float len = 0;
 	float[] tan = new float[2];
@@ -33,13 +35,15 @@ public class IcySunIV extends ImageView {
 		super(context);
 	}
 
-	public IcySunIV(Context context, int height, int width) {
+	public IcySunIV(Context context, int height, int width, int color) {
 		super(context);
 		this.height = height;
 		this.width = width;
 		sun = BitmapFactory.decodeResource(getResources(), R.drawable.sun);
 		cloud = BitmapFactory.decodeResource(getResources(),
 				R.drawable.cloud_open_black);
+		cloud_color = BitmapFactory.decodeResource(getResources(),
+				R.drawable.cloud_open_black_cut);
 		drop = BitmapFactory
 				.decodeResource(getResources(), R.drawable.drop_big);
 		int mheight = (int) (width * 0.144645);
@@ -53,8 +57,16 @@ public class IcySunIV extends ImageView {
 		mPaint2.setAntiAlias(true);
 		mPaint3 = new Paint();
 		mPaint3.setAntiAlias(true);
+		mPaint4 = new Paint();
+		mPaint4.setAntiAlias(true);
+
+		ColorFilter filter = new LightingColorFilter(color, 0);
+		mPaint4.setColorFilter(filter);
 
 		cloud = Bitmap.createScaledBitmap(cloud, (int) (width), (int) (height),
+				true);
+
+		cloud_color = Bitmap.createScaledBitmap(cloud_color, (int) (width), (int) (height),
 				true);
 
 		path1 = new Path();
@@ -91,8 +103,11 @@ public class IcySunIV extends ImageView {
 		canvas.drawBitmap(sun, width - (float) (sun.getWidth()), 0, mPaint);
 		canvas.restore();
 
-		canvas.drawBitmap(cloud, (width - cloud.getWidth()) / 2,
-				(height - cloud.getHeight()) / 2, mPaint); 
+        canvas.drawBitmap(cloud_color, (width - cloud.getWidth()) / 2,
+                (height - cloud.getHeight()) / 2, mPaint4);
+        canvas.drawBitmap(cloud, (width - cloud.getWidth()) / 2,
+				(height - cloud.getHeight()) / 2, mPaint);
+
 
 		mPaint1.setAlpha(setval(curr1));
 		mPaint2.setAlpha(setval(curr2));

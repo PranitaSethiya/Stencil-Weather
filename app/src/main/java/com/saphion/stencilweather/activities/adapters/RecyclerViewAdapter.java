@@ -2,23 +2,15 @@ package com.saphion.stencilweather.activities.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.saphion.stencilweather.R;
+import com.saphion.stencilweather.activities.activities.MainActivity;
 
 import java.util.ArrayList;
 
@@ -30,13 +22,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         TextView name;
         ImageView listIndicator;
         ImageView myLocation;
+        View container;
 
         public SimpleViewHolder(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.tvLocationName);
             listIndicator = (ImageView)itemView.findViewById(R.id.ivListIndicator);
             myLocation = (ImageView)itemView.findViewById(R.id.ivMyLocation);
+            container = itemView.findViewById(R.id.locationItemContainer);
         }
+
     }
 
     private Context mContext;
@@ -80,6 +75,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
 
         viewHolder.name.setText(item);
+        viewHolder.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity)mActivity).setViewPagerPosition(position);
+            }
+        });
     }
 
     @Override

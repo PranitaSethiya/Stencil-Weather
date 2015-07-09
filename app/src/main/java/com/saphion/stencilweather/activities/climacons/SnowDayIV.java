@@ -5,7 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.DashPathEffect;
+import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
@@ -17,12 +19,13 @@ import com.saphion.stencilweather.R;
 public class SnowDayIV extends ImageView {
 
 	int height, width;
-	Bitmap cloud, drop, sun;
+	Bitmap cloud, drop, sun, cloud_color;
 	int angle = 0;
 	Path path1;
 	Paint mPaint = new Paint();
 	PathMeasure pm1;
 	Paint mPaint1;
+	Paint mPaint4;
 	float curr1 = 0;
 	float len = 0;
 	float[] tan = new float[2];
@@ -32,13 +35,15 @@ public class SnowDayIV extends ImageView {
 		super(context);
 	}
 
-	public SnowDayIV(Context context, int height, int width) {
+	public SnowDayIV(Context context, int height, int width, int color) {
 		super(context);
 		this.height = height;
 		this.width = width;
 		sun = BitmapFactory.decodeResource(getResources(), R.drawable.sun);
 		cloud = BitmapFactory.decodeResource(getResources(),
 				R.drawable.cloud_open_black);
+		cloud_color = BitmapFactory.decodeResource(getResources(),
+				R.drawable.cloud_open_black_cut);
 		drop = BitmapFactory.decodeResource(getResources(), R.drawable.snow);
 		int nWidth = (int) (width * 0.2);
 		drop = Bitmap.createScaledBitmap(drop, nWidth, nWidth, true);
@@ -46,9 +51,16 @@ public class SnowDayIV extends ImageView {
 		mPaint.setAntiAlias(true);
 		mPaint1 = new Paint();
 		mPaint1.setAntiAlias(true);
+		mPaint4 = new Paint();
+		mPaint4.setAntiAlias(true);
+
+		ColorFilter filter = new LightingColorFilter(color, 0);
+		mPaint4.setColorFilter(filter);
 
 		cloud = Bitmap.createScaledBitmap(cloud, (int) (width), (int) (height),
 				true);
+		cloud_color = Bitmap.createScaledBitmap(cloud_color, (int) (width), (int) (height),
+						true);
 
 		path1 = new Path();
 
@@ -79,8 +91,12 @@ public class SnowDayIV extends ImageView {
 
 		mPaint1.setAlpha(setval(curr1));
 
-		canvas.drawBitmap(cloud, (width - cloud.getWidth()) / 2,
+        canvas.drawBitmap(cloud_color, (width - cloud.getWidth()) / 2,
+                (height - cloud.getHeight()) / 2, mPaint4);
+
+        canvas.drawBitmap(cloud, (width - cloud.getWidth()) / 2,
 				(height - cloud.getHeight()) / 2, mPaint);
+
 
 		pm1.getPosTan((float) (len * curr1), pts, tan);
 

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <FrameLayout
+        android:id="@+id/flConditionIcon"
+        android:layout_width="200dp"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_height="200dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:layout_marginBottom="25dp"
+        android:orientation="horizontal">
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/tvTemperature"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:text="27°"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:textSize="90sp"
+            app:fontFamily="roboto"
+            app:textWeight="light" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="15dp"
+            android:orientation="vertical">
+
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DETAILS"
+                android:textColor="#fff"
+                android:textSize="16sp"
+                app:fontFamily="roboto"
+                app:textWeight="bold" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="3.5dp"
+                android:layout_marginTop="3.5dp"
+                android:background="#fff" />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <TableRow>
+
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="0"
+                        android:layout_weight="1"
+                        android:text="FEELS LIKE"
+                        android:textColor="#fff"
+                        android:textSize="13sp"
+                        app:fontFamily="roboto"
+                        app:textWeight="medium" />
+
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:layout_weight="1"
+                        android:text="+9°"
+                        android:textColor="#fff"
+                        android:textSize="12.5sp"
+                        app:fontFamily="roboto"
+                        app:textWeight="light" />
+                </TableRow>
+
+                <TableRow>
+
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="0"
+                        android:layout_weight="1"
+                        android:text="HUMIDITY"
+                        android:textColor="#fff"
+                        android:textSize="13sp"
+                        app:fontFamily="roboto"
+                        app:textWeight="medium" />
+
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:layout_weight="1"
+                        android:text="72%"
+                        android:textColor="#fff"
+                        android:textSize="12.5sp"
+                        app:fontFamily="roboto"
+                        app:textWeight="light" />
+                </TableRow>
+
+
+                <TableRow>
+
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="0"
+                        android:layout_weight="1"
+                        android:text="WIND"
+                        android:textColor="#fff"
+                        android:textSize="13sp"
+                        app:fontFamily="roboto"
+                        app:textWeight="medium" />
+
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:layout_weight="1"
+                        android:text="15 Km/h"
+                        android:textColor="#fff"
+                        android:textSize="12.5sp"
+                        app:fontFamily="roboto"
+                        app:textWeight="light" />
+                </TableRow>
+
+
+                <TableRow>
+
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="0"
+                        android:layout_weight="1"
+                        android:text="VISIBILITY"
+                        android:textColor="#fff"
+                        android:textSize="13sp"
+                        app:fontFamily="roboto"
+                        app:textWeight="medium" />
+
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:layout_weight="1"
+                        android:text="10 Km"
+                        android:textColor="#fff"
+                        android:textSize="12.5sp"
+                        app:fontFamily="roboto"
+                        app:textWeight="light" />
+                </TableRow>
+
+            </TableLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>
