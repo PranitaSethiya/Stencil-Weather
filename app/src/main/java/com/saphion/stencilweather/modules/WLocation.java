@@ -61,4 +61,13 @@ public class WLocation {
     public void setIsMyLocation(boolean isMyLocation) {
         this.isMyLocation = isMyLocation;
     }
+
+    @Override
+    public String toString() {
+        return "[WLocation] " + "Name: "  + name +
+        ", timezone: " +  timezone +
+        ", latitude: " + latitude +
+        ", longitude: " + longitude +
+        ",isMyLocation: " + isMyLocation;
+    }
 }

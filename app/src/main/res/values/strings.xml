@@ -39,4 +39,7 @@
     <string name="share">Share</string>
     <string name="morebydev">More By Developer</string>
     <string name="about">About</string>
+    <string name="error">Error Occured</string>
+    <string name="add_location">Add Location</string>
+    <string name="edit_text_search">Search</string>
 </resources>

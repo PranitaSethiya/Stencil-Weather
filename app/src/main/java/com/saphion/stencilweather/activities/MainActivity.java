@@ -16,6 +16,7 @@
 
 package com.saphion.stencilweather.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -29,18 +30,30 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.saphion.stencilweather.R;
 import com.saphion.stencilweather.adapters.RecyclerViewAdapter;
 import com.saphion.stencilweather.fragments.WeatherFragment;
+import com.saphion.stencilweather.utilities.InitiateSearch;
 import com.saphion.stencilweather.utilities.Utils;
 
 import java.util.ArrayList;
@@ -57,13 +70,14 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     ArrayList<Integer> colors = new ArrayList<>();
     ViewPager viewPager;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Dehradun, India");
         setSupportActionBar(toolbar);
 
@@ -111,6 +125,38 @@ public class MainActivity extends AppCompatActivity {
 
 //        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 //        tabLayout.setupWithViewPager(viewPager);
+
+        initialiseThings();
+    }
+
+    View line_divider;
+    EditText edit_text_search;
+    ImageView image_search_back;
+    ImageView clearSearch;
+    ListView listView;
+    CardView card_search;
+    InitiateSearch initiateSearch;
+
+    private void initialiseThings() {
+
+
+        initiateSearch = new InitiateSearch();
+//        view_search = (RelativeLayout) findViewById(R.id.view_search);
+
+        line_divider = findViewById(R.id.line_divider);
+//        toolbar_shadow = findViewById(R.id.toolbar_shadow);
+        edit_text_search = (EditText) findViewById(R.id.edit_text_search);
+        image_search_back = (ImageView) findViewById(R.id.image_search_back);
+        clearSearch = (ImageView) findViewById(R.id.clearSearch);
+        listView = (ListView) findViewById(R.id.listView);
+
+        card_search = (CardView) findViewById(R.id.card_search);
+//        listContainer = (ListView) findViewById(R.id.listContainer);
+//        marker_progress = (ProgressBar) findViewById(R.id.marker_progress);
+//        marker_progress.getIndeterminateDrawable().setColorFilter(Color.parseColor("#FFFFFF"),//Pink color
+//                android.graphics.PorterDuff.Mode.MULTIPLY);
+
+        InitiateSearch();
     }
 
     public void setToolBarColor(int color){
@@ -273,4 +319,129 @@ public class MainActivity extends AppCompatActivity {
         // Finally show the PopupMenu
         popup.show();
     }
+
+
+    private void InitiateSearch() {
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int menuItem = item.getItemId();
+                switch (menuItem) {
+                    case R.id.action_search:
+                        IsAdapterEmpty();
+                        InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, line_divider);
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                LogQuickSearch logQuickSearch = logQuickSearchAdapter.getItem(position);
+//                edit_text_search.setText(logQuickSearch.getName());
+//                listView.setVisibility(View.GONE);
+//                ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(edit_text_search.getWindowToken(), 0);
+//                toolbar_shadow.setVisibility(View.GONE);
+//                searchFood(logQuickSearch.getName(), 0);
+            }
+        });
+        edit_text_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (edit_text_search.getText().toString().length() == 0) {
+//                    logQuickSearchAdapter = new LogQuickSearchAdapter(MainActivity.this, 0, LogQuickSearch.all());
+//                    listView.setAdapter(logQuickSearchAdapter);
+                    clearSearch.setImageResource(R.drawable.ic_microphone);
+//                    IsAdapterEmpty();
+                } else {
+//                    logQuickSearchAdapter = new LogQuickSearchAdapter(MainActivity.this, 0, LogQuickSearch.FilterByName(edit_text_search.getText().toString()));
+//                    listView.setAdapter(logQuickSearchAdapter);
+                    clearSearch.setImageResource(R.drawable.ic_close);
+                    IsAdapterEmpty();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        clearSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (edit_text_search.getText().toString().length() == 0) {
+
+                } else {
+//                    mAsyncTask.cancel(true);
+                    edit_text_search.setText("");
+                    listView.setVisibility(View.VISIBLE);
+//                    clearItems();
+                    ((InputMethodManager) MainActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                    IsAdapterEmpty();
+                }
+            }
+        });
+    }
+
+    private void UpdateQuickSearch(String item) {
+//        for (int i = 0; i < logQuickSearchAdapter.getCount(); i++) {
+//            LogQuickSearch ls = logQuickSearchAdapter.getItem(i);
+//            String name = ls.getName();
+//            set.add(name.toUpperCase());
+//        }
+//        if (set.add(item.toUpperCase())) {
+//            LogQuickSearch recentLog = new LogQuickSearch();
+//            recentLog.setName(item);
+//            recentLog.setDate(new Date());
+//            recentLog.save();
+//            logQuickSearchAdapter.add(recentLog);
+//            logQuickSearchAdapter.notifyDataSetChanged();
+//        }
+    }
+
+    private void HandleSearch() {
+        image_search_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, line_divider);
+//                listContainer.setVisibility(View.GONE);
+//                toolbar_shadow.setVisibility(View.VISIBLE);
+//                clearItems();
+            }
+        });
+        edit_text_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    if (edit_text_search.getText().toString().trim().length() > 0) {
+//                        clearItems();
+                        ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(edit_text_search.getWindowToken(), 0);
+                        UpdateQuickSearch(edit_text_search.getText().toString());
+                        listView.setVisibility(View.GONE);
+//                        searchFood(edit_text_search.getText().toString(), 0);
+//                        toolbar_shadow.setVisibility(View.GONE);
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void IsAdapterEmpty() {
+//        if (logQuickSearchAdapter.getCount() == 0) {
+            line_divider.setVisibility(View.GONE);
+//        } else {
+//            line_divider.setVisibility(View.VISIBLE);
+//        }
+    }
+
 }

@@ -27,6 +27,8 @@
     <color name="colorIcons">#B6B6B6</color>
     <color name="transparent">#00ffffff</color>
 
+    <color name="white">#ffffff</color>
+
 
 
     <!-- main color for drawable-v21/my_ripple -->

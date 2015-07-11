@@ -60,150 +60,148 @@
                         app:textWeight="normal" />
 
 
-
-
                 </LinearLayout>
 
                 <View
                     android:layout_width="0.2dp"
                     android:layout_height="match_parent"
-                    android:background="@color/colorDivider"/>
+                    android:background="@color/colorDivider" />
 
                 <ImageView
+                    android:id="@+id/ivMyLocation"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:id="@+id/ivMyLocation"
-                    android:padding="10dp"
-                    android:clickable="true"
-                    android:tint="@color/main_button_blue_normal"
                     android:background="@drawable/item_background_circle"
-                    android:src="@drawable/ic_map_marker"/>
+                    android:clickable="true"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_map_marker"
+                    android:tint="@color/main_button_blue_normal" />
 
 
             </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginLeft="58dp"
-                    android:layout_marginStart="58dp"
-                    android:background="@color/colorDivider"
-                    android:layout_below="@+id/llLocation"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_below="@+id/llLocation"
+                android:layout_marginLeft="58dp"
+                android:layout_marginStart="58dp"
+                android:background="@color/colorDivider" />
 
 
             <android.support.v7.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_below="@+id/llLocation"
-                android:layout_height="match_parent"
                 android:id="@+id/rvLocation"
-                android:layout_above="@+id/llSettings" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/llSettings"
+                android:layout_below="@+id/llLocation" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.8dp"
                 android:layout_above="@+id/llSettings"
-                android:background="@color/colorDivider"/>
+                android:background="@color/colorDivider" />
 
             <LinearLayout
-                android:layout_width="match_parent"
                 android:id="@+id/llSettings"
+                android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_above="@+id/llCustomize"
-                android:clickable="true"
                 android:background="?attr/selectableItemBackground"
+                android:clickable="true"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:padding="8.5dp"
-                    android:tint="#aa000000"
-                    android:layout_margin="10dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_settings"/>
+                    android:layout_margin="10dp"
+                    android:padding="8.5dp"
+                    android:src="@drawable/ic_settings"
+                    android:tint="#aa000000" />
 
                 <com.devspark.robototextview.widget.RobotoTextView
-                    android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical"
                     android:layout_height="match_parent"
-                    android:text="Settings"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Settings"
                     android:textColor="#c8000000"
                     android:textSize="14sp"
                     app:fontFamily="roboto"
-                    app:textWeight="medium"/>
+                    app:textWeight="medium" />
 
 
             </LinearLayout>
-            
-            
+
+
             <LinearLayout
-                android:layout_width="match_parent"
                 android:id="@+id/llCustomize"
+                android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_above="@+id/llShare"
-                android:clickable="true"
                 android:background="?attr/selectableItemBackground"
+                android:clickable="true"
                 android:orientation="horizontal">
-                
+
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:padding="8.5dp"
-                    android:tint="#aa000000"
-                    android:layout_margin="10dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_auto_fix"/>
+                    android:layout_margin="10dp"
+                    android:padding="8.5dp"
+                    android:src="@drawable/ic_auto_fix"
+                    android:tint="#aa000000" />
 
                 <com.devspark.robototextview.widget.RobotoTextView
-                    android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical"
                     android:layout_height="match_parent"
-                    android:text="Customize"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="Customize"
                     android:textColor="#c8000000"
                     android:textSize="14sp"
                     app:fontFamily="roboto"
-                    app:textWeight="medium"/>
-                
-                
+                    app:textWeight="medium" />
+
+
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
                 android:id="@+id/llShare"
+                android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_alignParentBottom="true"
-                android:clickable="true"
                 android:background="?attr/selectableItemBackground"
+                android:clickable="true"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:padding="8.5dp"
-                    android:tint="#aa000000"
-                    android:layout_margin="10dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_share_variant"/>
+                    android:layout_margin="10dp"
+                    android:padding="8.5dp"
+                    android:src="@drawable/ic_share_variant"
+                    android:tint="#aa000000" />
 
                 <com.devspark.robototextview.widget.RobotoTextView
-                    android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:text="Share Weather"
                     android:textColor="#c8000000"
-                    android:layout_marginLeft="10dp"
                     android:textSize="14sp"
                     app:fontFamily="roboto"
-                    app:textWeight="medium"/>
+                    app:textWeight="medium" />
 
 
             </LinearLayout>
