@@ -11,18 +11,22 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.Interpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.saphion.stencilweather.R;
 
 
 public class InitiateSearch {
 
-    public static void handleToolBar(final Context context, final CardView search, Toolbar toolbarMain, /*final View view,*/ final ListView listView, final EditText editText, final View line_divider) {
+    public static void handleToolBar(final Context context, final CardView search, final Toolbar toolbarMain, /*final View view,*/ final ListView listView, final EditText editText, final View line_divider) {
         final Animation fade_in = AnimationUtils.loadAnimation(context.getApplicationContext(), android.R.anim.fade_in);
-        final Animation fade_out = AnimationUtils.loadAnimation(context.getApplicationContext(), android.R.anim.fade_out);
+//        final Animation fade_out = AnimationUtils.loadAnimation(context.getApplicationContext(), android.R.anim.fade_out);
         if (search.getVisibility() == View.VISIBLE) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 final Animator animatorHide = ViewAnimationUtils.createCircularReveal(search,
@@ -43,6 +47,10 @@ public class InitiateSearch {
                         search.setVisibility(View.GONE);
                         ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search.getWindowToken(), 0);
                         listView.setVisibility(View.GONE);
+                        toolbarMain.setNavigationIcon(R.drawable.ic_menu);
+                        toolbarMain.setTitle("Dehradun"); // TODO change this
+                        toolbarMain.getMenu().clear();
+                        toolbarMain.inflateMenu(R.menu.menu_add);
                     }
 
                     @Override
@@ -61,14 +69,39 @@ public class InitiateSearch {
                 ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search.getWindowToken(), 0);
 //                view.startAnimation(fade_out);
 //                view.setVisibility(View.INVISIBLE);
-                search.setVisibility(View.GONE);
+
+                YoYo.with(Techniques.SlideOutRight)
+                        .duration(500).interpolate(new BounceInterpolator()).withListener(new com.nineoldandroids.animation.Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(com.nineoldandroids.animation.Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(com.nineoldandroids.animation.Animator animation) {
+                        search.setVisibility(View.GONE);
+                        editText.setText("");
+                        toolbarMain.setNavigationIcon(R.drawable.ic_menu);
+                        toolbarMain.setTitle("Dehradun"); // TODO change this
+                        toolbarMain.getMenu().clear();
+                        toolbarMain.inflateMenu(R.menu.menu_add);
+                        search.setEnabled(false);
+
+                    }
+
+                    @Override
+                    public void onAnimationCancel(com.nineoldandroids.animation.Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(com.nineoldandroids.animation.Animator animation) {
+
+                    }
+                }).playOn(search);
             }
-            editText.setText("");
-            toolbarMain.setNavigationIcon(R.drawable.ic_menu);
-            toolbarMain.setTitle("Dehradun"); // TODO change this
-            toolbarMain.getMenu().clear();
-            toolbarMain.inflateMenu(R.menu.menu_add);
-            search.setEnabled(false);
+
+
         } else {
             toolbarMain.setTitle("");
             toolbarMain.getMenu().clear();
@@ -125,6 +158,9 @@ public class InitiateSearch {
                 });
             } else {
                 search.setVisibility(View.VISIBLE);
+                YoYo.with(Techniques.SlideInRight)
+                        .duration(500).interpolate(new BounceInterpolator())
+                        .playOn(search);
                 search.setEnabled(true);
                 listView.setVisibility(View.VISIBLE);
                 ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);

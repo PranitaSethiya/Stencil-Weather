@@ -21,7 +21,7 @@
             android:layout_height="50dp"
             android:layout_gravity="center"
             android:id="@+id/ivListIndicator"
-            android:src="@drawable/middle"
+            android:src="@drawable/ic_map_marker_radius"
             android:tint="#ff000000" />
 
         <com.devspark.robototextview.widget.RobotoTextView
@@ -44,6 +44,7 @@
             android:layout_gravity="center"
             android:id="@+id/ivMyLocation"
             android:padding="10dp"
+            android:visibility="gone"
             android:src="@drawable/curloc"/>
 
     </LinearLayout>
