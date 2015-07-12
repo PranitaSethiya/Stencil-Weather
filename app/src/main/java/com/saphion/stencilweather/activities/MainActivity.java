@@ -261,15 +261,9 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView rv = (RecyclerView) findViewById(R.id.rvLocation);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
-        ArrayList<String> items = new ArrayList<>();
-        items.add("Pune");
-        items.add("Dehradun");
-        items.add("New Delhi");
-        items.add("Riverside");
-//        items.add("New York");
-//        items.add("Los Angeles");
+        List<WLocation> items = WLocation.listAll(WLocation.class);
 
-        rv.setAdapter(new RecyclerViewAdapter(getBaseContext(), items, items, MainActivity.this));
+        rv.setAdapter(new RecyclerViewAdapter(getBaseContext(), items, MainActivity.this));
 
 
     }
@@ -736,7 +730,7 @@ public class MainActivity extends AppCompatActivity {
 
             ad.dismiss();
 
-            Toast.makeText(MainActivity.this, location.getName() + (location.checkAndSave() ? " Added" : " Already exists."), Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, location.getName() + (location.checkAndSave() ? " added" : " already exists."), Toast.LENGTH_LONG).show();
 
             super.onPostExecute(result);
         }

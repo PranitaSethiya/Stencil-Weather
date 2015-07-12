@@ -11,8 +11,10 @@ import android.widget.TextView;
 
 import com.saphion.stencilweather.R;
 import com.saphion.stencilweather.activities.MainActivity;
+import com.saphion.stencilweather.modules.WLocation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.SimpleViewHolder> {
 
@@ -35,17 +37,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     private Context mContext;
-    private ArrayList<String> mDataset;
+    private List<WLocation> mDataset;
 
-    public void setDataList(ArrayList<String> mDataset){
-        this.mDataset = (ArrayList<String>) mDataset.clone();
-    }
-
-    public ArrayList<String> getArrayList(){
+    public List<WLocation> getArrayList(){
         return this.mDataset;
     }
 
-    public RecyclerViewAdapter(Context context, ArrayList<String> objects, ArrayList<String> subItems, Activity mActivity) {
+    public RecyclerViewAdapter(Context context, List<WLocation> objects, Activity mActivity) {
         this.mContext = context;
         this.mDataset = objects;
         this.mActivity = mActivity;
@@ -60,7 +58,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(final SimpleViewHolder viewHolder, final int position) {
 
-        String item = mDataset.get(position);
+        WLocation item = mDataset.get(position);
 
         if(position == 0){
             viewHolder.myLocation.setVisibility(View.VISIBLE);
@@ -74,7 +72,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             viewHolder.listIndicator.setImageResource(R.drawable.middle);
         }
 
-        viewHolder.name.setText(item);
+        viewHolder.name.setText(item.getName());
         viewHolder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
