@@ -16,9 +16,11 @@
 
 package com.saphion.stencilweather.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -28,6 +30,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,18 +41,13 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.BounceInterpolator;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -59,14 +57,21 @@ import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.google.android.gms.maps.model.LatLng;
 import com.nineoldandroids.animation.Animator;
 import com.saphion.stencilweather.R;
 import com.saphion.stencilweather.adapters.RecyclerViewAdapter;
 import com.saphion.stencilweather.fragments.WeatherFragment;
+import com.saphion.stencilweather.modules.WLocation;
+import com.saphion.stencilweather.tasks.GetLocationInfo;
 import com.saphion.stencilweather.tasks.SuggestTask;
 import com.saphion.stencilweather.utilities.InitiateSearch;
 import com.saphion.stencilweather.utilities.Utils;
 
+import org.apache.http.client.ClientProtocolException;
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -144,6 +149,12 @@ public class MainActivity extends AppCompatActivity {
     View pb;
 
     private void initialiseThings() {
+
+//        List<WLocation> locs = WLocation.all();
+
+//        for(int i = 0 ; i < locs.size(); i++){
+//            Toast.makeText(getBaseContext(), locs.get(i).toString(), Toast.LENGTH_LONG).show();
+//        }
 
         line_divider = findViewById(R.id.line_divider);
         edit_text_search = (EditText) findViewById(R.id.edit_text_search);
@@ -345,7 +356,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         // Terminate extra threads here
         try {
-            suggThread.shutdownNow();
+            suggestionThread.shutdownNow();
+            Utils.hideKeyboard(edit_text_search, getBaseContext());
         } catch (Exception e) {
         }
         super.onDestroy();
@@ -353,19 +365,16 @@ public class MainActivity extends AppCompatActivity {
 
     public MyAdapter adapter;
     private Handler guiThread;
-    private ExecutorService suggThread;
+    private ExecutorService suggestionThread;
     private Runnable updateTask;
-    private Future<?> suggPending;
-    private List<String> items;
-    String keys[];
-    private String[] GMT;
+    private Future<?> suggestionPending;
 
     public class MyAdapter extends BaseAdapter {
         private Context context;
-        private List<String> objects;
+        private List<WLocation> objects;
 
         public MyAdapter(Context context,
-                         List<String> objects) {
+                         List<WLocation> objects) {
             this.context = context;
             this.objects = objects;
         }
@@ -385,7 +394,7 @@ public class MainActivity extends AppCompatActivity {
             return i;
         }
 
-        public void add(String item){
+        public void add(WLocation item){
             objects.add(item);
             notifyDataSetChanged();
         }
@@ -396,10 +405,32 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public View getView(int position, View view, ViewGroup viewGroup) {
-            View v = LayoutInflater.from(context).inflate(R.layout.location_action_item, null);
-//			((TextView) v).setTypeface(font);
-            return v;
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            ViewHolder viewHolder;
+
+            if(convertView==null){
+
+                // inflate the layout
+                LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+                convertView = inflater.inflate(R.layout.location_action_item, parent, false);
+
+                // well set up the ViewHolder
+                viewHolder = new ViewHolder();
+                viewHolder.textView = (TextView) convertView.findViewById(R.id.tvLocationName);
+
+                // store the holder with the view.
+                convertView.setTag(viewHolder);
+
+            }else{
+                // we've just avoided calling findViewById() on resource everytime
+                // just use the viewHolder
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+
+            viewHolder.textView.setText(objects.get(position).getName());
+
+            return convertView;
         }
 
         class ViewHolder {
@@ -409,7 +440,7 @@ public class MainActivity extends AppCompatActivity {
 
     /** Set up adapter for list view. */
     private void setAdapters() {
-        items = new ArrayList<String>();
+        List<WLocation> items = new ArrayList<WLocation>();
         adapter = new MyAdapter(this, items);
 
         listView.setAdapter(adapter);
@@ -443,12 +474,29 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                LogQuickSearch logQuickSearch = logQuickSearchAdapter.getItem(position);
-//                edit_text_search.setText(logQuickSearch.getName());
-//                listView.setVisibility(View.GONE);
-//                ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(edit_text_search.getWindowToken(), 0);
-//                toolbar_shadow.setVisibility(View.GONE);
-//                searchFood(logQuickSearch.getName(), 0);
+
+                if (!(parent.getItemAtPosition(position).toString()
+                        .equalsIgnoreCase("Loading...")
+                        || parent.getItemAtPosition(position).toString()
+                        .equalsIgnoreCase("No suggestions") || parent
+                        .getItemAtPosition(position)
+                        .toString()
+                        .equalsIgnoreCase(
+                                "Unable To Connect to Internet, Please Check Your Network Settings."))) {
+
+
+                    new GetLL(getBaseContext(), (WLocation) parent.getItemAtPosition(position)).execute();
+                    // new myasync().execute(name);
+
+                    if (card_search.getVisibility() == View.VISIBLE) {
+                        InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, line_divider);
+                        hideDark();
+                    }
+                    listView.setVisibility(View.GONE);
+                    edit_text_search.setText("");
+                    ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(edit_text_search.getWindowToken(), 0);
+
+                }
             }
         });
 
@@ -465,8 +513,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (edit_text_search.getText().toString().length() == 0) {
-//                    logQuickSearchAdapter = new LogQuickSearchAdapter(MainActivity.this, 0, LogQuickSearch.all());
-//                    listView.setAdapter(logQuickSearchAdapter);
                     clearSearch.setVisibility(View.VISIBLE);
                     clearSearch.setImageResource(R.drawable.ic_microphone);
                     adapter.clear();
@@ -474,12 +520,10 @@ public class MainActivity extends AppCompatActivity {
                     listView.setVisibility(View.GONE);
                     pb.setVisibility(View.GONE);
 
-                    if (suggPending != null)
-                        suggPending.cancel(true);
+                    if (suggestionPending != null)
+                        suggestionPending.cancel(true);
 
                 } else {
-//                    logQuickSearchAdapter = new LogQuickSearchAdapter(MainActivity.this, 0, LogQuickSearch.FilterByName(edit_text_search.getText().toString()));
-//                    listView.setAdapter(logQuickSearchAdapter);
                     clearSearch.setImageResource(R.drawable.ic_close);
                     IsAdapterEmpty();
 
@@ -521,7 +565,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void initThreading() {
         guiThread = new Handler();
-        suggThread = Executors.newSingleThreadExecutor();
+        suggestionThread = Executors.newSingleThreadExecutor();
 
         // This task gets suggestions and updates the screen
         updateTask = new Runnable() {
@@ -530,28 +574,25 @@ public class MainActivity extends AppCompatActivity {
                 String original = edit_text_search.getText().toString().trim();
 
                 // Cancel previous suggestion if there was one
-                if (suggPending != null)
-                    suggPending.cancel(true);
+                if (suggestionPending != null)
+                    suggestionPending.cancel(true);
 
                 // Check to make sure there is text to work onSuggest
                 if (original.length() != 0) {
                     // Let user know we're doing something
                     // setText(R.string.working);
-                    keys = new String[1];
-                    keys[0] = "Working...";
 
                     // Begin suggestion now but don't wait for it
                     try {
-                        SuggestTask suggestTask = new SuggestTask(MainActivity.this, // reference
-                                // to
-                                // activity
+                        SuggestTask suggestTask = new SuggestTask(MainActivity.this, // reference to activity
                                 original // original text
                         );
-                        suggPending = suggThread.submit(suggestTask);
+                        suggestionPending = suggestionThread.submit(suggestTask);
                     } catch (RejectedExecutionException e) {
                         Log.d("Suggest", "5th Exception");
                         // Unable to start new task
-                        setText(R.string.error);
+//                        setText(R.string.error);
+                        Toast.makeText(MainActivity.this, "Unable to process request, please try again.", Toast.LENGTH_LONG).show();
                     }
                 } else {
                     pb.setVisibility(View.GONE);
@@ -570,18 +611,18 @@ public class MainActivity extends AppCompatActivity {
         guiThread.postDelayed(updateTask, delayMillis);
     }
 
-    /** Display a message */
-    private void setText(int id) {
-        adapter.clear();
-        adapter.add(getResources().getString(id));
-    }
+//    /** Display a message */
+//    private void setText(int id) {
+//        adapter.clear();
+//        adapter.add(getResources().getString(id));
+//    }
 
     /** Display a list */
-    private void setList(List<String> list) {
+    private void setList(List<WLocation> list) {
         adapter.clear();
         listView.setVisibility(View.VISIBLE);
         // adapter.addAll(list); // Could use if API >= 11
-        for (String item : list) {
+        for (WLocation item : list) {
             adapter.add(item);
         }
     }
@@ -589,20 +630,14 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Modify list on the screen (called from another thread)
      */
-    public void setSuggestions(List<String> suggestions, String[] key,
-                               String[] gmt) {
+    public void setSuggestions(List<WLocation> suggestions) {
 
         guiSetList(listView, suggestions);
-        Log.i("Inside setSuggestions", "Inside");
-        keys = new String[key.length];
-        keys = key.clone();
-        GMT = new String[gmt.length];
-        GMT = gmt.clone();
 
     }
 
     /** All changes to the GUI must be done in the GUI thread */
-    private void guiSetList(final ListView view, final List<String> list) {
+    private void guiSetList(final ListView view, final List<WLocation> list) {
 
         guiThread.post(new Runnable() {
             public void run() {
@@ -624,28 +659,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, line_divider);
                 hideDark();
-//                listContainer.setVisibility(View.GONE);
-//                toolbar_shadow.setVisibility(View.VISIBLE);
-//                clearItems();
+                edit_text_search.setText("");
+                listView.setVisibility(View.GONE);
             }
         });
-//        edit_text_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-//                    if (edit_text_search.getText().toString().trim().length() > 0) {
-////                        clearItems();
-//                        ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(edit_text_search.getWindowToken(), 0);
-//                        UpdateQuickSearch(edit_text_search.getText().toString());
-//                        listView.setVisibility(View.GONE);
-////                        searchFood(edit_text_search.getText().toString(), 0);
-////                        toolbar_shadow.setVisibility(View.GONE);
-//                    }
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
     }
 
     private void IsAdapterEmpty() {
@@ -665,5 +682,64 @@ public class MainActivity extends AppCompatActivity {
             hideDark();
         } else
             super.onBackPressed();
+    }
+
+    public class GetLL extends AsyncTask<Object, Integer, Boolean> {
+
+        WLocation location;
+        Context mContext;
+
+        AlertDialog ad;
+
+        public GetLL(Context mContext, WLocation location) {
+            this.mContext = mContext;
+            this.location = location;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            Utils.hideKeyboard(edit_text_search, getBaseContext());
+            ad = Utils.getProgressDialog(MainActivity.this, "Adding...");
+            ad.show();
+            ad.setCancelable(false);
+            ad.getWindow().setLayout(Utils.dpToPx(200, MainActivity.this), Utils.dpToPx(125, MainActivity.this));
+            super.onPreExecute();
+        }
+
+
+        @Override
+        protected Boolean doInBackground(Object... arg) {
+
+
+            if (location.getTimezone().equalsIgnoreCase("MISSING")) {
+                try {
+                    GetLocationInfo gl = new GetLocationInfo();
+                    location.setTimezone(gl.getTimezone(location.getLatitude(), location.getLongitude())
+                            .getDisplayName());
+                } catch (ClientProtocolException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+
+            ad.dismiss();
+
+            Toast.makeText(MainActivity.this, location.getName() + (location.checkAndSave() ? " Added" : " Already exists."), Toast.LENGTH_LONG).show();
+
+            super.onPostExecute(result);
+        }
+
     }
 }

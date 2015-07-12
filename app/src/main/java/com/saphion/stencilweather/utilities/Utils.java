@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -486,6 +487,36 @@ public class Utils {
         InputMethodManager imm = (InputMethodManager) mContext
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+    }
+
+    public static AlertDialog getProgressDialog(Activity activity, String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        final View view = LayoutInflater.from(activity).inflate(
+                R.layout.progress_dialog, null);
+        View img1 = view.findViewById(R.id.pd_circle1);
+        View img2 = view.findViewById(R.id.pd_circle2);
+        View img3 = view.findViewById(R.id.pd_circle3);
+        int ANIMATION_DURATION = 400;
+        Animator anim1 = setRepeatableAnim(activity, img1, ANIMATION_DURATION, R.animator.growndisappear);
+        Animator anim2 = setRepeatableAnim(activity, img2, ANIMATION_DURATION, R.animator.growndisappear);
+        Animator anim3 = setRepeatableAnim(activity, img3, ANIMATION_DURATION, R.animator.growndisappear);
+        setListeners(img1, anim1, anim2, ANIMATION_DURATION);
+        setListeners(img2, anim2, anim3, ANIMATION_DURATION);
+        setListeners(img3, anim3, anim1, ANIMATION_DURATION);
+        anim1.start();
+
+        ((TextView) view.findViewById(R.id.tvMessage)).setText(Html.fromHtml(msg));
+
+        builder.setView(view);
+        AlertDialog ad = builder.create();
+        ad.setCanceledOnTouchOutside(false);
+        try {
+            ad.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        ad.show();
+        return ad;
     }
 
 

@@ -1,20 +1,30 @@
 package com.saphion.stencilweather.modules;
 
+
+import android.util.Log;
+
+import com.orm.SugarRecord;
+import com.orm.query.Condition;
+import com.orm.query.Select;
+
+import java.util.List;
+
 /**
  * Created by sachin on 9/7/15.
  */
-public class WLocation {
+public class WLocation extends SugarRecord<WLocation> {
 
     private String name;
     private String timezone;
-    private long latitude;
-    private long longitude;
-    private boolean isMyLocation;
+    private Double latitude;
+    private Double longitude;
+    private Boolean isMyLocation;
 
-    public WLocation() {}
+    public WLocation() {
+    }
 
 
-    public WLocation(String name, String timezone, long latitude, long longitude, boolean isMyLocation) {
+    public WLocation(String name, String timezone, Double latitude, Double longitude, Boolean isMyLocation) {
         this.name = name;
         this.timezone = timezone;
         this.latitude = latitude;
@@ -38,19 +48,19 @@ public class WLocation {
         this.timezone = timezone;
     }
 
-    public long getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(long latitude) {
-        this.latitude = latitude;
-    }
-
-    public long getLongitude() {
+    public double getLatitude() {
         return longitude;
     }
 
-    public void setLongitude(long longitude) {
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
@@ -69,5 +79,19 @@ public class WLocation {
         ", latitude: " + latitude +
         ", longitude: " + longitude +
         ",isMyLocation: " + isMyLocation;
+    }
+
+
+    public boolean checkAndSave() {
+        List<WLocation> duplicates = Select.from(WLocation.class)
+                .where(Condition.prop("NAME").eq(this.name),
+                        Condition.prop("LATITUDE").eq(this.latitude),
+                        Condition.prop("LONGITUDE").eq(this.longitude)).list();
+        Log.d("Stencil", "duplicates: " + duplicates.size() + "");
+        if(duplicates.size() == 0) {
+            this.save();
+            return true;
+        }
+        return false;
     }
 }
