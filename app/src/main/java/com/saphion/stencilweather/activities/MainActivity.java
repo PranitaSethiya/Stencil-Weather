@@ -19,11 +19,11 @@ package com.saphion.stencilweather.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -57,10 +57,10 @@ import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.google.android.gms.maps.model.LatLng;
 import com.nineoldandroids.animation.Animator;
 import com.saphion.stencilweather.R;
 import com.saphion.stencilweather.adapters.RecyclerViewAdapter;
+import com.saphion.stencilweather.adapters.WeatherCardAdapter;
 import com.saphion.stencilweather.fragments.WeatherFragment;
 import com.saphion.stencilweather.modules.WLocation;
 import com.saphion.stencilweather.tasks.GetLocationInfo;
@@ -74,7 +74,6 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -88,9 +87,10 @@ import me.relex.circleindicator.CircleIndicator;
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
-    ArrayList<Integer> colors = new ArrayList<>();
     ViewPager viewPager;
     Toolbar toolbar;
+    List<WLocation> drawerItems;
+    private RecyclerViewAdapter recyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Dehradun, India");
+        toolbar.setTitle("Stencil Weather");
         toolbar.setNavigationIcon(R.drawable.ic_menu);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,19 +110,9 @@ public class MainActivity extends AppCompatActivity {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if (navigationView != null) {
-            setupDrawerContent();
-        }
-
-        Random random = new Random();
-        colors.add((0xff000000 | random.nextInt(0x00ffffff)));
-        colors.add((0xff000000 | random.nextInt(0x00ffffff)));
-        colors.add((0xff000000 | random.nextInt(0x00ffffff)));
-        colors.add((0xff000000 | random.nextInt(0x00ffffff)));
+        setupDrawerContent();
 
 
-        setToolBarColor(colors.get(0));
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         if (viewPager != null) {
@@ -138,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         initialiseThings();
+
     }
 
     View line_divider;
@@ -150,11 +141,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void initialiseThings() {
 
-//        List<WLocation> locs = WLocation.all();
-
-//        for(int i = 0 ; i < locs.size(); i++){
-//            Toast.makeText(getBaseContext(), locs.get(i).toString(), Toast.LENGTH_LONG).show();
-//        }
 
         line_divider = findViewById(R.id.line_divider);
         edit_text_search = (EditText) findViewById(R.id.edit_text_search);
@@ -179,17 +165,33 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void setToolBarTitle(String title) {
+        try {
+            toolbar.setTitle(title);
+        } catch (Exception ex) {
+        }
+    }
 
-    private void setupViewPager(ViewPager viewPager) {
-        Adapter adapter = new Adapter(getSupportFragmentManager());
+    Adapter viewPagerAdapter;
+    CircleIndicator defaultIndicator;
 
-        for (int i = 0; i < colors.size(); i++)
-            adapter.addFragment(WeatherFragment.newInstance(colors.get(i)).setContext(MainActivity.this), "" + i);
+    private void setupViewPager(final ViewPager viewPager) {
 
-        viewPager.setAdapter(adapter);
+        viewPagerAdapter = new Adapter(getSupportFragmentManager());
 
-        CircleIndicator defaultIndicator = (CircleIndicator) findViewById(R.id.indicator_default);
+        for (int i = 0; i < drawerItems.size(); i++)
+            viewPagerAdapter.addFragment(WeatherFragment.newInstance(drawerItems.get(i).getId()).setContext(MainActivity.this), "" + i);
+
+        viewPager.setAdapter(viewPagerAdapter);
+        if(viewPagerAdapter.getCount() > 0) {
+            setToolBarColor(((WeatherFragment) viewPagerAdapter.getItem(0)).getColor());
+            setToolBarTitle(drawerItems.get(0).getName());
+        }
+
+
+        defaultIndicator = (CircleIndicator) findViewById(R.id.indicator_default);
         defaultIndicator.setViewPager(viewPager);
+        viewPager.addOnPageChangeListener(defaultIndicator);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -199,7 +201,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                setToolBarColor(colors.get(position));
+                setToolBarColor(((WeatherFragment) viewPagerAdapter.getItem(position)).getColor());
+                setToolBarTitle(drawerItems.get(position).getName());
             }
 
             @Override
@@ -212,13 +215,32 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (card_search.getVisibility() == View.VISIBLE) {
-                    InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, line_divider);
+                    InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, drawerItems.get(viewPager.getCurrentItem()).getName());
                     hideDark();
 
                 }
                 return false;
             }
         });
+
+        initialiseWeatherCards();
+    }
+
+    RecyclerView weatherCardList;
+    private void initialiseWeatherCards() {
+        weatherCardList = (RecyclerView) findViewById(R.id.rvWeatherCards);
+        ArrayList<String> weatherCards = new ArrayList<>();
+        weatherCards.add("");
+        weatherCards.add("");
+        weatherCards.add("");
+        weatherCards.add("");
+        weatherCards.add("");
+        weatherCards.add("");
+        WeatherCardAdapter cardAdapter = new WeatherCardAdapter(MainActivity.this, weatherCards, MainActivity.this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        weatherCardList.setLayoutManager(layoutManager);
+        weatherCardList.setAdapter(cardAdapter);
     }
 
     public void hideDark(){
@@ -261,11 +283,32 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView rv = (RecyclerView) findViewById(R.id.rvLocation);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
-        List<WLocation> items = WLocation.listAll(WLocation.class);
+        drawerItems = WLocation.listAll(WLocation.class);
+        recyclerAdapter = new RecyclerViewAdapter(getBaseContext(), drawerItems, MainActivity.this);
+        rv.setAdapter(recyclerAdapter);
+    }
 
-        rv.setAdapter(new RecyclerViewAdapter(getBaseContext(), items, MainActivity.this));
+    public void addItemToDrawer(WLocation wLocation, boolean isMyLocation){
+        if(isMyLocation){
+            drawerItems.add(0, wLocation);
+            recyclerAdapter.notifyDataSetChanged();
+            viewPagerAdapter.addFragment(WeatherFragment.newInstance(wLocation.getId()).setContext(getBaseContext()), "", 0, true);
+        } else {
+            drawerItems.add(wLocation);
+            recyclerAdapter.notifyDataSetChanged();
+            viewPagerAdapter.addFragment(WeatherFragment.newInstance(wLocation.getId()).setContext(getBaseContext()), "");
+        }
+        defaultIndicator.setViewPager(viewPager);
+//        viewPager.addOnPageChangeListener(defaultIndicator);
+        viewPager.setCurrentItem(0, false);
+        viewPager.setCurrentItem(viewPagerAdapter.getCount() - 1, false);
+    }
 
-
+    public void removeItemFromDrawer(WLocation wLocation){
+        drawerItems.remove(wLocation);
+        recyclerAdapter.remove(wLocation);
+        viewPagerAdapter.notifyDataSetChanged();
+        defaultIndicator.setViewPager(viewPager);
     }
 
     public void setViewPagerPosition(int viewPagerPosition) {
@@ -284,6 +327,24 @@ public class MainActivity extends AppCompatActivity {
         public void addFragment(Fragment fragment, String title) {
             mFragments.add(fragment);
             mFragmentTitles.add(title);
+            notifyDataSetChanged();
+        }
+
+        public void addFragment(Fragment fragment, String title, int position, boolean replace){
+            if(replace){
+                mFragments.set(position, fragment);
+                mFragmentTitles.set(position, title);
+            } else {
+                mFragments.add(position, fragment);
+                mFragmentTitles.add(position, title);
+            }
+            notifyDataSetChanged();
+        }
+
+        public void removeFragment(int position){
+            mFragments.remove(position);
+            mFragmentTitles.remove(position);
+            notifyDataSetChanged();
         }
 
         @Override
@@ -357,7 +418,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    public MyAdapter adapter;
+    public MyAdapter suggestionAdapter;
     private Handler guiThread;
     private ExecutorService suggestionThread;
     private Runnable updateTask;
@@ -432,12 +493,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /** Set up adapter for list view. */
+    /** Set up suggestionAdapter for list view. */
     private void setAdapters() {
         List<WLocation> items = new ArrayList<WLocation>();
-        adapter = new MyAdapter(this, items);
+        suggestionAdapter = new MyAdapter(this, items);
 
-        listView.setAdapter(adapter);
+        listView.setAdapter(suggestionAdapter);
 
     }
 
@@ -456,7 +517,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (menuItem) {
                     case R.id.action_search:
                         IsAdapterEmpty();
-                        InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, line_divider);
+                        InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, drawerItems.get(viewPager.getCurrentItem()).getName());
                         showDark();
                         break;
                     default:
@@ -480,10 +541,9 @@ public class MainActivity extends AppCompatActivity {
 
 
                     new GetLL(getBaseContext(), (WLocation) parent.getItemAtPosition(position)).execute();
-                    // new myasync().execute(name);
 
                     if (card_search.getVisibility() == View.VISIBLE) {
-                        InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, line_divider);
+                        InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, drawerItems.get(viewPager.getCurrentItem()).getName());
                         hideDark();
                     }
                     listView.setVisibility(View.GONE);
@@ -509,7 +569,7 @@ public class MainActivity extends AppCompatActivity {
                 if (edit_text_search.getText().toString().length() == 0) {
                     clearSearch.setVisibility(View.VISIBLE);
                     clearSearch.setImageResource(R.drawable.ic_microphone);
-                    adapter.clear();
+                    suggestionAdapter.clear();
                     IsAdapterEmpty();
                     listView.setVisibility(View.GONE);
                     pb.setVisibility(View.GONE);
@@ -523,7 +583,7 @@ public class MainActivity extends AppCompatActivity {
 
                     pb.setVisibility(View.VISIBLE);
                     clearSearch.setVisibility(View.GONE);
-                    adapter.clear();
+                    suggestionAdapter.clear();
                     queueUpdate(1000 /* milliseconds */);
 
                 }
@@ -543,7 +603,7 @@ public class MainActivity extends AppCompatActivity {
 //                    mAsyncTask.cancel(true);
                     edit_text_search.setText("");
                     listView.setVisibility(View.GONE);
-                    adapter.clear();
+                    suggestionAdapter.clear();
 //                    clearItems();
                     ((InputMethodManager) MainActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
                     IsAdapterEmpty();
@@ -607,17 +667,17 @@ public class MainActivity extends AppCompatActivity {
 
 //    /** Display a message */
 //    private void setText(int id) {
-//        adapter.clear();
-//        adapter.add(getResources().getString(id));
+//        suggestionAdapter.clear();
+//        suggestionAdapter.add(getResources().getString(id));
 //    }
 
     /** Display a list */
     private void setList(List<WLocation> list) {
-        adapter.clear();
+        suggestionAdapter.clear();
         listView.setVisibility(View.VISIBLE);
-        // adapter.addAll(list); // Could use if API >= 11
+        // suggestionAdapter.addAll(list); // Could use if API >= 11
         for (WLocation item : list) {
-            adapter.add(item);
+            suggestionAdapter.add(item);
         }
     }
 
@@ -651,7 +711,7 @@ public class MainActivity extends AppCompatActivity {
         image_search_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, line_divider);
+                InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, drawerItems.get(viewPager.getCurrentItem()).getName());
                 hideDark();
                 edit_text_search.setText("");
                 listView.setVisibility(View.GONE);
@@ -660,7 +720,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void IsAdapterEmpty() {
-        if (adapter.getCount() == 0) {
+        if (suggestionAdapter.getCount() == 0) {
             line_divider.setVisibility(View.GONE);
         } else {
             line_divider.setVisibility(View.VISIBLE);
@@ -672,7 +732,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (card_search.getVisibility() == View.VISIBLE) {
-            InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, line_divider);
+            InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, drawerItems.get(viewPager.getCurrentItem()).getName());
             hideDark();
         } else
             super.onBackPressed();
@@ -711,13 +771,10 @@ public class MainActivity extends AppCompatActivity {
                     location.setTimezone(gl.getTimezone(location.getLatitude(), location.getLongitude())
                             .getDisplayName());
                 } catch (ClientProtocolException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 } catch (JSONException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -730,7 +787,22 @@ public class MainActivity extends AppCompatActivity {
 
             ad.dismiss();
 
-            Toast.makeText(MainActivity.this, location.getName() + (location.checkAndSave() ? " added" : " already exists."), Toast.LENGTH_LONG).show();
+            long id = location.checkAndSave();
+
+            if(id != -1) {
+                Toast.makeText(MainActivity.this, location.getName() + " added", Toast.LENGTH_LONG).show();
+                location.setId(id);
+                addItemToDrawer(location, location.isMyLocation());
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        setToolBarTitle(location.getName());
+                    }
+                }, 200);
+
+            } else {
+                Toast.makeText(MainActivity.this, location.getName() + " already exists.", Toast.LENGTH_LONG).show();
+            }
 
             super.onPostExecute(result);
         }

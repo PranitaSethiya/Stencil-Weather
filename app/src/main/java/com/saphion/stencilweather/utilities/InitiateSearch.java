@@ -24,7 +24,7 @@ import com.saphion.stencilweather.R;
 
 public class InitiateSearch {
 
-    public static void handleToolBar(final Context context, final CardView search, final Toolbar toolbarMain, /*final View view,*/ final ListView listView, final EditText editText, final View line_divider) {
+    public static void handleToolBar(final Context context, final CardView search, final Toolbar toolbarMain, /*final View view,*/ final ListView listView, final EditText editText, final String title) {
         final Animation fade_in = AnimationUtils.loadAnimation(context.getApplicationContext(), android.R.anim.fade_in);
 //        final Animation fade_out = AnimationUtils.loadAnimation(context.getApplicationContext(), android.R.anim.fade_out);
         if (search.getVisibility() == View.VISIBLE) {
@@ -48,7 +48,7 @@ public class InitiateSearch {
                         ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search.getWindowToken(), 0);
                         listView.setVisibility(View.GONE);
                         toolbarMain.setNavigationIcon(R.drawable.ic_menu);
-                        toolbarMain.setTitle("Dehradun"); // TODO change this
+                        toolbarMain.setTitle(title);
                         toolbarMain.getMenu().clear();
                         toolbarMain.inflateMenu(R.menu.menu_add);
                     }
@@ -82,7 +82,7 @@ public class InitiateSearch {
                         search.setVisibility(View.GONE);
                         editText.setText("");
                         toolbarMain.setNavigationIcon(R.drawable.ic_menu);
-                        toolbarMain.setTitle("Dehradun"); // TODO change this
+                        toolbarMain.setTitle(title);
                         toolbarMain.getMenu().clear();
                         toolbarMain.inflateMenu(R.menu.menu_add);
                         search.setEnabled(false);

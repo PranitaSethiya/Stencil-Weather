@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_search"
+    android:layout_width="130dp"
+    android:layout_height="150dp"
+    android:layout_margin="4dp"
+    card_view:cardBackgroundColor="@color/white"
+    card_view:cardCornerRadius="2dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/cardDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="MONDAY"
+            android:textColor="#c8000000"
+            android:textSize="13.5sp"
+            app:fontFamily="roboto_condensed"
+            app:textWeight="medium" />
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/cardDay"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:text="JULY 10"
+            android:id="@+id/cardDate"
+            android:textColor="#c8000000"
+            android:textSize="11sp"
+            app:fontFamily="roboto_condensed"
+            app:textWeight="bold" />
+
+
+        <ImageView
+            android:id="@+id/cardIcon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/cardDay"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/cofrain_light_d"
+            android:tint="@color/colorTernaryText" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/cardIcon"
+            android:gravity="bottom"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:orientation="horizontal">
+
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="15º"
+                android:id="@+id/cardHigh"
+                android:textColor="#c8000000"
+                android:textSize="15sp"
+                app:fontFamily="roboto_condensed"
+                app:textWeight="medium" />
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="/"
+                android:id="@+id/cardSlash"
+                android:textColor="#c8000000"
+                android:textSize="12sp"
+                app:fontFamily="roboto_condensed"
+                app:textWeight="medium" />
+
+
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="9º"
+                android:id="@+id/cardLow"
+                android:textColor="#c8000000"
+                android:textSize="12sp"
+                app:fontFamily="roboto_condensed"
+                app:textWeight="medium" />
+
+        </LinearLayout>
+
+        <me.grantland.widget.AutofitLayout
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/cardIcon"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content"
+            >
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:id="@+id/cardCondition"
+                android:text="Chances of thunderstorm"
+                android:textColor="#c8000000"
+                android:textSize="12sp"
+                app:fontFamily="roboto_condensed"
+                app:textWeight="medium" />
+
+        </me.grantland.widget.AutofitLayout>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

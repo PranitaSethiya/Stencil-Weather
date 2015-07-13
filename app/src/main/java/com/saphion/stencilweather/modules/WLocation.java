@@ -82,7 +82,7 @@ public class WLocation extends SugarRecord<WLocation> {
     }
 
 
-    public boolean checkAndSave() {
+    public long checkAndSave() {
         List<WLocation> duplicates = Select.from(WLocation.class)
                 .where(Condition.prop("NAME").eq(this.name),
                         Condition.prop("LATITUDE").eq(this.latitude),
@@ -90,8 +90,20 @@ public class WLocation extends SugarRecord<WLocation> {
         Log.d("Stencil", "duplicates: " + duplicates.size() + "");
         if(duplicates.size() == 0) {
             this.save();
-            return true;
+            List<WLocation> duplicates2 = Select.from(WLocation.class)
+                    .where(Condition.prop("NAME").eq(this.name),
+                            Condition.prop("LATITUDE").eq(this.latitude),
+                            Condition.prop("LONGITUDE").eq(this.longitude)).list();
+            Log.d("Stencil", "duplicates: " + duplicates.size() + "");
+            if(duplicates2.size() > 0)  return duplicates2.get(0).getId();
+            return -1;
         }
-        return false;
+        WLocation duplicate = duplicates.get(0);
+        if(!duplicate.isMyLocation() && this.isMyLocation()){
+            duplicate.setIsMyLocation(true);
+            duplicate.save();
+            return duplicate.getId();
+        }
+        return -1;
     }
 }

@@ -60,11 +60,16 @@
                 android:layout_marginRight="5dp"
                 android:layout_alignParentTop="true"/>
 
-
-
         </RelativeLayout>
 
     </android.support.design.widget.AppBarLayout>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvWeatherCards"
+        android:layout_marginTop="420dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 
     <!--<android.support.design.widget.FloatingActionButton-->

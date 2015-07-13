@@ -86,4 +86,20 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return mDataset.size();
     }
 
+    public void add(WLocation location) {
+        mDataset.add(location);
+        notifyDataSetChanged();
+    }
+
+    public void add(int index, WLocation wLocation){
+        mDataset.add(index, wLocation);
+        notifyItemInserted(index);
+    }
+
+    public void remove(WLocation wLocation) {
+        int index = mDataset.indexOf(wLocation);
+        mDataset.remove(index);
+        notifyItemRemoved(index);
+    }
+
 }
