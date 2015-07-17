@@ -9,7 +9,7 @@
     <FrameLayout
         android:id="@+id/flConditionIcon"
         android:layout_width="200dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:layout_height="200dp" />
@@ -17,9 +17,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/timeView"
         android:gravity="center"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="-5dp"
         android:orientation="horizontal">
 
         <com.devspark.robototextview.widget.RobotoTextView
@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="15dp"
+            android:layout_margin="5dp"
             android:orientation="vertical">
 
 
@@ -175,6 +175,13 @@
 
         </LinearLayout>
     </LinearLayout>
+
+    <include layout="@layout/time_seek"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/timeView"
+        android:layout_marginBottom="30dp"
+        android:layout_alignParentBottom="true"/>
 
 
 </RelativeLayout>

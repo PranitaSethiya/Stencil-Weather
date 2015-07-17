@@ -30,12 +30,12 @@ public class WeatherCardAdapter extends RecyclerView.Adapter<WeatherCardAdapter.
 
         public SimpleViewHolder(View itemView) {
             super(itemView);
-            day = (TextView) itemView.findViewById(R.id.cardDay);
-            date = (TextView) itemView.findViewById(R.id.cardDate);
-            condition = (TextView) itemView.findViewById(R.id.cardCondition);
-            high = (TextView) itemView.findViewById(R.id.cardHigh);
-            low = (TextView) itemView.findViewById(R.id.cardLow);
-            icon = (ImageView)itemView.findViewById(R.id.cardIcon);
+//            day = (TextView) itemView.findViewById(R.id.cardDay);
+//            date = (TextView) itemView.findViewById(R.id.cardDate);
+//            condition = (TextView) itemView.findViewById(R.id.cardCondition);
+//            high = (TextView) itemView.findViewById(R.id.cardHigh);
+//            low = (TextView) itemView.findViewById(R.id.cardLow);
+//            icon = (ImageView)itemView.findViewById(R.id.cardIcon);
         }
 
     }

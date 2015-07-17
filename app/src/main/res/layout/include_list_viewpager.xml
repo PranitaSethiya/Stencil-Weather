@@ -9,7 +9,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="420dp"
+        android:layout_height="435dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.v7.widget.Toolbar
@@ -20,45 +20,56 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
 
-
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_marginTop="-60dp"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="-60dp">
 
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewpager"
-                android:layout_marginTop="60dp"
+            <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/swipeRefresh_common"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-            <me.relex.circleindicator.CircleIndicator
-                android:id="@+id/indicator_default"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
                 android:layout_marginTop="60dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp" />
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/viewpager"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+                    <me.relex.circleindicator.CircleIndicator
+                        android:id="@+id/indicator_default"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="-10dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"/>
+                </RelativeLayout>
+            </android.support.v4.widget.SwipeRefreshLayout>
 
             <FrameLayout
+                android:id="@+id/flDarkenBackground"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
-                android:id="@+id/flDarkenBackground"
-                android:background="#50000000"/>
+                android:background="#50000000"
+                android:visibility="gone" />
 
-            <include layout="@layout/search_view"
+            <include
+                layout="@layout/search_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_alignParentTop="true"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_alignParentTop="true"/>
+                android:layout_marginTop="10dp" />
 
         </RelativeLayout>
 
@@ -67,9 +78,10 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvWeatherCards"
-        android:layout_marginTop="420dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="435dp"
+        android:background="@color/colorSecondaryText" />
 
 
     <!--<android.support.design.widget.FloatingActionButton-->

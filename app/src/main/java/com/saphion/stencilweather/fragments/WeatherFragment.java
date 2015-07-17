@@ -7,11 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.saphion.stencilweather.R;
-import com.saphion.stencilweather.activities.MainActivity;
 import com.saphion.stencilweather.climacons.RainSunIV;
-import com.saphion.stencilweather.modules.WLocation;
 import com.saphion.stencilweather.utilities.Utils;
 
 import java.util.Random;
@@ -36,7 +35,7 @@ public class WeatherFragment extends Fragment {
 
     }
 
-    public WeatherFragment setContext(Context mContext){
+    public WeatherFragment setContext(Context mContext) {
         this.mContext = mContext;
         return this;
     }
@@ -51,17 +50,18 @@ public class WeatherFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
 
         loadData();
 
         View v = inflater.inflate(R.layout.fragment_layout, null);
 
         FrameLayout flContainer = (FrameLayout) v.findViewById(R.id.flConditionIcon);
-
-        RainSunIV iv = new RainSunIV(mContext, Utils.dpToPx(180, mContext), Utils.dpToPx(180, mContext), mColor);
-
-        flContainer.addView(iv);
+        try {
+            ImageView iv = new RainSunIV(mContext, Utils.dpToPx(180, mContext), Utils.dpToPx(180, mContext), mColor);
+            flContainer.addView(iv);
+        } catch (Exception ignored) {
+        }
 
 //        WLocation wLocation = WLocation.findById(WLocation.class, locationID);
 
@@ -73,7 +73,7 @@ public class WeatherFragment extends Fragment {
         mColor = (0xff000000 | random.nextInt(0x00ffffff));
     }
 
-    public int getColor(){
+    public int getColor() {
         return this.mColor;
     }
 }

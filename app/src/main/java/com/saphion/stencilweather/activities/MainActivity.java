@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -46,6 +47,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -81,9 +84,6 @@ import java.util.concurrent.RejectedExecutionException;
 
 import me.relex.circleindicator.CircleIndicator;
 
-/**
- * TODO
- */
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
@@ -161,14 +161,24 @@ public class MainActivity extends AppCompatActivity {
         try {
             findViewById(R.id.appbar).setBackgroundColor(color);
             toolbar.setBackgroundColor(color);
-        } catch (Exception ex) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Window window = getWindow();
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+                color = (color & 0xfefefefe) >> 1;
+
+                window.setStatusBarColor(color);
+            }
+
+        } catch (Exception ignored) {
         }
     }
 
     public void setToolBarTitle(String title) {
         try {
             toolbar.setTitle(title);
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -183,10 +193,7 @@ public class MainActivity extends AppCompatActivity {
             viewPagerAdapter.addFragment(WeatherFragment.newInstance(drawerItems.get(i).getId()).setContext(MainActivity.this), "" + i);
 
         viewPager.setAdapter(viewPagerAdapter);
-        if(viewPagerAdapter.getCount() > 0) {
-            setToolBarColor(((WeatherFragment) viewPagerAdapter.getItem(0)).getColor());
-            setToolBarTitle(drawerItems.get(0).getName());
-        }
+
 
 
         defaultIndicator = (CircleIndicator) findViewById(R.id.indicator_default);
@@ -203,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 setToolBarColor(((WeatherFragment) viewPagerAdapter.getItem(position)).getColor());
                 setToolBarTitle(drawerItems.get(position).getName());
+
             }
 
             @Override
@@ -222,6 +230,18 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+
+        if(viewPagerAdapter.getCount() > 0) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setToolBarColor(((WeatherFragment) viewPagerAdapter.getItem(0)).getColor());
+                    setToolBarTitle(drawerItems.get(0).getName());
+                }
+            }, 200);
+
+        }
 
         initialiseWeatherCards();
     }

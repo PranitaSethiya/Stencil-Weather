@@ -165,6 +165,8 @@ public class InitiateSearch {
                 listView.setVisibility(View.VISIBLE);
                 ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
             }
+
+            editText.requestFocus();
         }
     }
 

@@ -3,9 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_search"
-    android:layout_width="130dp"
-    android:layout_height="150dp"
-    android:layout_margin="4dp"
+    android:layout_width="100dp"
+    xmlns:autofit="http://schemas.android.com/apk/res-auto"
+    android:layout_height="130dp"
+    android:layout_margin="2dp"
     card_view:cardBackgroundColor="@color/white"
     card_view:cardCornerRadius="2dp">
 
@@ -21,10 +22,12 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:text="MONDAY"
+            android:text="WED"
+            android:gravity="top|start"
+            android:layout_gravity="top|start"
             android:textColor="#c8000000"
-            android:textSize="13.5sp"
-            app:fontFamily="roboto_condensed"
+            android:textSize="11.5sp"
+            app:fontFamily="roboto"
             app:textWeight="medium" />
 
         <com.devspark.robototextview.widget.RobotoTextView
@@ -34,22 +37,21 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
+            android:gravity="bottom|end"
+            android:layout_gravity="bottom|end"
             android:text="JULY 10"
             android:id="@+id/cardDate"
             android:textColor="#c8000000"
-            android:textSize="11sp"
-            app:fontFamily="roboto_condensed"
+            android:textSize="9sp"
+            app:fontFamily="roboto"
             app:textWeight="bold" />
 
 
         <ImageView
             android:id="@+id/cardIcon"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_below="@+id/cardDay"
-            android:layout_centerHorizontal="true"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerInParent="true"
             android:src="@drawable/cofrain_light_d"
             android:tint="@color/colorTernaryText" />
 
@@ -57,7 +59,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_below="@+id/cardIcon"
             android:gravity="bottom"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
@@ -71,7 +72,7 @@
                 android:id="@+id/cardHigh"
                 android:textColor="#c8000000"
                 android:textSize="15sp"
-                app:fontFamily="roboto_condensed"
+                app:fontFamily="roboto"
                 app:textWeight="medium" />
 
             <com.devspark.robototextview.widget.RobotoTextView
@@ -81,7 +82,7 @@
                 android:id="@+id/cardSlash"
                 android:textColor="#c8000000"
                 android:textSize="12sp"
-                app:fontFamily="roboto_condensed"
+                app:fontFamily="roboto"
                 app:textWeight="medium" />
 
 
@@ -93,32 +94,52 @@
                 android:id="@+id/cardLow"
                 android:textColor="#c8000000"
                 android:textSize="12sp"
-                app:fontFamily="roboto_condensed"
+                app:fontFamily="roboto"
                 app:textWeight="medium" />
 
         </LinearLayout>
 
-        <me.grantland.widget.AutofitLayout
-            android:layout_width="wrap_content"
-            android:layout_below="@+id/cardIcon"
+        <!--<me.grantland.widget.AutofitLayout-->
+            <!--android:layout_width="80dp"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_alignParentEnd="true"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--autofit:minTextSize="8sp"-->
+            <!--android:layout_height="30dp"-->
+            <!-->-->
+
+            <!--<com.devspark.robototextview.widget.RobotoTextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:gravity="end|bottom"-->
+                <!--android:layout_gravity="end|bottom"-->
+                <!--android:id="@+id/cardCondition"-->
+                <!--android:textSize="18sp"-->
+                <!--autofit:minTextSize="8sp"-->
+                <!--android:text="Chances of thunderstorm"-->
+                <!--android:textColor="#c8000000"-->
+                <!--app:fontFamily="roboto"-->
+                <!--app:textWeight="medium" />-->
+
+        <!--</me.grantland.widget.AutofitLayout>-->
+
+
+
+        <me.grantland.widget.AutofitTextView
+            android:id="@+id/cardCondition"
+            android:layout_height="45dp"
+            android:gravity="end|bottom"
+            android:layout_gravity="end|bottom"
+            android:layout_width="48dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_height="wrap_content"
-            >
-
-            <com.devspark.robototextview.widget.RobotoTextView
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:id="@+id/cardCondition"
-                android:text="Chances of thunderstorm"
-                android:textColor="#c8000000"
-                android:textSize="12sp"
-                app:fontFamily="roboto_condensed"
-                app:textWeight="medium" />
-
-        </me.grantland.widget.AutofitLayout>
+            android:text="Partly Cloudy"
+            android:textSize="12sp"
+            android:textColor="#c8000000"
+            android:maxLines="2"
+            autofit:minTextSize="6.8sp"
+            />
 
     </RelativeLayout>
 
