@@ -47,6 +47,8 @@
 
             <RelativeLayout
                 android:layout_width="60dp"
+                android:layout_gravity="end"
+                android:gravity="end"
                 android:layout_height="60dp">
 
                 <ImageView
@@ -56,7 +58,7 @@
                     android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:padding="12dp"
-                    android:src="@drawable/ic_microphone"
+                    android:src="@drawable/goto_icon"
                     android:tint="@color/colorTernaryText" />
 
                 <ProgressBar

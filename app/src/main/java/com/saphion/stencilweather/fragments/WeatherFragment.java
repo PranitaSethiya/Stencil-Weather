@@ -1,18 +1,23 @@
 package com.saphion.stencilweather.fragments;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 
 import com.saphion.stencilweather.R;
+import com.saphion.stencilweather.activities.MainActivity;
 import com.saphion.stencilweather.climacons.RainSunIV;
 import com.saphion.stencilweather.utilities.Utils;
 
+import java.util.Calendar;
 import java.util.Random;
 
 public class WeatherFragment extends Fragment {
@@ -60,10 +65,34 @@ public class WeatherFragment extends Fragment {
         try {
             ImageView iv = new RainSunIV(mContext, Utils.dpToPx(180, mContext), Utils.dpToPx(180, mContext), mColor);
             flContainer.addView(iv);
+
+            SeekBar sb = (SeekBar) v.findViewById(R.id.sbTimeSeek);
+            sb.setThumb(new BitmapDrawable(mContext.getResources(), Utils.getTimeThumb(mContext, Calendar.getInstance().get(Calendar.HOUR), 0)));
+            sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+                    seekBar.setThumb(new BitmapDrawable(mContext.getResources(), Utils.getTimeThumb(mContext, Calendar.getInstance().get(Calendar.HOUR) + (progress * 3), 0)));
+                    ((MainActivity)getActivity()).setToolBarSubTitle(null);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+
         } catch (Exception ignored) {
         }
 
 //        WLocation wLocation = WLocation.findById(WLocation.class, locationID);
+
+
+
 
         return v;
     }

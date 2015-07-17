@@ -19,7 +19,6 @@ package com.saphion.stencilweather.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -69,6 +68,7 @@ import com.saphion.stencilweather.modules.WLocation;
 import com.saphion.stencilweather.tasks.GetLocationInfo;
 import com.saphion.stencilweather.tasks.SuggestTask;
 import com.saphion.stencilweather.utilities.InitiateSearch;
+import com.saphion.stencilweather.utilities.TimeHelpers;
 import com.saphion.stencilweather.utilities.Utils;
 
 import org.apache.http.client.ClientProtocolException;
@@ -76,7 +76,9 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -111,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         setupDrawerContent();
-
 
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -155,6 +156,8 @@ public class MainActivity extends AppCompatActivity {
         InitiateSearch();
         HandleSearch();
         IsAdapterEmpty();
+        setToolBarSubTitle(null);
+        callHandler();
     }
 
     public void setToolBarColor(int color) {
@@ -182,6 +185,62 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    public void setToolBarSubTitle(String subTitle) {
+        try {
+            if (subTitle == null) {
+                int position = 0;
+                if(viewPager != null)
+                    position = viewPager.getCurrentItem();
+                Calendar c = Calendar
+                            .getInstance(drawerItems.size() > 0 ? TimeZone.getTimeZone(drawerItems.get(position).getTimezone()) : TimeZone.getDefault());
+
+
+                toolbar.setSubtitle(TimeHelpers.getWeek(c.get(Calendar.DAY_OF_WEEK))
+                        + ", "
+                        + TimeHelpers.getMonth(c
+                        .get(Calendar.MONTH))
+                        + " "
+                        + c.get(Calendar.DAY_OF_MONTH)
+                        + " | "
+                        + (c.get(Calendar.HOUR) == 0 ? "12" : c
+                        .get(Calendar.HOUR))
+                        + ":"
+                        + ((c.get(Calendar.MINUTE) + "").length() == 1 ? "0"
+                        + c.get(Calendar.MINUTE)
+                        : c.get(Calendar.MINUTE))
+                        + (c.get(Calendar.AM_PM) == Calendar.AM ? " AM"
+                        : " PM"));
+            } else {
+                toolbar.setSubtitle(subTitle);
+            }
+
+
+        } catch (Exception ignored) {
+        }
+
+    }
+
+    private void callHandler() {
+        long callback = (60 - Calendar.getInstance().get(Calendar.SECOND)) * 1000;
+        handler.removeCallbacks(drawRunner);
+        if (callback == 0)
+            handler.postDelayed(drawRunner, 60000);
+        else
+            handler.postDelayed(drawRunner, callback);
+
+    }
+
+    private final Handler handler = new Handler();
+    private final Runnable drawRunner = new Runnable() {
+        public void run() {
+            setToolBarSubTitle(null);
+            callHandler();
+
+        }
+
+    };
+
     Adapter viewPagerAdapter;
     CircleIndicator defaultIndicator;
 
@@ -193,7 +252,6 @@ public class MainActivity extends AppCompatActivity {
             viewPagerAdapter.addFragment(WeatherFragment.newInstance(drawerItems.get(i).getId()).setContext(MainActivity.this), "" + i);
 
         viewPager.setAdapter(viewPagerAdapter);
-
 
 
         defaultIndicator = (CircleIndicator) findViewById(R.id.indicator_default);
@@ -210,6 +268,7 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 setToolBarColor(((WeatherFragment) viewPagerAdapter.getItem(position)).getColor());
                 setToolBarTitle(drawerItems.get(position).getName());
+                setToolBarSubTitle(null);
 
             }
 
@@ -223,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (card_search.getVisibility() == View.VISIBLE) {
-                    InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, drawerItems.get(viewPager.getCurrentItem()).getName());
+                    InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, drawerItems.size() > 0 ? drawerItems.get(viewPager.getCurrentItem()).getName() : "");
                     hideDark();
 
                 }
@@ -232,12 +291,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        if(viewPagerAdapter.getCount() > 0) {
+        if (viewPagerAdapter.getCount() > 0) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     setToolBarColor(((WeatherFragment) viewPagerAdapter.getItem(0)).getColor());
                     setToolBarTitle(drawerItems.get(0).getName());
+                    setToolBarSubTitle(null);
                 }
             }, 200);
 
@@ -247,6 +307,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     RecyclerView weatherCardList;
+
     private void initialiseWeatherCards() {
         weatherCardList = (RecyclerView) findViewById(R.id.rvWeatherCards);
         ArrayList<String> weatherCards = new ArrayList<>();
@@ -263,7 +324,7 @@ public class MainActivity extends AppCompatActivity {
         weatherCardList.setAdapter(cardAdapter);
     }
 
-    public void hideDark(){
+    public void hideDark() {
 
         YoYo.with(Techniques.FadeOut)
                 .duration(500).withListener(new Animator.AnimatorListener() {
@@ -290,7 +351,7 @@ public class MainActivity extends AppCompatActivity {
                 .playOn(findViewById(R.id.flDarkenBackground));
     }
 
-    public void showDark(){
+    public void showDark() {
         findViewById(R.id.flDarkenBackground).setVisibility(View.VISIBLE);
         YoYo.with(Techniques.FadeIn)
                 .duration(500)
@@ -308,8 +369,8 @@ public class MainActivity extends AppCompatActivity {
         rv.setAdapter(recyclerAdapter);
     }
 
-    public void addItemToDrawer(WLocation wLocation, boolean isMyLocation){
-        if(isMyLocation){
+    public void addItemToDrawer(WLocation wLocation, boolean isMyLocation) {
+        if (isMyLocation) {
             drawerItems.add(0, wLocation);
             recyclerAdapter.notifyDataSetChanged();
             viewPagerAdapter.addFragment(WeatherFragment.newInstance(wLocation.getId()).setContext(getBaseContext()), "", 0, true);
@@ -324,7 +385,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setCurrentItem(viewPagerAdapter.getCount() - 1, false);
     }
 
-    public void removeItemFromDrawer(WLocation wLocation){
+    public void removeItemFromDrawer(WLocation wLocation) {
         drawerItems.remove(wLocation);
         recyclerAdapter.remove(wLocation);
         viewPagerAdapter.notifyDataSetChanged();
@@ -350,8 +411,8 @@ public class MainActivity extends AppCompatActivity {
             notifyDataSetChanged();
         }
 
-        public void addFragment(Fragment fragment, String title, int position, boolean replace){
-            if(replace){
+        public void addFragment(Fragment fragment, String title, int position, boolean replace) {
+            if (replace) {
                 mFragments.set(position, fragment);
                 mFragmentTitles.set(position, title);
             } else {
@@ -361,7 +422,7 @@ public class MainActivity extends AppCompatActivity {
             notifyDataSetChanged();
         }
 
-        public void removeFragment(int position){
+        public void removeFragment(int position) {
             mFragments.remove(position);
             mFragmentTitles.remove(position);
             notifyDataSetChanged();
@@ -469,12 +530,12 @@ public class MainActivity extends AppCompatActivity {
             return i;
         }
 
-        public void add(WLocation item){
+        public void add(WLocation item) {
             objects.add(item);
             notifyDataSetChanged();
         }
 
-        public void clear(){
+        public void clear() {
             objects.clear();
             notifyDataSetChanged();
         }
@@ -484,7 +545,7 @@ public class MainActivity extends AppCompatActivity {
 
             ViewHolder viewHolder;
 
-            if(convertView==null){
+            if (convertView == null) {
 
                 // inflate the layout
                 LayoutInflater inflater = ((Activity) context).getLayoutInflater();
@@ -497,7 +558,7 @@ public class MainActivity extends AppCompatActivity {
                 // store the holder with the view.
                 convertView.setTag(viewHolder);
 
-            }else{
+            } else {
                 // we've just avoided calling findViewById() on resource everytime
                 // just use the viewHolder
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -513,7 +574,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /** Set up suggestionAdapter for list view. */
+    /**
+     * Set up suggestionAdapter for list view.
+     */
     private void setAdapters() {
         List<WLocation> items = new ArrayList<WLocation>();
         suggestionAdapter = new MyAdapter(this, items);
@@ -537,7 +600,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (menuItem) {
                     case R.id.action_search:
                         IsAdapterEmpty();
-                        InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, drawerItems.get(viewPager.getCurrentItem()).getName());
+                        InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, drawerItems.size() > 0 ? drawerItems.get(viewPager.getCurrentItem()).getName() : "");
                         showDark();
                         break;
                     default:
@@ -563,7 +626,7 @@ public class MainActivity extends AppCompatActivity {
                     new GetLL(getBaseContext(), (WLocation) parent.getItemAtPosition(position)).execute();
 
                     if (card_search.getVisibility() == View.VISIBLE) {
-                        InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, drawerItems.get(viewPager.getCurrentItem()).getName());
+                        InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, drawerItems.size() > 0 ? drawerItems.get(viewPager.getCurrentItem()).getName() : "");
                         hideDark();
                     }
                     listView.setVisibility(View.GONE);
@@ -573,9 +636,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-
-
 
 
         edit_text_search.addTextChangedListener(new TextWatcher() {
@@ -588,7 +648,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (edit_text_search.getText().toString().length() == 0) {
                     clearSearch.setVisibility(View.VISIBLE);
-                    clearSearch.setImageResource(R.drawable.ic_microphone);
+                    clearSearch.setImageResource(R.drawable.goto_icon);
                     suggestionAdapter.clear();
                     IsAdapterEmpty();
                     listView.setVisibility(View.GONE);
@@ -676,7 +736,9 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
-    /** Request an update to start after a short delay */
+    /**
+     * Request an update to start after a short delay
+     */
     private void queueUpdate(long delayMillis) {
         Log.d("Stencil", "inside queue");
         // Cancel previous update if it hasn't started yet
@@ -691,7 +753,9 @@ public class MainActivity extends AppCompatActivity {
 //        suggestionAdapter.add(getResources().getString(id));
 //    }
 
-    /** Display a list */
+    /**
+     * Display a list
+     */
     private void setList(List<WLocation> list) {
         suggestionAdapter.clear();
         listView.setVisibility(View.VISIBLE);
@@ -710,7 +774,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /** All changes to the GUI must be done in the GUI thread */
+    /**
+     * All changes to the GUI must be done in the GUI thread
+     */
     private void guiSetList(final ListView view, final List<WLocation> list) {
 
         guiThread.post(new Runnable() {
@@ -731,7 +797,7 @@ public class MainActivity extends AppCompatActivity {
         image_search_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, drawerItems.get(viewPager.getCurrentItem()).getName());
+                InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, drawerItems.size() > 0 ? drawerItems.get(viewPager.getCurrentItem()).getName() : "");
                 hideDark();
                 edit_text_search.setText("");
                 listView.setVisibility(View.GONE);
@@ -752,7 +818,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (card_search.getVisibility() == View.VISIBLE) {
-            InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, drawerItems.get(viewPager.getCurrentItem()).getName());
+            InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, drawerItems.size() > 0 ? drawerItems.get(viewPager.getCurrentItem()).getName() : "");
             hideDark();
         } else
             super.onBackPressed();
@@ -809,7 +875,7 @@ public class MainActivity extends AppCompatActivity {
 
             long id = location.checkAndSave();
 
-            if(id != -1) {
+            if (id != -1) {
                 Toast.makeText(MainActivity.this, location.getName() + " added", Toast.LENGTH_LONG).show();
                 location.setId(id);
                 addItemToDrawer(location, location.isMyLocation());

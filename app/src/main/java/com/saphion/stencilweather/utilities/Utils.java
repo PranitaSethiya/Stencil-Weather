@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.net.Uri;
@@ -60,6 +61,7 @@ public class Utils {
     public static final String INTENT_DELETE_WORD = "action.wordlearner.DELETEWORD";
     public static final String INTENT_REFRESH = "action.wordlearner.REFRESHWORD";
     public static final String WORDS_PATH = Environment.getExternalStorageDirectory().getPath() + File.separator + "WordLearner";
+    public static String[] romans = {"i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x"};
 
     public static void writeListToFile(ArrayList<String> list, String FileName) {
 
@@ -121,6 +123,9 @@ public class Utils {
         return list;
     }
 
+//    public static final String URL1 = "http://api.wordnik.com/v4/word.json/";
+//    public static final String URL2 = "/definitions?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key="+Constants.API_KEY;
+
     public static String jsonToWordNikString(String jsonString) {
         String string = "";
         try {
@@ -134,9 +139,6 @@ public class Utils {
         Log.d("WordLearner", string);
         return string;
     }
-
-//    public static final String URL1 = "http://api.wordnik.com/v4/word.json/";
-//    public static final String URL2 = "/definitions?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key="+Constants.API_KEY;
 
     public static boolean hasWord(String word) {
         word = word.trim().toLowerCase(Locale.getDefault());
@@ -239,19 +241,15 @@ public class Utils {
         return definition;
     }
 
-
-    public static String[] romans= {"i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x"};
-
     private static String convertListToString(ArrayList<String> examples, String separator, boolean index) {
 
         String result = "";
-        for(int i = 0 ; i < examples.size() ; i++){
-            result = result + (index?("<b>" + romans[i] + ".</b> "):"") + examples.get(i).toUpperCase(Locale.US).charAt(0) + examples.get(i).substring(1) + separator;
+        for (int i = 0; i < examples.size(); i++) {
+            result = result + (index ? ("<b>" + romans[i] + ".</b> ") : "") + examples.get(i).toUpperCase(Locale.US).charAt(0) + examples.get(i).substring(1) + separator;
         }
         return result;
 
     }
-
 
 
     public static View getProgressView(Activity activity, String msg) {
@@ -272,7 +270,7 @@ public class Utils {
         return view;
     }
 
-    public static int dpToPx(int i, Context mContext) {
+    public static int dpToPx(float i, Context mContext) {
 
         DisplayMetrics displayMetrics = mContext.getResources()
                 .getDisplayMetrics();
@@ -370,8 +368,6 @@ public class Utils {
     }
 
 
-
-
     public static Bitmap loader(Context mContext) {
 
         int mLevel = 5;
@@ -460,7 +456,7 @@ public class Utils {
     }
 
 
-    public static void incAppCount(Context mContext){
+    public static void incAppCount(Context mContext) {
         PreferenceManager.getDefaultSharedPreferences(mContext).edit().putInt("AppCount", getAppCount(mContext) + 1).commit();
     }
 
@@ -520,4 +516,29 @@ public class Utils {
     }
 
 
+    public static Bitmap getTimeThumb(Context mContext, float hour, float minutes) {
+        int px = dpToPx(30, mContext);
+
+        Bitmap mBitmap = Bitmap.createBitmap(px, px, Bitmap.Config.ARGB_8888);
+
+        float x = mBitmap.getWidth() / 2;
+        float r = x - dpToPx(2.5f, mContext);
+        Canvas canvas = new Canvas(mBitmap);
+        Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaint.setAntiAlias(true);
+        mPaint.setColor(Color.WHITE);
+        mPaint.setStrokeWidth(px / 12.5f);
+        mPaint.setStyle(Paint.Style.STROKE);
+        canvas.drawCircle(mBitmap.getWidth() / 2, mBitmap.getWidth() / 2, r, mPaint);
+        canvas.drawCircle(mBitmap.getWidth() / 2, mBitmap.getWidth() / 2, dpToPx(0.5f, mContext), mPaint);
+
+        mPaint.setStrokeWidth(px / 15f);
+        hour = hour + minutes / 60.0f;
+//        mPaint.setColor(0xFFFF0000);
+        canvas.drawLine(x, x, (float) (x + (r - 15) * Math.cos(Math.toRadians((hour / 12.0f * 360.0f) - 90f))), (float) (x + (r - 10) * Math.sin(Math.toRadians((hour / 12.0f * 360.0f) - 90f))), mPaint);
+//        mPaint.setColor(0xFF0000FF);
+        canvas.drawLine(x, x, (float) (x + r * Math.cos(Math.toRadians((minutes / 60.0f * 360.0f) - 90f))), (float) (x + r * Math.sin(Math.toRadians((minutes / 60.0f * 360.0f) - 90f))), mPaint);
+
+        return mBitmap;
+    }
 }

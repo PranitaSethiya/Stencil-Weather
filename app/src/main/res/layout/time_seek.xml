@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:max="10"
+        android:id="@+id/sbTimeSeek"
         android:progressDrawable="@drawable/apptheme_scrubber_secondary_holo"
         android:indeterminateDrawable="@drawable/apptheme_scrubber_secondary_holo"
         android:progress="0" />

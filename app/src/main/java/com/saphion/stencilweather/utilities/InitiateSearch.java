@@ -1,6 +1,7 @@
 package com.saphion.stencilweather.utilities;
 
 import android.animation.Animator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
@@ -20,18 +21,19 @@ import android.widget.ListView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.saphion.stencilweather.R;
+import com.saphion.stencilweather.activities.MainActivity;
 
 
 public class InitiateSearch {
 
-    public static void handleToolBar(final Context context, final CardView search, final Toolbar toolbarMain, /*final View view,*/ final ListView listView, final EditText editText, final String title) {
-        final Animation fade_in = AnimationUtils.loadAnimation(context.getApplicationContext(), android.R.anim.fade_in);
+    public static void handleToolBar(final Activity activity, final CardView search, final Toolbar toolbarMain, /*final View view,*/ final ListView listView, final EditText editText, final String title) {
+        final Animation fade_in = AnimationUtils.loadAnimation(activity.getApplicationContext(), android.R.anim.fade_in);
 //        final Animation fade_out = AnimationUtils.loadAnimation(context.getApplicationContext(), android.R.anim.fade_out);
         if (search.getVisibility() == View.VISIBLE) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 final Animator animatorHide = ViewAnimationUtils.createCircularReveal(search,
-                    search.getWidth() - (int) convertDpToPixel(56, context),
-                    (int) convertDpToPixel(23, context),
+                    search.getWidth() - (int) convertDpToPixel(56, activity),
+                    (int) convertDpToPixel(23, activity),
                     (float) Math.hypot(search.getWidth(), search.getHeight()),
                     0);
                 animatorHide.addListener(new Animator.AnimatorListener() {
@@ -45,10 +47,11 @@ public class InitiateSearch {
 //                        view.startAnimation(fade_out);
 //                        view.setVisibility(View.INVISIBLE);
                         search.setVisibility(View.GONE);
-                        ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search.getWindowToken(), 0);
+                        ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search.getWindowToken(), 0);
                         listView.setVisibility(View.GONE);
                         toolbarMain.setNavigationIcon(R.drawable.ic_menu);
                         toolbarMain.setTitle(title);
+                        ((MainActivity)activity).setToolBarSubTitle(null);
                         toolbarMain.getMenu().clear();
                         toolbarMain.inflateMenu(R.menu.menu_add);
                     }
@@ -66,7 +69,7 @@ public class InitiateSearch {
                 animatorHide.setDuration(300);
                 animatorHide.start();
             } else {
-                ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search.getWindowToken(), 0);
+                ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search.getWindowToken(), 0);
 //                view.startAnimation(fade_out);
 //                view.setVisibility(View.INVISIBLE);
 
@@ -83,6 +86,7 @@ public class InitiateSearch {
                         editText.setText("");
                         toolbarMain.setNavigationIcon(R.drawable.ic_menu);
                         toolbarMain.setTitle(title);
+                        ((MainActivity)activity).setToolBarSubTitle(null);
                         toolbarMain.getMenu().clear();
                         toolbarMain.inflateMenu(R.menu.menu_add);
                         search.setEnabled(false);
@@ -104,12 +108,13 @@ public class InitiateSearch {
 
         } else {
             toolbarMain.setTitle("");
+            ((MainActivity)activity).setToolBarSubTitle("");
             toolbarMain.getMenu().clear();
             toolbarMain.setNavigationIcon(null);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 final Animator animator = ViewAnimationUtils.createCircularReveal(search,
-                    search.getWidth() - (int) convertDpToPixel(56, context),
-                    (int) convertDpToPixel(23, context),
+                    search.getWidth() - (int) convertDpToPixel(56, activity),
+                    (int) convertDpToPixel(23, activity),
                     0,
                     (float) Math.hypot(search.getWidth(), search.getHeight()));
                 animator.addListener(new Animator.AnimatorListener() {
@@ -121,7 +126,7 @@ public class InitiateSearch {
                     public void onAnimationEnd(Animator animation) {
 //                        view.setVisibility(View.VISIBLE);
 //                        view.startAnimation(fade_in);
-                        ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                        ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
                     }
 
                     @Override
@@ -163,7 +168,7 @@ public class InitiateSearch {
                         .playOn(search);
                 search.setEnabled(true);
                 listView.setVisibility(View.VISIBLE);
-                ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
             }
 
             editText.requestFocus();

@@ -9,40 +9,67 @@
     <FrameLayout
         android:id="@+id/flConditionIcon"
         android:layout_width="200dp"
-        android:layout_marginTop="5dp"
+        android:layout_height="200dp"
         android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:layout_height="200dp" />
+        android:layout_marginTop="5dp"
+        android:gravity="center" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/timeView"
-        android:gravity="center"
         android:layout_marginBottom="-5dp"
+        android:gravity="center"
         android:orientation="horizontal">
-
-        <com.devspark.robototextview.widget.RobotoTextView
-            android:id="@+id/tvTemperature"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="14dp"
-            android:paddingRight="14dp"
-            android:text="27°"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textColor="#fff"
-            android:textSize="90sp"
-            app:fontFamily="roboto"
-            app:textWeight="light" />
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="-12dp"
+            android:orientation="vertical">
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/tvTemperature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:text="27°"
+                android:layout_marginBottom="-15dp"
+                android:textColor="#fff"
+                android:textSize="90sp"
+                app:fontFamily="roboto"
+                app:textWeight="light" />
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/tvCondition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Scattered Thunderstorm"
+                android:textColor="#fff"
+                android:textSize="15sp"
+                app:fontFamily="roboto"
+                app:textWeight="medium" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
             android:orientation="vertical">
 
 
@@ -176,12 +203,15 @@
         </LinearLayout>
     </LinearLayout>
 
-    <include layout="@layout/time_seek"
+    <include
+        android:id="@+id/timeView"
+        layout="@layout/time_seek"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/timeView"
-        android:layout_marginBottom="30dp"
-        android:layout_alignParentBottom="true"/>
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp" />
 
 
 </RelativeLayout>
