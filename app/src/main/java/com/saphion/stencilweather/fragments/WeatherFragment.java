@@ -4,23 +4,33 @@ import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
+import android.view.animation.RotateAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.nineoldandroids.animation.ObjectAnimator;
 import com.saphion.stencilweather.R;
 import com.saphion.stencilweather.activities.MainActivity;
 import com.saphion.stencilweather.climacons.RainSunIV;
+import com.saphion.stencilweather.modules.WLocation;
+import com.saphion.stencilweather.utilities.TimeHelpers;
 import com.saphion.stencilweather.utilities.Utils;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 public class WeatherFragment extends Fragment {
 
@@ -29,6 +39,8 @@ public class WeatherFragment extends Fragment {
     private int mColor;
     private long locationID;
     Context mContext;
+    private WLocation location;
+    private boolean expanded;
 
     public static WeatherFragment newInstance(long locationID) {
         WeatherFragment fragment = new WeatherFragment();
@@ -42,8 +54,9 @@ public class WeatherFragment extends Fragment {
 
     }
 
-    public WeatherFragment setContext(Context mContext) {
+    public WeatherFragment setContext(Context mContext, WLocation location) {
         this.mContext = mContext;
+        this.location = location;
         return this;
     }
 
@@ -56,6 +69,7 @@ public class WeatherFragment extends Fragment {
     }
 
     View v;
+    Calendar calendar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,13 +84,16 @@ public class WeatherFragment extends Fragment {
             ImageView iv = new RainSunIV(mContext, Utils.dpToPx(160, mContext), Utils.dpToPx(160, mContext), mColor);
             flContainer.addView(iv);
 
+
+            calendar = Calendar
+                    .getInstance(TimeZone.getTimeZone(location.getTimezone()));
+
             SeekBar sb = (SeekBar) v.findViewById(R.id.sbTimeSeek);
-            sb.setThumb(new BitmapDrawable(mContext.getResources(), Utils.getTimeThumb(mContext, mColor, Calendar.getInstance().get(Calendar.HOUR), 0)));
+            sb.setThumb(new BitmapDrawable(mContext.getResources(), Utils.getTimeThumb(mContext, mColor, calendar.get(Calendar.HOUR), 0)));
             sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-                    seekBar.setThumb(new BitmapDrawable(mContext.getResources(), Utils.getTimeThumb(mContext, mColor, Calendar.getInstance().get(Calendar.HOUR) + (progress * 3), 0)));
-                    ((MainActivity)getActivity()).setToolBarSubTitle(null);
+                    seekBar.setThumb(new BitmapDrawable(mContext.getResources(), Utils.getTimeThumb(mContext, mColor, calendar.get(Calendar.HOUR) + (progress * 3), 0)));
                 }
 
                 @Override
@@ -91,6 +108,26 @@ public class WeatherFragment extends Fragment {
             });
             ((MainActivity)getActivity()).setToolBarColor(getColor());
 
+
+
+
+
+            callHandler();
+            setTime(null);
+
+            expanded = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("expanded", false);
+
+            v.findViewById(R.id.ivExpand).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setExpand(!expanded, true);
+                    PreferenceManager.getDefaultSharedPreferences(mContext).edit().putBoolean("expanded", !expanded).commit();
+                    expanded = !expanded;
+                }
+            });
+
+            setExpand(expanded, false);
+
             onFragmentUnSelected();
 
             new Handler().postDelayed(new Runnable() {
@@ -100,17 +137,67 @@ public class WeatherFragment extends Fragment {
                 }
             }, 100);
 
-
-
         } catch (Exception ignored) {
         }
 
-//        WLocation wLocation = WLocation.findById(WLocation.class, locationID);
-
-
-
 
         return v;
+    }
+
+    private void setExpand(boolean expand, boolean animate) {
+        if(v != null){
+            RotateAnimation anim = new RotateAnimation(expand?0:180, expand?180:360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            anim.setDuration(500);
+            anim.setFillAfter(true);
+            v.findViewById(R.id.ivExpand).startAnimation(anim);
+            if(expand) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        (v.findViewById(R.id.tlWeatherContainer)).setAlpha(0);
+                        (v.findViewById(R.id.tlWeatherContainer)).setVisibility(View.VISIBLE);
+                    }
+                }, 210);
+                YoYo.with(Techniques.FadeInDown)
+                        .duration(500).interpolate(new BounceInterpolator()).delay(200)
+                        .playOn(v.findViewById(R.id.tlWeatherContainer));
+
+//                TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 0, 0);
+//                translateAnimation.setDuration(500);
+//                translateAnimation.setFillEnabled(true);
+//                translateAnimation.setFillAfter(true);
+//                v.findViewById(R.id.llMainWeatherContainer).startAnimation(translateAnimation);
+
+                ObjectAnimator objectAnimator= ObjectAnimator.ofFloat(v.findViewById(R.id.llMainWeatherContainer), "translationY", Utils.dpToPx(20, mContext), 0);
+                objectAnimator.setDuration(500);
+                objectAnimator.start();
+
+
+            }else {
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        (v.findViewById(R.id.tlWeatherContainer)).setAlpha(0);
+                        (v.findViewById(R.id.tlWeatherContainer)).setVisibility(View.INVISIBLE);
+                    }
+                }, 510);
+                YoYo.with(Techniques.FadeOutUp)
+                        .duration(500).interpolate(new BounceInterpolator()).delay(200)
+                        .playOn(v.findViewById(R.id.tlWeatherContainer));
+
+//                TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 0, Utils.dpToPx(20, mContext));
+//                translateAnimation.setDuration(500);
+//                translateAnimation.setFillEnabled(true);
+//                translateAnimation.setFillAfter(true);
+//                v.findViewById(R.id.llMainWeatherContainer).startAnimation(translateAnimation);
+
+                ObjectAnimator objectAnimator= ObjectAnimator.ofFloat(v.findViewById(R.id.llMainWeatherContainer), "translationY", 0, Utils.dpToPx(20, mContext));
+                objectAnimator.setDuration(500);
+                objectAnimator.start();
+
+            }
+        }
     }
 
     @Override
@@ -139,12 +226,23 @@ public class WeatherFragment extends Fragment {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    (v.findViewById(R.id.llWeatherContainer1)).setAlpha(0);
-                    (v.findViewById(R.id.llWeatherContainer1)).setVisibility(View.VISIBLE);
+                    (v.findViewById(R.id.llWeatherContainer0)).setAlpha(0);
+                    (v.findViewById(R.id.llWeatherContainer0)).setVisibility(View.VISIBLE);
                 }
             }, 110);
             YoYo.with(Techniques.FadeInLeft)
                     .duration(500).interpolate(new BounceInterpolator()).delay(100)
+                    .playOn(v.findViewById(R.id.llWeatherContainer0));
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    (v.findViewById(R.id.llWeatherContainer1)).setAlpha(0);
+                    (v.findViewById(R.id.llWeatherContainer1)).setVisibility(View.VISIBLE);
+                }
+            }, 210);
+            YoYo.with(Techniques.FadeInLeft)
+                    .duration(500).interpolate(new BounceInterpolator()).delay(200)
                     .playOn(v.findViewById(R.id.llWeatherContainer1));
 
             new Handler().postDelayed(new Runnable() {
@@ -153,9 +251,9 @@ public class WeatherFragment extends Fragment {
                     (v.findViewById(R.id.llWeatherContainer2)).setAlpha(0);
                     (v.findViewById(R.id.llWeatherContainer2)).setVisibility(View.VISIBLE);
                 }
-            }, 220);
+            }, 310);
             YoYo.with(Techniques.FadeInLeft)
-                    .duration(500).interpolate(new BounceInterpolator()).delay(200)
+                    .duration(500).interpolate(new BounceInterpolator()).delay(300)
                     .playOn(v.findViewById(R.id.llWeatherContainer2));
 
             new Handler().postDelayed(new Runnable() {
@@ -164,9 +262,9 @@ public class WeatherFragment extends Fragment {
                     (v.findViewById(R.id.llWeatherContainer3)).setAlpha(0);
                     (v.findViewById(R.id.llWeatherContainer3)).setVisibility(View.VISIBLE);
                 }
-            }, 310);
+            }, 410);
             YoYo.with(Techniques.FadeInLeft)
-                    .duration(500).interpolate(new BounceInterpolator()).delay(300)
+                    .duration(500).interpolate(new BounceInterpolator()).delay(400)
                     .playOn(v.findViewById(R.id.llWeatherContainer3));
         }
     }
@@ -174,9 +272,62 @@ public class WeatherFragment extends Fragment {
     public void onFragmentUnSelected() {
         if(v != null){
             (v.findViewById(R.id.containerTemperatureAndCondition)).setVisibility(View.INVISIBLE);
+            (v.findViewById(R.id.llWeatherContainer0)).setVisibility(View.INVISIBLE);
             (v.findViewById(R.id.llWeatherContainer1)).setVisibility(View.INVISIBLE);
             (v.findViewById(R.id.llWeatherContainer2)).setVisibility(View.INVISIBLE);
             (v.findViewById(R.id.llWeatherContainer3)).setVisibility(View.INVISIBLE);
         }
     }
+
+    public void setTime(String subTitle) {
+        try {
+            if (subTitle == null) {
+                Calendar c = Calendar
+                            .getInstance(TimeZone.getTimeZone(location.getTimezone()));
+
+
+                ((TextView)v.findViewById(R.id.tvTime)).setText(TimeHelpers.getWeek(c.get(Calendar.DAY_OF_WEEK))
+                        + ", "
+                        + TimeHelpers.getMonth(c
+                        .get(Calendar.MONTH))
+                        + " "
+                        + c.get(Calendar.DAY_OF_MONTH)
+                        + " | "
+                        + (c.get(Calendar.HOUR) == 0 ? "12" : c
+                        .get(Calendar.HOUR))
+                        + ":"
+                        + ((c.get(Calendar.MINUTE) + "").length() == 1 ? "0"
+                        + c.get(Calendar.MINUTE)
+                        : c.get(Calendar.MINUTE))
+                        + (c.get(Calendar.AM_PM) == Calendar.AM ? " AM"
+                        : " PM"));
+            } else {
+                ((TextView)v.findViewById(R.id.tvTime)).setText(subTitle);
+            }
+
+
+        } catch (Exception ignored) {
+        }
+
+    }
+
+    private void callHandler() {
+        long callback = (60 - Calendar.getInstance().get(Calendar.SECOND)) * 1000;
+        handler.removeCallbacks(drawRunner);
+        if (callback == 0)
+            handler.postDelayed(drawRunner, 60000);
+        else
+            handler.postDelayed(drawRunner, callback);
+
+    }
+
+    private final Handler handler = new Handler();
+    private final Runnable drawRunner = new Runnable() {
+        public void run() {
+            setTime(null);
+            callHandler();
+
+        }
+
+    };
 }

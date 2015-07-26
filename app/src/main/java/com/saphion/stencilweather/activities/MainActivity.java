@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -89,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     List<WLocation> drawerItems;
     private RecyclerViewAdapter recyclerAdapter;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,16 +148,28 @@ public class MainActivity extends AppCompatActivity {
         image_search_back = (ImageView) findViewById(R.id.image_search_back);
         clearSearch = (ImageView) findViewById(R.id.clearSearch);
         listView = (ListView) findViewById(R.id.listView);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh_common);
 
         card_search = (CardView) findViewById(R.id.card_search);
 
         pb = findViewById(R.id.progressSearch);
 
+        swipeRefreshLayout.setColorSchemeResources(R.color.main_button_red_normal, R.color.main_button_green_normal, R.color.main_button_blue_normal);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 3000);
+            }
+        });
+
         InitiateSearch();
         HandleSearch();
         IsAdapterEmpty();
-        setToolBarSubTitle(null);
-        callHandler();
     }
 
     public void setToolBarColor(int color) {
@@ -176,77 +190,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void setToolBarTitle(String title) {
-        try {
-            toolbar.setTitle("");
-        } catch (Exception ignored) {
-        }
-    }
 
-
-    public void setToolBarSubTitle(String subTitle) {
-//        try {
-//            if (subTitle == null) {
-//                int position = 0;
-//                if(viewPager != null)
-//                    position = viewPager.getCurrentItem();
-//                Calendar c = Calendar
-//                            .getInstance(drawerItems.size() > 0 ? TimeZone.getTimeZone(drawerItems.get(position).getTimezone()) : TimeZone.getDefault());
-//
-//
-//                toolbar.setSubtitle(TimeHelpers.getWeek(c.get(Calendar.DAY_OF_WEEK))
-//                        + ", "
-//                        + TimeHelpers.getMonth(c
-//                        .get(Calendar.MONTH))
-//                        + " "
-//                        + c.get(Calendar.DAY_OF_MONTH)
-//                        + " | "
-//                        + (c.get(Calendar.HOUR) == 0 ? "12" : c
-//                        .get(Calendar.HOUR))
-//                        + ":"
-//                        + ((c.get(Calendar.MINUTE) + "").length() == 1 ? "0"
-//                        + c.get(Calendar.MINUTE)
-//                        : c.get(Calendar.MINUTE))
-//                        + (c.get(Calendar.AM_PM) == Calendar.AM ? " AM"
-//                        : " PM"));
-//            } else {
-//                toolbar.setSubtitle(subTitle);
-//            }
-//
-//
-//        } catch (Exception ignored) {
-//        }
-
-    }
-
-    private void callHandler() {
-        long callback = (60 - Calendar.getInstance().get(Calendar.SECOND)) * 1000;
-        handler.removeCallbacks(drawRunner);
-        if (callback == 0)
-            handler.postDelayed(drawRunner, 60000);
-        else
-            handler.postDelayed(drawRunner, callback);
-
-    }
-
-    private final Handler handler = new Handler();
-    private final Runnable drawRunner = new Runnable() {
-        public void run() {
-            setToolBarSubTitle(null);
-            callHandler();
-
-        }
-
-    };
-
-    //    Adapter viewPagerAdapter;
-//    CircleIndicator defaultIndicator;
     Spinner navSpinner;
     ArrayAdapter<String> navAdapter;
 
     private void setupNavigationMode() {
-
-//        viewPagerAdapter = new Adapter(getSupportFragmentManager());
 
         navSpinner = (Spinner) findViewById(R.id.spinner_toolbar);
 
@@ -264,13 +212,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 try {
-                    WeatherFragment fragment = WeatherFragment.newInstance(drawerItems.get(i).getId()).setContext(getBaseContext());
-//                setToolBarColor(fragment.getColor());
-//                fragment.onFragmentSelected();
+                    WeatherFragment fragment = WeatherFragment.newInstance(drawerItems.get(i).getId()).setContext(getBaseContext(), drawerItems.get(i));
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
-                }catch(Exception ex){}
-//                setToolBarTitle(drawerItems.get(position).getName());
-//                setToolBarSubTitle(null);
+                }catch(Exception ignored){}
             }
 
             @Override
@@ -291,24 +235,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-
-//        if (navAdapter.getCount() > 0) {
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    WeatherFragment fragment = WeatherFragment.newInstance(drawerItems.get(0).getId()).setContext(getBaseContext());
-//                    getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
-//                    setToolBarColor(fragment.getColor());
-//                    setToolBarTitle(drawerItems.get(0).getName());
-//                    setToolBarSubTitle(null);
-////                    ((WeatherFragment) viewPagerAdapter.getItem(0)).onFragmentUnSelected();
-//                    fragment.onFragmentSelected();
-//                    Toast.makeText(MainActivity.this, "Initialising", Toast.LENGTH_LONG).show();
-//                }
-//            }, 200);
-//
-//        }
 
         initialiseWeatherCards();
     }
@@ -391,27 +317,18 @@ public class MainActivity extends AppCompatActivity {
         if (isMyLocation) {
             drawerItems.add(0, wLocation);
             recyclerAdapter.notifyDataSetChanged();
-//            navAdapter.re(0, wLocation.getName());
-            //TODO
-//            viewPagerAdapter.addFragment(WeatherFragment.newInstance(wLocation.getId()).setContext(getBaseContext()), "", 0, true);
+            //TODO Add for my location
         } else {
             drawerItems.add(wLocation);
             recyclerAdapter.notifyDataSetChanged();
             navAdapter.add(wLocation.getName());
             navAdapter.notifyDataSetChanged();
-//            viewPagerAdapter.addFragment(WeatherFragment.newInstance(wLocation.getId()).setContext(getBaseContext()), "");
         }
-//        defaultIndicator.setViewPager(viewPager);
-//        viewPager.addOnPageChangeListener(defaultIndicator);
-//        viewPager.setCurrentItem(0, false);
-//        viewPager.setCurrentItem(viewPagerAdapter.getCount() - 1, false);
     }
 
     public void removeItemFromDrawer(WLocation wLocation) {
         drawerItems.remove(wLocation);
         recyclerAdapter.remove(wLocation);
-//        viewPagerAdapter.notifyDataSetChanged();
-//        defaultIndicator.setViewPager(viewPager);
     }
 
 
@@ -728,52 +645,7 @@ public class MainActivity extends AppCompatActivity {
 
         builder.show();
 
-//        final AlertDialog dialog = builder.create();
-//        dialog.setCanceledOnTouchOutside(true);
-//        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-//        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-//            @Override
-//            public void onShow(DialogInterface dialog) {
-////                revealShow(dialogView, true, null, v);
-//            }
-//        });
-//
-//        dialog.show();
-
     }
-//
-//    private void revealShow(View rootView, boolean reveal, final AlertDialog dialog, View v){
-//        final View view = rootView.findViewById(R.id.reveal_view);
-//        int w = v.getWidth();
-//        int h = v.getHeight();
-//        float maxRadius = (float) Math.sqrt(w * w / 4 + h * h / 4);
-//
-//        if(reveal){
-//            android.animation.Animator revealAnimator = ViewAnimationUtils.createCircularReveal(view,
-//                    w / 2, h / 2, 0, maxRadius);
-//
-//            view.setVisibility(View.VISIBLE);
-//            revealAnimator.start();
-//
-//        } else {
-//
-//            android.animation.Animator anim =
-//                    ViewAnimationUtils.createCircularReveal(view, w / 2, h / 2, maxRadius, 0);
-//
-//            anim.addListener(new AnimatorListenerAdapter() {
-//                @Override
-//                public void onAnimationEnd(android.animation.Animator animation) {
-//                    super.onAnimationEnd(animation);
-//                    dialog.dismiss();
-//                    view.setVisibility(View.INVISIBLE);
-//
-//                }
-//            });
-//
-//            anim.start();
-//        }
-//
-//    }
 
 
     /**

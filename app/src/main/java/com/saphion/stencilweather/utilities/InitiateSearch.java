@@ -28,7 +28,6 @@ public class InitiateSearch {
 
     public static void handleToolBar(final Activity activity, final CardView search, final Toolbar toolbarMain, /*final View view,*/ final ListView listView, final EditText editText) {
         final Animation fade_in = AnimationUtils.loadAnimation(activity.getApplicationContext(), android.R.anim.fade_in);
-//        final Animation fade_out = AnimationUtils.loadAnimation(context.getApplicationContext(), android.R.anim.fade_out);
         if (search.getVisibility() == View.VISIBLE) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 final Animator animatorHide = ViewAnimationUtils.createCircularReveal(search,
@@ -44,15 +43,10 @@ public class InitiateSearch {
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
-//                        view.startAnimation(fade_out);
-//                        view.setVisibility(View.INVISIBLE);
                         search.setVisibility(View.GONE);
                         ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search.getWindowToken(), 0);
                         listView.setVisibility(View.GONE);
                         toolbarMain.setNavigationIcon(R.drawable.ic_menu);
-//                        toolbarMain.setTitle(title);
-//                        ((MainActivity)activity).setToolBarTitle(title);
-//                        ((MainActivity)activity).setToolBarSubTitle(null);
                         ((MainActivity)activity).actionBarContent(true);
                         toolbarMain.getMenu().clear();
                         toolbarMain.inflateMenu(R.menu.menu_add);
@@ -72,8 +66,6 @@ public class InitiateSearch {
                 animatorHide.start();
             } else {
                 ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search.getWindowToken(), 0);
-//                view.startAnimation(fade_out);
-//                view.setVisibility(View.INVISIBLE);
 
                 YoYo.with(Techniques.SlideOutRight)
                         .duration(500).interpolate(new BounceInterpolator()).withListener(new com.nineoldandroids.animation.Animator.AnimatorListener() {
@@ -87,9 +79,6 @@ public class InitiateSearch {
                         search.setVisibility(View.GONE);
                         editText.setText("");
                         toolbarMain.setNavigationIcon(R.drawable.ic_menu);
-//                        toolbarMain.setTitle(title);
-//                        ((MainActivity)activity).setToolBarTitle(title);
-//                        ((MainActivity)activity).setToolBarSubTitle(null);
                         ((MainActivity)activity).actionBarContent(true);
                         toolbarMain.getMenu().clear();
                         toolbarMain.inflateMenu(R.menu.menu_add);
@@ -111,9 +100,6 @@ public class InitiateSearch {
 
 
         } else {
-//            toolbarMain.setTitle("");
-            ((MainActivity)activity).setToolBarTitle("");
-            ((MainActivity)activity).setToolBarSubTitle("");
             ((MainActivity)activity).actionBarContent(false);
             toolbarMain.getMenu().clear();
             toolbarMain.setNavigationIcon(null);
@@ -130,8 +116,6 @@ public class InitiateSearch {
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
-//                        view.setVisibility(View.VISIBLE);
-//                        view.startAnimation(fade_in);
                         ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
                     }
 
