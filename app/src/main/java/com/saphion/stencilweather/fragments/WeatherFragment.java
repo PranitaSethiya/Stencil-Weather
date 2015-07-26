@@ -5,7 +5,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import com.saphion.stencilweather.climacons.RainSunIV;
 import com.saphion.stencilweather.utilities.Utils;
 
 import java.util.Calendar;
-import java.util.Random;
 
 public class WeatherFragment extends Fragment {
 
@@ -73,11 +71,11 @@ public class WeatherFragment extends Fragment {
             flContainer.addView(iv);
 
             SeekBar sb = (SeekBar) v.findViewById(R.id.sbTimeSeek);
-            sb.setThumb(new BitmapDrawable(mContext.getResources(), Utils.getTimeThumb(mContext, Calendar.getInstance().get(Calendar.HOUR), 0)));
+            sb.setThumb(new BitmapDrawable(mContext.getResources(), Utils.getTimeThumb(mContext, mColor, Calendar.getInstance().get(Calendar.HOUR), 0)));
             sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-                    seekBar.setThumb(new BitmapDrawable(mContext.getResources(), Utils.getTimeThumb(mContext, Calendar.getInstance().get(Calendar.HOUR) + (progress * 3), 0)));
+                    seekBar.setThumb(new BitmapDrawable(mContext.getResources(), Utils.getTimeThumb(mContext, mColor, Calendar.getInstance().get(Calendar.HOUR) + (progress * 3), 0)));
                     ((MainActivity)getActivity()).setToolBarSubTitle(null);
                 }
 
@@ -91,6 +89,17 @@ public class WeatherFragment extends Fragment {
 
                 }
             });
+            ((MainActivity)getActivity()).setToolBarColor(getColor());
+
+            onFragmentUnSelected();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    onFragmentSelected();
+                }
+            }, 100);
+
 
 
         } catch (Exception ignored) {
@@ -113,8 +122,7 @@ public class WeatherFragment extends Fragment {
     }
 
     private void loadData() {
-        Random random = new Random();
-        mColor = (0xff000000 | random.nextInt(0x00ffffff));
+        mColor = 0xff1e8bd4;
     }
 
     public int getColor() {

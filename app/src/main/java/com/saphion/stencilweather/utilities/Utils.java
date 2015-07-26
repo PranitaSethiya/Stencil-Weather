@@ -516,7 +516,7 @@ public class Utils {
     }
 
 
-    public static Bitmap getTimeThumb(Context mContext, float hour, float minutes) {
+    public static Bitmap getTimeThumb(Context mContext, int mColor, float hour, float minutes) {
         int px = dpToPx(30, mContext);
 
         Bitmap mBitmap = Bitmap.createBitmap(px, px, Bitmap.Config.ARGB_8888);
@@ -526,10 +526,19 @@ public class Utils {
         Canvas canvas = new Canvas(mBitmap);
         Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setAntiAlias(true);
-        mPaint.setColor(Color.WHITE);
+
         mPaint.setStrokeWidth(px / 12.5f);
+
+        mPaint.setColor(mColor);
+        mPaint.setStyle(Paint.Style.FILL);
+        canvas.drawCircle(mBitmap.getWidth() / 2, mBitmap.getWidth() / 2, r, mPaint);
+
+        mPaint.setColor(Color.WHITE);
+
         mPaint.setStyle(Paint.Style.STROKE);
         canvas.drawCircle(mBitmap.getWidth() / 2, mBitmap.getWidth() / 2, r, mPaint);
+
+        mPaint.setStyle(Paint.Style.STROKE);
         canvas.drawCircle(mBitmap.getWidth() / 2, mBitmap.getWidth() / 2, dpToPx(0.5f, mContext), mPaint);
 
         mPaint.setStrokeWidth(px / 15f);

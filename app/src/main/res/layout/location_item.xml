@@ -2,58 +2,72 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
     android:id="@+id/locationItemContainer"
-    android:clickable="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
-    android:layout_height="wrap_content">
+    android:clickable="true">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/llItem"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:paddingLeft="5dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="5dp">
 
         <ImageView
+            android:id="@+id/ivListIndicator"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
-            android:id="@+id/ivListIndicator"
             android:src="@drawable/ic_map_marker_radius"
             android:tint="#ff000000" />
 
         <com.devspark.robototextview.widget.RobotoTextView
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
-            android:layout_height="match_parent"
-            android:text="Share Weather"
             android:id="@+id/tvLocationName"
-            android:textColor="#c8000000"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="Share Weather"
+            android:textColor="#c8000000"
             android:textSize="13.5sp"
             app:fontFamily="roboto"
-            app:textWeight="medium"/>
+            app:textWeight="medium" />
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:id="@+id/ivMyLocation"
-            android:padding="10dp"
-            android:visibility="gone"
-            android:src="@drawable/curloc"/>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
+            <ImageView
+                android:id="@+id/ivMyLocation"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:background="@drawable/item_background_circle"
+                android:clickable="true"
+                android:padding="15dp"
+                android:src="@drawable/curloc"
+                android:visibility="gone" />
+
+            <ProgressBar
+                android:id="@+id/pbMyLocation"
+                android:layout_width="50dp"
+                android:visibility="gone"
+                android:layout_height="50dp"
+                android:padding="10dp" />
+
+        </RelativeLayout>
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
+        android:layout_below="@+id/llItem"
         android:layout_marginLeft="58dp"
         android:layout_marginStart="58dp"
-        android:background="@color/colorDivider"
-        android:layout_below="@+id/llItem"/>
+        android:background="@color/colorDivider" />
 </RelativeLayout>

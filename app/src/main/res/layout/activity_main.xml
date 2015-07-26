@@ -29,14 +29,6 @@
                 android:layout_height="50dp"
                 android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:orientation="horizontal">
-
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
@@ -57,26 +49,6 @@
                         android:textSize="16sp"
                         app:fontFamily="roboto"
                         app:textWeight="normal" />
-
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="0.2dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorDivider" />
-
-                <ImageView
-                    android:id="@+id/ivMyLocation"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/item_background_circle"
-                    android:clickable="true"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_map_marker"
-                    android:tint="@color/main_button_blue_normal" />
-
 
             </LinearLayout>
 

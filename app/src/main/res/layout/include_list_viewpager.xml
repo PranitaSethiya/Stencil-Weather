@@ -22,47 +22,27 @@
             <Spinner
                 android:id="@+id/spinner_toolbar"
                 android:layout_width="wrap_content"
-                android:entries="@array/test_enteries"
-                style="@style/Theme.AppCompat.Light"
                 android:layout_height="wrap_content" />
 
             </android.support.v7.widget.Toolbar>
 
-
+        <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/swipeRefresh_common"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="-60dp">
 
-            <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/swipeRefresh_common"
-                android:layout_width="match_parent"
-                android:layout_marginTop="60dp"
-                android:layout_height="match_parent">
 
-                <RelativeLayout
+
+                <FrameLayout
                     android:layout_width="match_parent"
+                    android:id="@+id/fragmentContainer"
                     android:layout_height="match_parent">
+                </FrameLayout>
 
-
-                    <android.support.v4.view.ViewPager
-                        android:id="@+id/viewpager"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-                    <me.relex.circleindicator.CircleIndicator
-                        android:id="@+id/indicator_default"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginBottom="-5dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginRight="10dp"/>
-                </RelativeLayout>
-            </android.support.v4.widget.SwipeRefreshLayout>
 
             <FrameLayout
                 android:id="@+id/flDarkenBackground"
@@ -81,7 +61,7 @@
                 android:layout_marginTop="10dp" />
 
         </RelativeLayout>
-
+    </android.support.v4.widget.SwipeRefreshLayout>
     </android.support.design.widget.AppBarLayout>
 
 

@@ -26,7 +26,7 @@ import com.saphion.stencilweather.activities.MainActivity;
 
 public class InitiateSearch {
 
-    public static void handleToolBar(final Activity activity, final CardView search, final Toolbar toolbarMain, /*final View view,*/ final ListView listView, final EditText editText, final String title) {
+    public static void handleToolBar(final Activity activity, final CardView search, final Toolbar toolbarMain, /*final View view,*/ final ListView listView, final EditText editText) {
         final Animation fade_in = AnimationUtils.loadAnimation(activity.getApplicationContext(), android.R.anim.fade_in);
 //        final Animation fade_out = AnimationUtils.loadAnimation(context.getApplicationContext(), android.R.anim.fade_out);
         if (search.getVisibility() == View.VISIBLE) {
@@ -50,8 +50,10 @@ public class InitiateSearch {
                         ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search.getWindowToken(), 0);
                         listView.setVisibility(View.GONE);
                         toolbarMain.setNavigationIcon(R.drawable.ic_menu);
-                        toolbarMain.setTitle(title);
-                        ((MainActivity)activity).setToolBarSubTitle(null);
+//                        toolbarMain.setTitle(title);
+//                        ((MainActivity)activity).setToolBarTitle(title);
+//                        ((MainActivity)activity).setToolBarSubTitle(null);
+                        ((MainActivity)activity).actionBarContent(true);
                         toolbarMain.getMenu().clear();
                         toolbarMain.inflateMenu(R.menu.menu_add);
                     }
@@ -85,8 +87,10 @@ public class InitiateSearch {
                         search.setVisibility(View.GONE);
                         editText.setText("");
                         toolbarMain.setNavigationIcon(R.drawable.ic_menu);
-                        toolbarMain.setTitle(title);
-                        ((MainActivity)activity).setToolBarSubTitle(null);
+//                        toolbarMain.setTitle(title);
+//                        ((MainActivity)activity).setToolBarTitle(title);
+//                        ((MainActivity)activity).setToolBarSubTitle(null);
+                        ((MainActivity)activity).actionBarContent(true);
                         toolbarMain.getMenu().clear();
                         toolbarMain.inflateMenu(R.menu.menu_add);
                         search.setEnabled(false);
@@ -107,8 +111,10 @@ public class InitiateSearch {
 
 
         } else {
-            toolbarMain.setTitle("");
+//            toolbarMain.setTitle("");
+            ((MainActivity)activity).setToolBarTitle("");
             ((MainActivity)activity).setToolBarSubTitle("");
+            ((MainActivity)activity).actionBarContent(false);
             toolbarMain.getMenu().clear();
             toolbarMain.setNavigationIcon(null);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

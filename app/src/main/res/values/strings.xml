@@ -44,4 +44,6 @@
     <string name="edit_text_search">Search Location</string>
     <string name="location_database_name">locationDB</string>
     <string name="degree">º</string>
+    <string name="longitude">Longitude</string>
+    <string name="latitude">Latitude</string>
 </resources>
