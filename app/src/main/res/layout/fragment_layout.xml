@@ -2,54 +2,112 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-
-    <FrameLayout
-        android:id="@+id/flConditionIcon"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
-        android:gravity="center" />
-
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/containerTemperatureAndCondition"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/timeView"
-        android:layout_marginBottom="-5dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:visibility="invisible"
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <RelativeLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp">
+
+
+            <FrameLayout
+                android:id="@+id/flConditionIcon"
+                android:layout_width="170dp"
+                android:layout_height="170dp"
+                android:gravity="center" />
+
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/containerTemperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="-12dp"
-            android:orientation="vertical">
+            android:layout_marginTop="-5dp">
 
             <com.devspark.robototextview.widget.RobotoTextView
                 android:id="@+id/tvTemperature"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:paddingLeft="14dp"
-                android:paddingRight="14dp"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_vertical|end"
+                android:gravity="center_vertical|end"
+                android:paddingLeft="25dp"
                 android:text="27°"
-                android:layout_marginBottom="-15dp"
                 android:textColor="#fff"
-                android:textSize="90sp"
+                android:textSize="100sp"
                 app:fontFamily="roboto"
                 app:textWeight="light" />
 
+            <LinearLayout
+                android:id="@+id/llMinMaxContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvTemperature"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="-15dp"
+                android:orientation="horizontal">
+
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="2.5dp"
+                    android:src="@drawable/ic_arrow_up" />
+
+                <com.devspark.robototextview.widget.RobotoTextView
+                    android:id="@+id/tvTemperatureMax"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="35°"
+                    android:textColor="#fff"
+                    android:textSize="20sp"
+                    app:fontFamily="roboto"
+                    app:textWeight="light" />
+
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="2.5dp"
+                    android:src="@drawable/ic_arrow_down" />
+
+                <com.devspark.robototextview.widget.RobotoTextView
+                    android:id="@+id/tvTemperatureMin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="20°"
+                    android:textColor="#fff"
+                    android:textSize="20sp"
+                    app:fontFamily="roboto"
+                    app:textWeight="light" />
+
+            </LinearLayout>
+
             <com.devspark.robototextview.widget.RobotoTextView
                 android:id="@+id/tvCondition"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/llMinMaxContainer"
+                android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="Scattered Thunderstorm"
@@ -58,160 +116,397 @@
                 app:fontFamily="roboto"
                 app:textWeight="medium" />
 
-        </LinearLayout>
 
-        <LinearLayout
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <TableLayout
+        android:id="@+id/tlWeatherContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/containerTemperatureAndCondition"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp">
+
+        <TableRow
+            android:id="@+id/llWeatherContainer1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:visibility="invisible"
+            android:layout_height="wrap_content">
 
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="30dp"
+                android:layout_column="0"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/ic_tshirt_crew" />
 
             <com.devspark.robototextview.widget.RobotoTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="DETAILS"
+                android:layout_column="1"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="35°"
                 android:textColor="#fff"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 app:fontFamily="roboto"
-                app:textWeight="bold" />
+                app:textWeight="light" />
 
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginBottom="3.5dp"
-                android:layout_marginTop="3.5dp"
-                android:background="#fff" />
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_column="2"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/umbrella" />
 
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-                <TableRow>
-
-                    <com.devspark.robototextview.widget.RobotoTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_column="0"
-                        android:layout_weight="1"
-                        android:text="FEELS LIKE"
-                        android:textColor="#fff"
-                        android:textSize="13sp"
-                        app:fontFamily="roboto"
-                        app:textWeight="medium" />
-
-                    <com.devspark.robototextview.widget.RobotoTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_column="1"
-                        android:layout_weight="1"
-                        android:text="+9°"
-                        android:textColor="#fff"
-                        android:textSize="12.5sp"
-                        app:fontFamily="roboto"
-                        app:textWeight="light" />
-                </TableRow>
-
-                <TableRow>
-
-                    <com.devspark.robototextview.widget.RobotoTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_column="0"
-                        android:layout_weight="1"
-                        android:text="HUMIDITY"
-                        android:textColor="#fff"
-                        android:textSize="13sp"
-                        app:fontFamily="roboto"
-                        app:textWeight="medium" />
-
-                    <com.devspark.robototextview.widget.RobotoTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_column="1"
-                        android:layout_weight="1"
-                        android:text="72%"
-                        android:textColor="#fff"
-                        android:textSize="12.5sp"
-                        app:fontFamily="roboto"
-                        app:textWeight="light" />
-                </TableRow>
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="3"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="0.5 in"
+                android:textColor="#fff"
+                android:textSize="15sp"
+                app:fontFamily="roboto"
+                app:textWeight="light" />
 
 
-                <TableRow>
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_column="4"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/windmill" />
 
-                    <com.devspark.robototextview.widget.RobotoTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_column="0"
-                        android:layout_weight="1"
-                        android:text="WIND"
-                        android:textColor="#fff"
-                        android:textSize="13sp"
-                        app:fontFamily="roboto"
-                        app:textWeight="medium" />
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="5"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="2 kmph SW"
+                android:textColor="#fff"
+                android:textSize="15sp"
+                app:fontFamily="roboto"
+                app:textWeight="light" />
+        </TableRow>
 
-                    <com.devspark.robototextview.widget.RobotoTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_column="1"
-                        android:layout_weight="1"
-                        android:text="15 Km/h"
-                        android:textColor="#fff"
-                        android:textSize="12.5sp"
-                        app:fontFamily="roboto"
-                        app:textWeight="light" />
-                </TableRow>
-
-
-                <TableRow>
-
-                    <com.devspark.robototextview.widget.RobotoTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_column="0"
-                        android:layout_weight="1"
-                        android:text="VISIBILITY"
-                        android:textColor="#fff"
-                        android:textSize="13sp"
-                        app:fontFamily="roboto"
-                        app:textWeight="medium" />
-
-                    <com.devspark.robototextview.widget.RobotoTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_column="1"
-                        android:layout_weight="1"
-                        android:text="10 Km"
-                        android:textColor="#fff"
-                        android:textSize="12.5sp"
-                        app:fontFamily="roboto"
-                        app:textWeight="light" />
-                </TableRow>
-
-            </TableLayout>
+        <TableRow
+            android:id="@+id/llWeatherContainer2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:visibility="invisible"
+            android:orientation="horizontal">
 
 
-        </LinearLayout>
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_column="0"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/drop_humidity" />
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="88 %"
+                android:textColor="#fff"
+                android:textSize="15sp"
+                app:fontFamily="roboto"
+                app:textWeight="light" />
+
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_column="2"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/cloudiness" />
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="3"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="20 %"
+                android:textColor="#fff"
+                android:textSize="15sp"
+                app:fontFamily="roboto"
+                app:textWeight="light" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_column="4"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/pressure" />
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="5"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="1001 mbar"
+                android:textColor="#fff"
+                android:textSize="15sp"
+                app:fontFamily="roboto"
+                app:textWeight="light" />
+
+        </TableRow>
+
+    </TableLayout>
+
+    <LinearLayout
+        android:id="@+id/llWeatherContainer3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tlWeatherContainer"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:visibility="invisible"
+        android:layout_marginTop="2dp"
+        android:orientation="horizontal">
+
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_weather_sunset_up" />
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="05:26 AM"
+            android:textColor="#fff"
+            android:textSize="15sp"
+            app:fontFamily="roboto"
+            app:textWeight="light" />
+
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_weather_sunset_down" />
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="07:21 PM"
+            android:textColor="#fff"
+            android:textSize="15sp"
+            app:fontFamily="roboto"
+            app:textWeight="light" />
     </LinearLayout>
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_above="@+id/timeView"-->
+    <!--android:layout_marginBottom="-5dp"-->
+    <!--android:gravity="center"-->
+    <!--android:orientation="horizontal">-->
+
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginBottom="5dp"-->
+    <!--android:layout_marginEnd="15dp"-->
+    <!--android:layout_marginLeft="5dp"-->
+    <!--android:layout_marginRight="15dp"-->
+    <!--android:layout_marginStart="5dp"-->
+    <!--android:layout_marginTop="5dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:orientation="vertical">-->
+
+
+    <!--<com.devspark.robototextview.widget.RobotoTextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="DETAILS"-->
+    <!--android:textColor="#fff"-->
+    <!--android:textSize="16sp"-->
+    <!--app:fontFamily="roboto"-->
+    <!--app:textWeight="bold" />-->
+
+
+    <!--<View-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="2dp"-->
+    <!--android:layout_marginBottom="3.5dp"-->
+    <!--android:layout_marginTop="3.5dp"-->
+    <!--android:background="#fff" />-->
+
+    <!--<TableLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content">-->
+
+
+    <!--<TableRow>-->
+
+    <!--<com.devspark.robototextview.widget.RobotoTextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_column="0"-->
+    <!--android:layout_weight="1"-->
+    <!--android:text="FEELS LIKE"-->
+    <!--android:textColor="#fff"-->
+    <!--android:textSize="13sp"-->
+    <!--app:fontFamily="roboto"-->
+    <!--app:textWeight="medium" />-->
+
+    <!--<com.devspark.robototextview.widget.RobotoTextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_column="1"-->
+    <!--android:layout_weight="1"-->
+    <!--android:text="+9°"-->
+    <!--android:textColor="#fff"-->
+    <!--android:textSize="12.5sp"-->
+    <!--app:fontFamily="roboto"-->
+    <!--app:textWeight="light" />-->
+    <!--</TableRow>-->
+
+    <!--<TableRow>-->
+
+    <!--<com.devspark.robototextview.widget.RobotoTextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_column="0"-->
+    <!--android:layout_weight="1"-->
+    <!--android:text="HUMIDITY"-->
+    <!--android:textColor="#fff"-->
+    <!--android:textSize="13sp"-->
+    <!--app:fontFamily="roboto"-->
+    <!--app:textWeight="medium" />-->
+
+    <!--<com.devspark.robototextview.widget.RobotoTextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_column="1"-->
+    <!--android:layout_weight="1"-->
+    <!--android:text="72%"-->
+    <!--android:textColor="#fff"-->
+    <!--android:textSize="12.5sp"-->
+    <!--app:fontFamily="roboto"-->
+    <!--app:textWeight="light" />-->
+    <!--</TableRow>-->
+
+
+    <!--<TableRow>-->
+
+    <!--<com.devspark.robototextview.widget.RobotoTextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_column="0"-->
+    <!--android:layout_weight="1"-->
+    <!--android:text="WIND"-->
+    <!--android:textColor="#fff"-->
+    <!--android:textSize="13sp"-->
+    <!--app:fontFamily="roboto"-->
+    <!--app:textWeight="medium" />-->
+
+    <!--<com.devspark.robototextview.widget.RobotoTextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_column="1"-->
+    <!--android:layout_weight="1"-->
+    <!--android:text="15 Km/h"-->
+    <!--android:textColor="#fff"-->
+    <!--android:textSize="12.5sp"-->
+    <!--app:fontFamily="roboto"-->
+    <!--app:textWeight="light" />-->
+    <!--</TableRow>-->
+
+
+    <!--<TableRow>-->
+
+    <!--<com.devspark.robototextview.widget.RobotoTextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_column="0"-->
+    <!--android:layout_weight="1"-->
+    <!--android:text="VISIBILITY"-->
+    <!--android:textColor="#fff"-->
+    <!--android:textSize="13sp"-->
+    <!--app:fontFamily="roboto"-->
+    <!--app:textWeight="medium" />-->
+
+    <!--<com.devspark.robototextview.widget.RobotoTextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_column="1"-->
+    <!--android:layout_weight="1"-->
+    <!--android:text="10 Km"-->
+    <!--android:textColor="#fff"-->
+    <!--android:textSize="12.5sp"-->
+    <!--app:fontFamily="roboto"-->
+    <!--app:textWeight="light" />-->
+    <!--</TableRow>-->
+
+    <!--</TableLayout>-->
+
+
+    <!--</LinearLayout>-->
+    <!--</LinearLayout>-->
 
     <include
         android:id="@+id/timeView"
         layout="@layout/time_seek"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="30dp" />
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp" />
 
 
 </RelativeLayout>

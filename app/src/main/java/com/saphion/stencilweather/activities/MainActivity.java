@@ -16,9 +16,12 @@
 
 package com.saphion.stencilweather.activities;
 
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -45,6 +48,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -63,6 +67,7 @@ import com.nineoldandroids.animation.Animator;
 import com.saphion.stencilweather.R;
 import com.saphion.stencilweather.adapters.RecyclerViewAdapter;
 import com.saphion.stencilweather.adapters.WeatherCardAdapter;
+import com.saphion.stencilweather.climacons.Main;
 import com.saphion.stencilweather.fragments.WeatherFragment;
 import com.saphion.stencilweather.modules.WLocation;
 import com.saphion.stencilweather.tasks.GetLocationInfo;
@@ -108,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
                 mDrawerLayout.openDrawer(GravityCompat.START);
             }
         });
+
+//        toolbar.setTitleTextColor();
 
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -252,6 +259,7 @@ public class MainActivity extends AppCompatActivity {
             viewPagerAdapter.addFragment(WeatherFragment.newInstance(drawerItems.get(i).getId()).setContext(MainActivity.this), "" + i);
 
         viewPager.setAdapter(viewPagerAdapter);
+//        viewPager.setOffscreenPageLimit(0);
 
 
         defaultIndicator = (CircleIndicator) findViewById(R.id.indicator_default);
@@ -269,6 +277,14 @@ public class MainActivity extends AppCompatActivity {
                 setToolBarColor(((WeatherFragment) viewPagerAdapter.getItem(position)).getColor());
                 setToolBarTitle(drawerItems.get(position).getName());
                 setToolBarSubTitle(null);
+                ((WeatherFragment) viewPagerAdapter.getItem(position)).onFragmentSelected();
+                if(position - 1 >= 0){
+                    ((WeatherFragment) viewPagerAdapter.getItem(position - 1)).onFragmentUnSelected();
+                }
+
+                if(position + 1 < viewPagerAdapter.getCount()){
+                    ((WeatherFragment) viewPagerAdapter.getItem(position + 1)).onFragmentUnSelected();
+                }
 
             }
 
@@ -298,6 +314,8 @@ public class MainActivity extends AppCompatActivity {
                     setToolBarColor(((WeatherFragment) viewPagerAdapter.getItem(0)).getColor());
                     setToolBarTitle(drawerItems.get(0).getName());
                     setToolBarSubTitle(null);
+//                    ((WeatherFragment) viewPagerAdapter.getItem(0)).onFragmentUnSelected();
+                    ((WeatherFragment) viewPagerAdapter.getItem(0)).onFragmentSelected();
                 }
             }, 200);
 
@@ -679,6 +697,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (edit_text_search.getText().toString().length() == 0) {
 
+//                    showDialog(v);
+
                 } else {
 //                    mAsyncTask.cancel(true);
                     edit_text_search.setText("");
@@ -690,7 +710,76 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+
     }
+
+//    private void showDialog(final View v){
+//        final View dialogView = View.inflate(MainActivity.this, R.layout.layout_add_location_point, null);
+//
+//        AlertDialog.Builder builder =  new AlertDialog.Builder(MainActivity.this);
+//        builder.setView(dialogView)
+//                .setCancelable(false);
+//
+//
+//        final AlertDialog dialog = builder.create();
+//        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+//            @Override
+//            public void onShow(DialogInterface dialog) {
+//                revealShow(dialogView, true, null, v);
+//            }
+//        });
+//        dialogView.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                revealShow(dialogView, false, dialog, v);
+//            }
+//        });
+//        dialogView.findViewById(R.id.btn_save).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                revealShow(dialogView, false, dialog, v);
+//            }
+//        });
+//
+//
+//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+//        dialog.show();
+//
+//    }
+//
+//    private void revealShow(View rootView, boolean reveal, final AlertDialog dialog, View v){
+//        final View view = rootView.findViewById(R.id.reveal_view);
+//        int w = v.getWidth();
+//        int h = v.getHeight();
+//        float maxRadius = (float) Math.sqrt(w * w / 4 + h * h / 4);
+//
+//        if(reveal){
+//            android.animation.Animator revealAnimator = ViewAnimationUtils.createCircularReveal(view,
+//                    w / 2, h / 2, 0, maxRadius);
+//
+//            view.setVisibility(View.VISIBLE);
+//            revealAnimator.start();
+//
+//        } else {
+//
+//            android.animation.Animator anim =
+//                    ViewAnimationUtils.createCircularReveal(view, w / 2, h / 2, maxRadius, 0);
+//
+//            anim.addListener(new AnimatorListenerAdapter() {
+//                @Override
+//                public void onAnimationEnd(android.animation.Animator animation) {
+//                    super.onAnimationEnd(animation);
+//                    dialog.dismiss();
+//                    view.setVisibility(View.INVISIBLE);
+//
+//                }
+//            });
+//
+//            anim.start();
+//        }
+//
+//    }
 
     /**
      * Initialize multi-threading. There are two threads: 1) The main graphical
