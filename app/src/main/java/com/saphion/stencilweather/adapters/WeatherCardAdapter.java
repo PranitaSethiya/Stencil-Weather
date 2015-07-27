@@ -2,6 +2,7 @@ package com.saphion.stencilweather.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.saphion.stencilweather.R;
+import com.saphion.stencilweather.activities.ForecastActivity;
 import com.saphion.stencilweather.activities.MainActivity;
 import com.saphion.stencilweather.modules.WLocation;
 
@@ -27,6 +29,7 @@ public class WeatherCardAdapter extends RecyclerView.Adapter<WeatherCardAdapter.
         TextView slash;
         TextView condition;
         ImageView icon;
+        View container;
 
         public SimpleViewHolder(View itemView) {
             super(itemView);
@@ -36,6 +39,7 @@ public class WeatherCardAdapter extends RecyclerView.Adapter<WeatherCardAdapter.
 //            high = (TextView) itemView.findViewById(R.id.cardHigh);
 //            low = (TextView) itemView.findViewById(R.id.cardLow);
 //            icon = (ImageView)itemView.findViewById(R.id.cardIcon);
+            container = itemView.findViewById(R.id.card);
         }
 
     }
@@ -83,6 +87,15 @@ public class WeatherCardAdapter extends RecyclerView.Adapter<WeatherCardAdapter.
 //                ((MainActivity)mActivity).setViewPagerPosition(position);
 //            }
 //        });
+
+        viewHolder.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mActivity.startActivity(new Intent(mContext, ForecastActivity.class));
+            }
+        });
+
+
     }
 
     @Override

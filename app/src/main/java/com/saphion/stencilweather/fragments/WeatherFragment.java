@@ -138,6 +138,7 @@ public class WeatherFragment extends Fragment {
             }, 100);
 
         } catch (Exception ignored) {
+            ignored.printStackTrace();
         }
 
 
