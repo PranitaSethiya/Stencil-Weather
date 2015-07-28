@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MON"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="-7dp"
+        android:id="@+id/tvTabDay"
+        android:textSize="11sp"
+        android:textColor="@color/colorSecondaryText"
+        app:fontFamily="roboto"
+        app:textWeight="normal" />
+
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="25"
+        android:id="@+id/tvTabDate"
+        android:textColor="@color/colorSecondaryText"
+        android:layout_gravity="center_horizontal"
+        android:textSize="22sp"
+        app:fontFamily="roboto"
+        app:textWeight="medium" />
+</LinearLayout>
