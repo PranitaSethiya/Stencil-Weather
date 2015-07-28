@@ -46,7 +46,7 @@
     <string name="degree">º</string>
     <string name="longitude">Longitude</string>
     <string name="latitude">Latitude</string>
-    <string name="title_activity_forecast">ForecastActivity</string>
+    <string name="title_activity_forecast">Forecast</string>
 
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>

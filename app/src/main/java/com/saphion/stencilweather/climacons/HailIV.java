@@ -4,7 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.graphics.DashPathEffect;
+import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
@@ -31,7 +33,7 @@ public class HailIV extends ImageView {
 		super(context);
 	}
 
-	public HailIV(Context context, int height, int width) {
+	public HailIV(Context context, int height, int width, int tint) {
 		super(context);
 		this.height = height;
 		this.width = width;
@@ -49,6 +51,12 @@ public class HailIV extends ImageView {
 		mPaint2.setAntiAlias(true);
 		mPaint3 = new Paint();
 		mPaint3.setAntiAlias(true);
+
+		ColorFilter tintColor = new LightingColorFilter(tint, 0);
+		mPaint.setColorFilter(tintColor);
+		mPaint1.setColorFilter(tintColor);
+		mPaint2.setColorFilter(tintColor);
+		mPaint3.setColorFilter(tintColor);
 
 		cloud = Bitmap.createScaledBitmap(cloud, (int) (width), (int) (height),
 				true);

@@ -34,7 +34,7 @@ public class MistSunIV extends ImageView {
 		super(context);
 	}
 
-	public MistSunIV(Context context, int height, int width, int color) {
+	public MistSunIV(Context context, int height, int width, int color, int tint) {
 		super(context);
 		this.height = height;
 		this.width = width;
@@ -51,6 +51,10 @@ public class MistSunIV extends ImageView {
 		mPaint.setAntiAlias(true);
 		mPaint1.setAntiAlias(true);
 		mPaint2.setAntiAlias(true);
+
+		ColorFilter tintColor = new LightingColorFilter(tint, 0);
+		mPaint.setColorFilter(tintColor);
+		mPaint1.setColorFilter(tintColor);
 
         ColorFilter filter = new LightingColorFilter(color, 0);
         mPaint2.setColorFilter(filter);

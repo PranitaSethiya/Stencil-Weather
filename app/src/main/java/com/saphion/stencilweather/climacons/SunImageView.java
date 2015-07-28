@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.widget.ImageView;
@@ -21,13 +23,16 @@ public class SunImageView extends ImageView {
 		super(context);
 	}
 
-	public SunImageView(Context context, int height, int width) {
+	public SunImageView(Context context, int height, int width, int tint) {
 		super(context);
 		this.height = height;
 		this.width = width;
 		sun = BitmapFactory.decodeResource(getResources(), R.drawable.sun);
 		mPaint = new Paint();
 		mPaint.setAntiAlias(true);
+
+		ColorFilter tintColor = new LightingColorFilter(tint, 0);
+		mPaint.setColorFilter(tintColor);
 
 		sun = Bitmap.createScaledBitmap(sun, (int) (width), (int) (height),
 				true);

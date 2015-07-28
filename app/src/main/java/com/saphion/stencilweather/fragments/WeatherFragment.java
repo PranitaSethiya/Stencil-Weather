@@ -1,6 +1,7 @@
 package com.saphion.stencilweather.fragments;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -81,7 +82,7 @@ public class WeatherFragment extends Fragment {
 
         FrameLayout flContainer = (FrameLayout) v.findViewById(R.id.flConditionIcon);
         try {
-            ImageView iv = new RainSunIV(mContext, Utils.dpToPx(160, mContext), Utils.dpToPx(160, mContext), mColor);
+            ImageView iv = new RainSunIV(mContext, Utils.dpToPx(160, mContext), Utils.dpToPx(160, mContext), mColor, Color.WHITE);
             flContainer.addView(iv);
 
 

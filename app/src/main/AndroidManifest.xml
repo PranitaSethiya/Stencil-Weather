@@ -49,8 +49,7 @@
 
         <activity
             android:name=".activities.ForecastActivity"
-            android:label="@string/title_activity_forecast"
-            android:parentActivityName=".activities.MainActivity" >
+            android:label="@string/title_activity_forecast" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.saphion.stencilweather.activities.MainActivity" />

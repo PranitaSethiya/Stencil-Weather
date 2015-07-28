@@ -6,7 +6,9 @@ import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.graphics.DashPathEffect;
+import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
@@ -34,7 +36,7 @@ public class HazeMoonIV extends ImageView {
 		super(context);
 	}
 
-	public HazeMoonIV(Context context, int height, int width) {
+	public HazeMoonIV(Context context, int height, int width, int tint) {
 		super(context);
 		this.height = height;
 		this.width = width;
@@ -59,6 +61,14 @@ public class HazeMoonIV extends ImageView {
 		mPaint4.setAntiAlias(true);
 		mPaint5 = new Paint(Paint.FILTER_BITMAP_FLAG);
 		mPaint5.setAntiAlias(true);
+
+		ColorFilter tintColor = new LightingColorFilter(tint, 0);
+		mPaint.setColorFilter(tintColor);
+		mPaint1.setColorFilter(tintColor);
+		mPaint2.setColorFilter(tintColor);
+		mPaint3.setColorFilter(tintColor);
+		mPaint4.setColorFilter(tintColor);
+		mPaint5.setColorFilter(tintColor);
 
 		cloud = Bitmap.createBitmap(width, height, Config.ARGB_8888);
 

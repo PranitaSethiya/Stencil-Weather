@@ -2,30 +2,20 @@ package com.saphion.stencilweather.activities;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import android.os.Build;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -45,6 +35,10 @@ public class ForecastActivity extends AppCompatActivity{
 
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        toolbar.setTitle("Forecast");
+        toolbar.setSubtitle(getIntent().getStringExtra("subtitle"));
+
         setSupportActionBar(toolbar);
 
         final ActionBar ab = getSupportActionBar();
@@ -58,10 +52,7 @@ public class ForecastActivity extends AppCompatActivity{
             setupViewPager(viewPager);
         }
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-
-        setToolBarColor(getResources().getColor(R.color.main_button_blue_normal));
+        setToolBarColor(getResources().getColor(R.color.forecast_action_bar));
     }
 
     private void setToolBarColor(int color) {
@@ -87,33 +78,75 @@ public class ForecastActivity extends AppCompatActivity{
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom);
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(ForecastFragment.newInstance(0).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "JUL 27");
-        adapter.addFragment(ForecastFragment.newInstance(1).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "JUL 28");
-        adapter.addFragment(ForecastFragment.newInstance(2).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "JUL 29");
-        adapter.addFragment(ForecastFragment.newInstance(3).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "JUL 30");
-        adapter.addFragment(ForecastFragment.newInstance(4).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "JUL 31");
-        adapter.addFragment(ForecastFragment.newInstance(5).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "AUG 1");
+        final Adapter adapter = new Adapter(getSupportFragmentManager());
+        adapter.addFragment(ForecastFragment.newInstance(0).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "MON", "27", "July, 2015");
+        adapter.addFragment(ForecastFragment.newInstance(1).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "TUE", "28", "July, 2015");
+        adapter.addFragment(ForecastFragment.newInstance(2).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "WED", "29", "July, 2015");
+        adapter.addFragment(ForecastFragment.newInstance(3).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "THU", "30", "July, 2015");
+        adapter.addFragment(ForecastFragment.newInstance(4).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "FRI", "31", "July, 2015");
+        adapter.addFragment(ForecastFragment.newInstance(5).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "SAT", "1", "August, 2015");
         viewPager.setAdapter(adapter);
+
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+        // Iterate over all tabs and set the custom view
+        int tabColor = getResources().getColor(R.color.colorSecondaryText);
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+            TabLayout.Tab tab = tabLayout.getTabAt(i);
+            tab.setCustomView(adapter.getTabView(i));
+        }
+
+        adapter.setTabColor(0, getResources().getColor(R.color.colorPrimaryText));
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                ((TextView)findViewById(R.id.tvTabMonth)).setText(adapter.getMonth(position));
+                adapter.setTabColor(position, getResources().getColor(R.color.colorPrimaryText));
+                adapter.setTabColor(prevSelected, getResources().getColor(R.color.colorSecondaryText));
+                prevSelected = position;
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
     }
 
-    static class Adapter extends FragmentPagerAdapter {
+    int prevSelected = 0;
+
+    class Adapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragments = new ArrayList<>();
-        private final List<String> mFragmentTitles = new ArrayList<>();
+        private final List<String> mFragmentDay = new ArrayList<>();
+        private final List<String> mFragmentDate = new ArrayList<>();
+        private final List<String> mFragmentMonth = new ArrayList<>();
+        private final List<View> mFragmentViews = new ArrayList<>();
 
         public Adapter(FragmentManager fm) {
             super(fm);
         }
 
-        public void addFragment(Fragment fragment, String title) {
+        public void addFragment(Fragment fragment, String day, String date, String month) {
             mFragments.add(fragment);
-            mFragmentTitles.add(title);
+            mFragmentDay.add(day);
+            mFragmentDate.add(date);
+            mFragmentMonth.add(month);
         }
 
         @Override
@@ -128,8 +161,34 @@ public class ForecastActivity extends AppCompatActivity{
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return mFragmentTitles.get(position);
+            return mFragmentDay.get(position);
+        }
+
+
+        public View getTabView(int i) {
+            View v = LayoutInflater.from(ForecastActivity.this).inflate(R.layout.tabhost, null);
+            ((TextView)v.findViewById(R.id.tvTabDate)).setText(mFragmentDate.get(i));
+            ((TextView)v.findViewById(R.id.tvTabDay)).setText(mFragmentDay.get(i));
+            mFragmentViews.add(v);
+            return v;
+        }
+
+        public void setTabColor(int position, int color){
+            View v = mFragmentViews.get(position);
+            ((TextView)v.findViewById(R.id.tvTabDate)).setTextColor(color);
+            ((TextView)v.findViewById(R.id.tvTabDay)).setTextColor(color);
+        }
+
+        public String getMonth(int position){
+            return mFragmentMonth.get(position);
         }
     }
 
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom);
+        super.onBackPressed();
+    }
 }

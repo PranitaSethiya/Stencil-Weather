@@ -175,7 +175,7 @@
                 android:background="@drawable/item_background_circle"
                 android:clickable="true"
                 android:id="@+id/ivExpand"
-                android:src="@drawable/ic_menu_down"
+                android:src="@drawable/ic_chevron_down"
                 android:tint="@color/white" />
 
         </LinearLayout>

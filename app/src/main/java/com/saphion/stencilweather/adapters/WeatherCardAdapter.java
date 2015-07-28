@@ -19,7 +19,7 @@ import java.util.List;
 
 public class WeatherCardAdapter extends RecyclerView.Adapter<WeatherCardAdapter.SimpleViewHolder> {
 
-    private final Activity mActivity;
+    private final MainActivity mActivity;
 
     public static class SimpleViewHolder extends RecyclerView.ViewHolder {
         TextView day;
@@ -51,7 +51,7 @@ public class WeatherCardAdapter extends RecyclerView.Adapter<WeatherCardAdapter.
         return this.mDataset;
     }
 
-    public WeatherCardAdapter(Context context, List<String> objects, Activity mActivity) {
+    public WeatherCardAdapter(Context context, List<String> objects, MainActivity mActivity) {
         this.mContext = context;
         this.mDataset = objects;
         this.mActivity = mActivity;
@@ -91,7 +91,11 @@ public class WeatherCardAdapter extends RecyclerView.Adapter<WeatherCardAdapter.
         viewHolder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mActivity.startActivity(new Intent(mContext, ForecastActivity.class));
+                Intent intent = new Intent(mContext, ForecastActivity.class);
+                intent.putExtra("subtitle", mActivity.getSelectedLocation().getName());
+                intent.putExtra("locationID", mActivity.getSelectedLocation().getId());
+                mActivity.startActivity(intent);
+                mActivity.overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom);
             }
         });
 

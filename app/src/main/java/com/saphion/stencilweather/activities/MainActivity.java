@@ -313,6 +313,10 @@ public class MainActivity extends AppCompatActivity {
         rv.setAdapter(recyclerAdapter);
     }
 
+    public WLocation getSelectedLocation(){
+        return drawerItems.get(navSpinner.getSelectedItemPosition());
+    }
+
     public void addItemToDrawer(WLocation wLocation, boolean isMyLocation) {
         if (isMyLocation) {
             drawerItems.add(0, wLocation);

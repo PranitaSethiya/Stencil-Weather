@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.widget.ImageView;
@@ -23,7 +25,7 @@ public class ThunderIV extends ImageView {
 		super(context);
 	}
 
-	public ThunderIV(Context context, int height, int width) {
+	public ThunderIV(Context context, int height, int width, int tint) {
 		super(context);
 		this.height = height;
 		this.width = width;
@@ -36,6 +38,10 @@ public class ThunderIV extends ImageView {
 
 		mPaint.setAntiAlias(true);
 		mPaint1.setAntiAlias(true);
+
+		ColorFilter tintColor = new LightingColorFilter(tint, 0);
+		mPaint.setColorFilter(tintColor);
+		mPaint1.setColorFilter(tintColor);
 
 		cloud = Bitmap.createScaledBitmap(cloud, (int) (width), (int) (height),
 				true);

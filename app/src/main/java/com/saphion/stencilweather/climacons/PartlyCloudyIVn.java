@@ -24,7 +24,7 @@ public class PartlyCloudyIVn extends ImageView {
 		super(context);
 	}
 
-	public PartlyCloudyIVn(Context context, int height, int width, int color) {
+	public PartlyCloudyIVn(Context context, int height, int width, int color, int tint) {
 		super(context);
 		this.height = height;
 		this.width = width;
@@ -39,6 +39,10 @@ public class PartlyCloudyIVn extends ImageView {
 
 		mPaint2 = new Paint();
 		mPaint2.setAntiAlias(true);
+
+		ColorFilter tintColor = new LightingColorFilter(tint, 0);
+		mPaint.setColorFilter(tintColor);
+
 		ColorFilter filter = new LightingColorFilter(color, 0);
 		mPaint2.setColorFilter(filter);
 

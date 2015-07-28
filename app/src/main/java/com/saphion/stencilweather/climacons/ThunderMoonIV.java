@@ -26,7 +26,7 @@ public class ThunderMoonIV extends ImageView {
 		super(context);
 	}
 
-	public ThunderMoonIV(Context context, int height, int width, int color) {
+	public ThunderMoonIV(Context context, int height, int width, int color, int tint) {
 		super(context);
 		this.height = height;
 		this.width = width;
@@ -42,6 +42,10 @@ public class ThunderMoonIV extends ImageView {
 		mPaint.setAntiAlias(true);
 		mPaint1.setAntiAlias(true);
 		mPaint4.setAntiAlias(true);
+
+		ColorFilter tintColor = new LightingColorFilter(tint, 0);
+		mPaint.setColorFilter(tintColor);
+		mPaint1.setColorFilter(tintColor);
 
 		ColorFilter filter = new LightingColorFilter(color, 0);
 		mPaint4.setColorFilter(filter);

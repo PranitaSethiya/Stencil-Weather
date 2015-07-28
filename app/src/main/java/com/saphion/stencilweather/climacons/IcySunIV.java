@@ -35,7 +35,7 @@ public class IcySunIV extends ImageView {
 		super(context);
 	}
 
-	public IcySunIV(Context context, int height, int width, int color) {
+	public IcySunIV(Context context, int height, int width, int color, int tint) {
 		super(context);
 		this.height = height;
 		this.width = width;
@@ -59,6 +59,12 @@ public class IcySunIV extends ImageView {
 		mPaint3.setAntiAlias(true);
 		mPaint4 = new Paint();
 		mPaint4.setAntiAlias(true);
+
+		ColorFilter tintColor = new LightingColorFilter(tint, 0);
+		mPaint.setColorFilter(tintColor);
+		mPaint1.setColorFilter(tintColor);
+		mPaint2.setColorFilter(tintColor);
+		mPaint3.setColorFilter(tintColor);
 
 		ColorFilter filter = new LightingColorFilter(color, 0);
 		mPaint4.setColorFilter(filter);
