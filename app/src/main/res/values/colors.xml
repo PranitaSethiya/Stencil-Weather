@@ -38,8 +38,10 @@
     <!-- main color for drawable/my_ripple -->
     <color name="my_color_highlight_press">#28ffffff</color>
 
-    <color name="forecast_tint_widget">#242424</color>
-    <color name="forecast_frag_background">#ffffff</color>
+    <color name="forecast_tint_widget">#ffffff</color>
+    <color name="forecast_frag_background">#000000</color>
     <color name="forecast_frag_viewpager_background">#e5eaee</color>
     <color name="forecast_action_bar">#243678</color>
+    <color name="forecast_frag_top">#243678</color>
+    <color name="forecast_frag_bottom">#1e1e1e</color>
 </resources>

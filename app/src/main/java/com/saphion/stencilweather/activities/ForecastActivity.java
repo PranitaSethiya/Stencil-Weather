@@ -27,6 +27,7 @@ import com.saphion.stencilweather.modules.WLocation;
 public class ForecastActivity extends AppCompatActivity{
 
     Toolbar toolbar;
+    int prevSelected = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +93,10 @@ public class ForecastActivity extends AppCompatActivity{
         adapter.addFragment(ForecastFragment.newInstance(3).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "THU", "30", "July, 2015");
         adapter.addFragment(ForecastFragment.newInstance(4).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "FRI", "31", "July, 2015");
         adapter.addFragment(ForecastFragment.newInstance(5).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "SAT", "1", "August, 2015");
+        adapter.addFragment(ForecastFragment.newInstance(6).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "SAT", "2", "August, 2015");
+        adapter.addFragment(ForecastFragment.newInstance(7).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "SUN", "3", "August, 2015");
+        adapter.addFragment(ForecastFragment.newInstance(8).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "MON", "4", "August, 2015");
+        adapter.addFragment(ForecastFragment.newInstance(9).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "TUE", "5", "August, 2015");
         viewPager.setAdapter(adapter);
 
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -104,7 +109,7 @@ public class ForecastActivity extends AppCompatActivity{
             tab.setCustomView(adapter.getTabView(i));
         }
 
-        adapter.setTabColor(0, getResources().getColor(R.color.colorPrimaryText));
+        adapter.setTabColor(prevSelected, getResources().getColor(R.color.colorPrimaryText));
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -129,7 +134,6 @@ public class ForecastActivity extends AppCompatActivity{
 
     }
 
-    int prevSelected = 0;
 
     class Adapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragments = new ArrayList<>();
