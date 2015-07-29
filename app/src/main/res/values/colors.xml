@@ -23,7 +23,8 @@
     <color name="colorAccent">#ff4c41</color>
     <color name="colorPrimaryLight">#B3E5FC</color>
     <color name="colorPrimaryText">#ffffff</color>
-    <color name="colorSecondaryText">#b1b1b1</color>
+    <color name="colorSecondaryText">#8fffffff</color>
+    <color name="colorSecondaryText2">#b1b1b1</color>
     <color name="colorTernaryText">#434343</color>
     <color name="colorDivider">#B6B6B6</color>
     <color name="colorIcons">#B6B6B6</color>
@@ -32,16 +33,22 @@
     <color name="white">#ffffff</color>
 
 
+    <color name="dark_blue">#243678</color>
 
     <!-- main color for drawable-v21/my_ripple -->
     <color name="my_color_highlight">#28bababa</color>
     <!-- main color for drawable/my_ripple -->
     <color name="my_color_highlight_press">#28ffffff</color>
 
-    <color name="forecast_tint_widget">#ffffff</color>
-    <color name="forecast_frag_background">#000000</color>
+    <color name="forecast_tint_widget_top">#ffffff</color>
+    <color name="forecast_tint_widget_bottom">@color/main_button_blue_selected</color>
+    <color name="forecast_font_bottom">#1e1e1e</color>
+    <color name="forecast_font_bottom_headers">@color/main_button_blue_normal</color>
+
+    <color name="forecast_frag_background">#ffffff</color>
     <color name="forecast_frag_viewpager_background">#e5eaee</color>
-    <color name="forecast_action_bar">#243678</color>
-    <color name="forecast_frag_top">#243678</color>
+    <color name="forecast_action_bar">@color/main_button_blue_normal</color>
+    <color name="forecast_frag_top">@color/main_button_blue_normal</color>
     <color name="forecast_frag_bottom">#1e1e1e</color>
+    <color name="forecast_frag_separator">#64ffffff</color>
 </resources>

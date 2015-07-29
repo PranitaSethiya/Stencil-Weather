@@ -44,7 +44,7 @@
                 android:paddingRight="8dp"
                 android:singleLine="true"
                 android:textColor="@color/colorTernaryText"
-                android:textColorHint="@color/colorSecondaryText" />
+                android:textColorHint="@color/colorSecondaryText2" />
 
             <RelativeLayout
                 android:layout_width="60dp"

@@ -2,8 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -19,32 +19,40 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/tvTabMonth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tvTabMonth"
-            android:text="July, 2015"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="60dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:textSize="16sp"
+            android:text="July, 2015"
             android:textColor="@color/colorPrimaryText"
+            android:textSize="16sp"
             app:fontFamily="roboto"
             app:textWeight="medium" />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
-            app:tabMode="scrollable"
-            android:paddingLeft="50dp"
             android:layout_width="match_parent"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:layout_marginLeft="50dp"
+            app:tabMode="scrollable" />
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpagerForecast"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:background="@color/forecast_frag_viewpager_background"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:foreground="@drawable/header_shadow">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpagerForecast"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/forecast_frag_viewpager_background" />
+
+
+    </FrameLayout>
 
 
 </LinearLayout>

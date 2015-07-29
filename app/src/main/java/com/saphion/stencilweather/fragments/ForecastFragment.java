@@ -71,16 +71,16 @@ public class ForecastFragment extends Fragment {
 
         FrameLayout flContainer = (FrameLayout) v.findViewById(R.id.flConditionIcon);
         try {
-            ImageView iv = new RainSunIV(mContext, Utils.dpToPx(160, mContext), Utils.dpToPx(160, mContext), mColor, getResources().getColor(R.color.forecast_tint_widget));
+            ImageView iv = new RainSunIV(getActivity(), Utils.dpToPx(150, getActivity()), Utils.dpToPx(150, getActivity()), getResources().getColor(R.color.forecast_frag_top), getResources().getColor(R.color.forecast_tint_widget_top));
             flContainer.addView(iv);
 
-            expanded = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("expanded_forecast", false);
+            expanded = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("expanded_forecast", false);
 
             v.findViewById(R.id.ivExpand).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     setExpand(!expanded, true);
-                    PreferenceManager.getDefaultSharedPreferences(mContext).edit().putBoolean("expanded_forecast", !expanded).commit();
+                    PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().putBoolean("expanded_forecast", !expanded).commit();
                     expanded = !expanded;
                 }
             });
@@ -110,14 +110,14 @@ public class ForecastFragment extends Fragment {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        (v.findViewById(R.id.tlWeatherContainer)).setAlpha(animate?0:255);
-                        (v.findViewById(R.id.tlWeatherContainer)).setVisibility(View.VISIBLE);
+                        (v.findViewById(R.id.tlTempContainer)).setAlpha(animate?0:255);
+                        (v.findViewById(R.id.tlTempContainer)).setVisibility(View.VISIBLE);
                     }
                 }, 10);
                 YoYo.with(Techniques.FadeInDown)
                         .duration(animate?500:0).interpolate(new BounceInterpolator())
-                        .playOn(v.findViewById(R.id.tlWeatherContainer));
-                ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(v.findViewById(R.id.ivExpand), "translationY", -Utils.dpToPx(50, mContext), 0);
+                        .playOn(v.findViewById(R.id.tlTempContainer));
+                ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(v.findViewById(R.id.tlWeatherContainer), "translationY", -Utils.dpToPx(50, getActivity()), 0);
                 objectAnimator.setDuration(animate?500:0);
                 objectAnimator.start();
 
@@ -130,19 +130,19 @@ public class ForecastFragment extends Fragment {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        (v.findViewById(R.id.tlWeatherContainer)).setAlpha(0);
-                        (v.findViewById(R.id.tlWeatherContainer)).setVisibility(View.INVISIBLE);
+                        (v.findViewById(R.id.tlTempContainer)).setAlpha(0);
+                        (v.findViewById(R.id.tlTempContainer)).setVisibility(View.INVISIBLE);
                     }
                 }, 510);
                 YoYo.with(Techniques.FadeOutUp)
                         .duration(animate?500:0).interpolate(new BounceInterpolator())
-                        .playOn(v.findViewById(R.id.tlWeatherContainer));
+                        .playOn(v.findViewById(R.id.tlTempContainer));
 
-                ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(v.findViewById(R.id.ivExpand), "translationY", 0, -Utils.dpToPx(50, mContext));
+                ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(v.findViewById(R.id.tlWeatherContainer), "translationY", 0, -Utils.dpToPx(50, getActivity()));
                 objectAnimator.setDuration(animate?500:0);
                 objectAnimator.start();
 
-                ObjectAnimator rotate = ObjectAnimator.ofFloat(v.findViewById(R.id.ivExpand), "rotation", -180, 0);
+                ObjectAnimator rotate = ObjectAnimator.ofFloat(v.findViewById(R.id.ivExpand), "rotation", 180, 0);
                 rotate.setDuration(animate?500:0);
                 rotate.start();
 
