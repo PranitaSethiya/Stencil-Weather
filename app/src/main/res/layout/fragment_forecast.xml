@@ -111,16 +111,17 @@
 
     </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginBottom="5dp"
-        android:background="@color/forecast_frag_separator" />
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="5dp"-->
+        <!--android:background="@drawable/header_shadow" />-->
 
     <TableLayout
         android:id="@+id/tlTempContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="3dp"
         android:layout_gravity="center"
         android:gravity="center">
 
@@ -150,7 +151,7 @@
                 android:textColor="@color/forecast_font_bottom_headers"
                 android:textSize="18sp"
                 app:fontFamily="roboto"
-                app:textWeight="normal" />
+                app:textWeight="medium" />
 
             <View
                 android:layout_width="0.5dp"
@@ -171,7 +172,7 @@
                 android:textColor="@color/forecast_font_bottom_headers"
                 android:textSize="18sp"
                 app:fontFamily="roboto"
-                app:textWeight="normal" />
+                app:textWeight="medium" />
 
             <View
                 android:layout_width="0.5dp"
@@ -192,7 +193,7 @@
                 android:textColor="@color/forecast_font_bottom_headers"
                 android:textSize="18sp"
                 app:fontFamily="roboto"
-                app:textWeight="normal" />
+                app:textWeight="medium" />
 
             <View
                 android:layout_width="0.5dp"
@@ -213,7 +214,7 @@
                 android:textColor="@color/forecast_font_bottom_headers"
                 android:textSize="18sp"
                 app:fontFamily="roboto"
-                app:textWeight="normal" />
+                app:textWeight="medium" />
 
             <View
                 android:layout_width="0.5dp"
@@ -252,7 +253,7 @@
                 android:textColor="@color/forecast_font_bottom"
                 android:textSize="16sp"
                 app:fontFamily="roboto"
-                app:textWeight="light" />
+                app:textWeight="normal" />
 
             <View
                 android:layout_width="0.5dp"
@@ -274,7 +275,7 @@
                 android:textColor="@color/forecast_font_bottom"
                 android:textSize="16sp"
                 app:fontFamily="roboto"
-                app:textWeight="light" />
+                app:textWeight="normal" />
 
             <View
                 android:layout_width="0.5dp"
@@ -296,7 +297,7 @@
                 android:textColor="@color/forecast_font_bottom"
                 android:textSize="16sp"
                 app:fontFamily="roboto"
-                app:textWeight="light" />
+                app:textWeight="normal" />
 
             <View
                 android:layout_width="0.5dp"
@@ -318,7 +319,7 @@
                 android:textColor="@color/forecast_font_bottom"
                 android:textSize="16sp"
                 app:fontFamily="roboto"
-                app:textWeight="light" />
+                app:textWeight="normal" />
 
             <View
                 android:layout_width="0.5dp"
@@ -330,9 +331,15 @@
         </TableRow>
     </TableLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tlWeatherContainer"
+        android:foreground="@drawable/header_shadow">
+
 
     <TableLayout
-        android:id="@+id/tlWeatherContainer"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -380,7 +387,7 @@
                     android:textColor="@color/forecast_font_bottom_headers"
                     android:textSize="16sp"
                     app:fontFamily="roboto"
-                    app:textWeight="normal" />
+                    app:textWeight="medium" />
 
                 <com.devspark.robototextview.widget.RobotoTextView
                     android:layout_width="wrap_content"
@@ -393,7 +400,7 @@
                     android:textColor="@color/forecast_font_bottom"
                     android:textSize="15sp"
                     app:fontFamily="roboto"
-                    app:textWeight="light" />
+                    app:textWeight="normal" />
 
             </LinearLayout>
 
@@ -425,7 +432,7 @@
                     android:textColor="@color/forecast_font_bottom_headers"
                     android:textSize="16sp"
                     app:fontFamily="roboto"
-                    app:textWeight="normal" />
+                    app:textWeight="medium" />
 
 
                 <com.devspark.robototextview.widget.RobotoTextView
@@ -440,7 +447,7 @@
                     android:textColor="@color/forecast_font_bottom"
                     android:textSize="15sp"
                     app:fontFamily="roboto"
-                    app:textWeight="light" />
+                    app:textWeight="normal" />
 
             </LinearLayout>
         </TableRow>
@@ -485,7 +492,7 @@
                     android:textColor="@color/forecast_font_bottom_headers"
                     android:textSize="16sp"
                     app:fontFamily="roboto"
-                    app:textWeight="normal" />
+                    app:textWeight="medium" />
 
                 <com.devspark.robototextview.widget.RobotoTextView
                     android:layout_width="wrap_content"
@@ -499,7 +506,7 @@
                     android:textColor="@color/forecast_font_bottom"
                     android:textSize="15sp"
                     app:fontFamily="roboto"
-                    app:textWeight="light" />
+                    app:textWeight="normal" />
 
             </LinearLayout>
 
@@ -532,7 +539,7 @@
                     android:textColor="@color/forecast_font_bottom_headers"
                     android:textSize="16sp"
                     app:fontFamily="roboto"
-                    app:textWeight="normal" />
+                    app:textWeight="medium" />
 
                 <com.devspark.robototextview.widget.RobotoTextView
                     android:layout_width="wrap_content"
@@ -546,7 +553,7 @@
                     android:textColor="@color/forecast_font_bottom"
                     android:textSize="15sp"
                     app:fontFamily="roboto"
-                    app:textWeight="light" />
+                    app:textWeight="normal" />
             </LinearLayout>
 
 
@@ -592,7 +599,7 @@
                     android:textColor="@color/forecast_font_bottom_headers"
                     android:textSize="16sp"
                     app:fontFamily="roboto"
-                    app:textWeight="normal" />
+                    app:textWeight="medium" />
 
                 <com.devspark.robototextview.widget.RobotoTextView
                     android:layout_width="wrap_content"
@@ -606,7 +613,7 @@
                     android:textColor="@color/forecast_font_bottom"
                     android:textSize="15sp"
                     app:fontFamily="roboto"
-                    app:textWeight="light" />
+                    app:textWeight="normal" />
             </LinearLayout>
 
             <ImageView
@@ -637,7 +644,7 @@
                     android:textColor="@color/forecast_font_bottom_headers"
                     android:textSize="16sp"
                     app:fontFamily="roboto"
-                    app:textWeight="normal" />
+                    app:textWeight="medium" />
 
                 <com.devspark.robototextview.widget.RobotoTextView
                     android:layout_width="wrap_content"
@@ -651,7 +658,7 @@
                     android:textColor="@color/forecast_font_bottom"
                     android:textSize="15sp"
                     app:fontFamily="roboto"
-                    app:textWeight="light" />
+                    app:textWeight="normal" />
             </LinearLayout>
 
         </TableRow>
@@ -662,5 +669,6 @@
             android:layout_height="0.7dp"/>
 
     </TableLayout>
+    </FrameLayout>
 
 </LinearLayout>

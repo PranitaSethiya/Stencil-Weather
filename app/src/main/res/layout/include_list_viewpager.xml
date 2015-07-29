@@ -39,8 +39,8 @@
 
                 <ScrollView
                     android:layout_width="match_parent"
-                    android:scrollbars="none"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:scrollbars="none">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -77,14 +77,18 @@
         </RelativeLayout>
     </android.support.design.widget.AppBarLayout>
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvWeatherCards"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginTop="435dp"
-        android:background="@color/colorSecondaryText" />
+        android:foreground="@drawable/header_shadow">
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvWeatherCards"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorSecondaryText" />
+    </FrameLayout>
 
     <!--<android.support.design.widget.FloatingActionButton-->
     <!--android:id="@+id/fab"-->

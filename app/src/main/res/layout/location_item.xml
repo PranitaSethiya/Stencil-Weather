@@ -21,7 +21,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_map_marker_radius"
+            android:src="@drawable/middle"
             android:tint="#ff000000" />
 
         <com.devspark.robototextview.widget.RobotoTextView
@@ -67,6 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_below="@+id/llItem"
+        android:layout_marginTop="-1dp"
         android:layout_marginLeft="58dp"
         android:layout_marginStart="58dp"
         android:background="@color/colorDivider" />

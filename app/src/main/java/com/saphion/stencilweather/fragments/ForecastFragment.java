@@ -115,9 +115,9 @@ public class ForecastFragment extends Fragment {
                     }
                 }, 10);
                 YoYo.with(Techniques.FadeInDown)
-                        .duration(animate?500:0).interpolate(new BounceInterpolator())
+                        .duration(animate?850:0).interpolate(new BounceInterpolator())
                         .playOn(v.findViewById(R.id.tlTempContainer));
-                ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(v.findViewById(R.id.tlWeatherContainer), "translationY", -Utils.dpToPx(50, getActivity()), 0);
+                ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(v.findViewById(R.id.tlWeatherContainer), "translationY", -Utils.dpToPx(60, getActivity()), 0);
                 objectAnimator.setDuration(animate?500:0);
                 objectAnimator.start();
 
@@ -135,10 +135,10 @@ public class ForecastFragment extends Fragment {
                     }
                 }, 510);
                 YoYo.with(Techniques.FadeOutUp)
-                        .duration(animate?500:0).interpolate(new BounceInterpolator())
+                        .duration(animate?300:0).interpolate(new BounceInterpolator())
                         .playOn(v.findViewById(R.id.tlTempContainer));
 
-                ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(v.findViewById(R.id.tlWeatherContainer), "translationY", 0, -Utils.dpToPx(50, getActivity()));
+                ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(v.findViewById(R.id.tlWeatherContainer), "translationY", 0, -Utils.dpToPx(60, getActivity()));
                 objectAnimator.setDuration(animate?500:0);
                 objectAnimator.start();
 
