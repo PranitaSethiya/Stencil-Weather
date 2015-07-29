@@ -45,11 +45,18 @@
         android:layout_height="match_parent"
         android:foreground="@drawable/header_shadow">
 
+        <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/swipeRefresh_forecast"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpagerForecast"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/forecast_frag_viewpager_background" />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
 
 
     </FrameLayout>

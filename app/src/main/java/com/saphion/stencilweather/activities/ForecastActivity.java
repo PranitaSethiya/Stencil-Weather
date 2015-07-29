@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Build;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -12,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -28,6 +31,7 @@ public class ForecastActivity extends AppCompatActivity{
 
     Toolbar toolbar;
     int prevSelected = 0;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,21 @@ public class ForecastActivity extends AppCompatActivity{
         }
 
         setToolBarColor(getResources().getColor(R.color.forecast_action_bar));
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh_forecast);
+
+        swipeRefreshLayout.setColorSchemeResources(R.color.main_button_red_normal, R.color.main_button_green_normal, R.color.main_button_blue_normal);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 3000);
+            }
+        });
     }
 
     private void setToolBarColor(int color) {
@@ -131,6 +150,8 @@ public class ForecastActivity extends AppCompatActivity{
 
             }
         });
+
+        viewPager.setOffscreenPageLimit(1);
 
     }
 

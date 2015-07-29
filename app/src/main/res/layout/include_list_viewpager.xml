@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -29,48 +30,42 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="-50dp">
+            android:layout_marginTop="-60dp">
 
             <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/swipeRefresh_common"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="50dp">
+                android:layout_marginTop="60dp">
 
                 <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scrollbars="none">
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
 
 
                         <FrameLayout
                             android:id="@+id/fragmentContainer"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_height="wrap_content" />
 
-
-                        <FrameLayout
-                            android:id="@+id/flDarkenBackground"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="60dp"
-                            android:background="#50000000"
-                            android:visibility="gone" />
-
-
-                    </RelativeLayout>
                 </ScrollView>
             </android.support.v4.widget.SwipeRefreshLayout>
+
+            <FrameLayout
+                android:id="@+id/flDarkenBackground"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:background="#50000000"/>
 
             <include
                 layout="@layout/search_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
+                android:layout_marginTop="10dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp" />
 
@@ -80,7 +75,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="435dp"
+
         android:foreground="@drawable/header_shadow">
 
         <android.support.v7.widget.RecyclerView
@@ -98,4 +93,4 @@
     <!--android:layout_margin="@dimen/fab_margin"-->
     <!--android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha" />-->
 
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

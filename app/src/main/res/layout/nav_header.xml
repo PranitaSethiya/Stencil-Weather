@@ -6,14 +6,13 @@
     android:layout_height="130dp"
     android:background="@drawable/nav_background"
     android:paddingLeft="16dp"
-    android:backgroundTintMode="src_over"
-    android:backgroundTint="#99512DA8"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:orientation="horizontal"
     android:gravity="bottom">
 
     <com.devspark.robototextview.widget.RobotoTextView
         android:layout_width="wrap_content"
+        android:id="@+id/AppName"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
         android:layout_alignParentBottom="true"

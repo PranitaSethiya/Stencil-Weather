@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/llMainWeatherContainer"
     android:layout_width="match_parent"
-    android:background="@color/forecast_frag_background"
     android:layout_height="match_parent"
+    android:background="@color/forecast_frag_background"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -112,17 +111,17 @@
     </RelativeLayout>
 
     <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="5dp"-->
-        <!--android:background="@drawable/header_shadow" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="5dp"-->
+    <!--android:background="@drawable/header_shadow" />-->
 
     <TableLayout
         android:id="@+id/tlTempContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="3dp"
-        android:layout_gravity="center"
         android:gravity="center">
 
         <TableRow
@@ -132,96 +131,71 @@
             android:layout_gravity="center"
             android:gravity="center">
 
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_column="0"
-                android:layout_marginTop="3.5dp"
-                android:background="@color/forecast_frag_separator" />
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:text="MORNING"
+                android:layout_weight="1"
+                android:textColor="@color/forecast_font_bottom_headers"
+                android:textSize="18sp"
+                app:fontFamily="roboto"
+                app:typeface="roboto_condensed_light"
+                app:textWeight="medium" />
 
             <com.devspark.robototextview.widget.RobotoTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
                 android:layout_gravity="center"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:text="Morning"
+                android:text="NOON"
                 android:textColor="@color/forecast_font_bottom_headers"
                 android:textSize="18sp"
                 app:fontFamily="roboto"
+                app:typeface="roboto_condensed_light"
                 app:textWeight="medium" />
 
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_column="2"
-                android:layout_marginTop="3.5dp"
-                android:background="@color/forecast_frag_separator" />
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:text="EVENING"
+                android:textColor="@color/forecast_font_bottom_headers"
+                android:textSize="18sp"
+                app:fontFamily="roboto"
+                app:typeface="roboto_condensed_light"
+                app:textWeight="medium" />
+
 
             <com.devspark.robototextview.widget.RobotoTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="3"
                 android:layout_gravity="center"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:text="Afternoon"
+                android:text="NIGHT"
                 android:textColor="@color/forecast_font_bottom_headers"
                 android:textSize="18sp"
                 app:fontFamily="roboto"
+                app:typeface="roboto_condensed_light"
                 app:textWeight="medium" />
-
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
-                android:layout_column="4"
-                android:layout_marginTop="3.5dp"
-                android:background="@color/forecast_frag_separator" />
-
-            <com.devspark.robototextview.widget.RobotoTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="5"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:text="Evening"
-                android:textColor="@color/forecast_font_bottom_headers"
-                android:textSize="18sp"
-                app:fontFamily="roboto"
-                app:textWeight="medium" />
-
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
-                android:layout_column="6"
-                android:layout_marginTop="3.5dp"
-                android:background="@color/forecast_frag_separator" />
-
-            <com.devspark.robototextview.widget.RobotoTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="7"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:text="Night"
-                android:textColor="@color/forecast_font_bottom_headers"
-                android:textSize="18sp"
-                app:fontFamily="roboto"
-                app:textWeight="medium" />
-
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
-                android:layout_column="8"
-                android:layout_marginTop="3.5dp"
-                android:background="@color/forecast_frag_separator" />
 
 
         </TableRow>
@@ -233,19 +207,13 @@
             android:layout_gravity="center"
             android:gravity="center">
 
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
-                android:layout_column="0"
-                android:layout_marginBottom="2.5dp"
-                android:background="@color/forecast_frag_separator" />
-
             <com.devspark.robototextview.widget.RobotoTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="1"
+                android:layout_column="0"
                 android:layout_gravity="center"
                 android:layout_marginTop="2.5dp"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
@@ -255,19 +223,13 @@
                 app:fontFamily="roboto"
                 app:textWeight="normal" />
 
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
-                android:layout_column="2"
-                android:layout_marginBottom="2.5dp"
-                android:background="@color/forecast_frag_separator" />
-
             <com.devspark.robototextview.widget.RobotoTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="3"
+                android:layout_column="1"
                 android:layout_gravity="center"
                 android:layout_marginTop="2.5dp"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
@@ -277,19 +239,13 @@
                 app:fontFamily="roboto"
                 app:textWeight="normal" />
 
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
-                android:layout_column="4"
-                android:layout_marginBottom="2.5dp"
-                android:background="@color/forecast_frag_separator" />
-
             <com.devspark.robototextview.widget.RobotoTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="5"
+                android:layout_column="2"
                 android:layout_gravity="center"
                 android:layout_marginTop="2.5dp"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
@@ -299,19 +255,14 @@
                 app:fontFamily="roboto"
                 app:textWeight="normal" />
 
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
-                android:layout_column="6"
-                android:layout_marginBottom="2.5dp"
-                android:background="@color/forecast_frag_separator" />
 
             <com.devspark.robototextview.widget.RobotoTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="7"
+                android:layout_column="3"
                 android:layout_gravity="center"
                 android:layout_marginTop="2.5dp"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
@@ -321,354 +272,350 @@
                 app:fontFamily="roboto"
                 app:textWeight="normal" />
 
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="match_parent"
-                android:layout_column="8"
-                android:layout_marginBottom="2.5dp"
-                android:background="@color/forecast_frag_separator" />
-
         </TableRow>
     </TableLayout>
 
     <FrameLayout
+        android:id="@+id/tlWeatherContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tlWeatherContainer"
         android:foreground="@drawable/header_shadow">
 
 
-    <TableLayout
+        <TableLayout
 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
-        android:gravity="center">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center">
 
-        <!--<View android:layout_width="match_parent"-->
+            <!--<View android:layout_width="match_parent"-->
             <!--android:background="@color/forecast_frag_separator"-->
             <!--android:layout_margin="6dp"-->
             <!--android:layout_height="0.7dp"/>-->
 
-        <TableRow
-            android:id="@+id/llWeatherContainer2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_column="0"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/windmill"
-                android:tint="@color/forecast_tint_widget_bottom" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <TableRow
+                android:id="@+id/llWeatherContainer2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_column="1"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:gravity="center">
 
-                <com.devspark.robototextview.widget.RobotoTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left|start|center_vertical"
-                    android:gravity="left|start|center_vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="Wind"
-                    android:textColor="@color/forecast_font_bottom_headers"
-                    android:textSize="16sp"
-                    app:fontFamily="roboto"
-                    app:textWeight="medium" />
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_column="0"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/windmill"
+                    android:tint="@color/forecast_tint_widget_bottom" />
 
-                <com.devspark.robototextview.widget.RobotoTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left|start|center_vertical"
-                    android:gravity="left|start|center_vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="2 kmph SW"
-                    android:textColor="@color/forecast_font_bottom"
-                    android:textSize="15sp"
-                    app:fontFamily="roboto"
-                    app:textWeight="normal" />
-
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_column="2"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/cloudiness"
-                android:tint="@color/forecast_tint_widget_bottom" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="3"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <com.devspark.robototextview.widget.RobotoTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left|start|center_vertical"
-                    android:gravity="left|start|center_vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="Cloudiness"
-                    android:textColor="@color/forecast_font_bottom_headers"
-                    android:textSize="16sp"
-                    app:fontFamily="roboto"
-                    app:textWeight="medium" />
-
-
-                <com.devspark.robototextview.widget.RobotoTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_column="3"
-                    android:layout_gravity="left|start|center_vertical"
-                    android:gravity="left|start|center_vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="20 %"
-                    android:textColor="@color/forecast_font_bottom"
-                    android:textSize="15sp"
-                    app:fontFamily="roboto"
-                    app:textWeight="normal" />
-
-            </LinearLayout>
-        </TableRow>
-
-        <View android:layout_width="match_parent"
-            android:background="@color/forecast_frag_separator"
-            android:layout_margin="6dp"
-            android:layout_height="0.7dp"/>
-
-        <TableRow
-            android:id="@+id/llWeatherContainer3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_column="0"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/pressure"
-                android:tint="@color/forecast_tint_widget_bottom" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="1"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <com.devspark.robototextview.widget.RobotoTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left|start|center_vertical"
-                    android:gravity="left|start|center_vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="Pressure"
-                    android:textColor="@color/forecast_font_bottom_headers"
-                    android:textSize="16sp"
-                    app:fontFamily="roboto"
-                    app:textWeight="medium" />
-
-                <com.devspark.robototextview.widget.RobotoTextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_column="1"
-                    android:layout_gravity="left|start|center_vertical"
-                    android:gravity="left|start|center_vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="1001 mbar"
-                    android:textColor="@color/forecast_font_bottom"
-                    android:textSize="15sp"
-                    app:fontFamily="roboto"
-                    app:textWeight="normal" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|start|center_vertical"
+                        android:gravity="left|start|center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="Wind"
+                        android:textColor="@color/forecast_font_bottom_headers"
+                        android:textSize="16sp"
+                        app:fontFamily="roboto"
+                        app:textWeight="medium" />
 
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_column="2"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
-                android:padding="5dp"
-                android:src="@drawable/drop_humidity"
-                android:tint="@color/forecast_tint_widget_bottom" />
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|start|center_vertical"
+                        android:gravity="left|start|center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="2 kmph SW"
+                        android:textColor="@color/forecast_font_bottom"
+                        android:textSize="15sp"
+                        app:fontFamily="roboto"
+                        app:textWeight="normal" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="3"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                </LinearLayout>
 
-                <com.devspark.robototextview.widget.RobotoTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left|start|center_vertical"
-                    android:gravity="left|start|center_vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="Humidity"
-                    android:textColor="@color/forecast_font_bottom_headers"
-                    android:textSize="16sp"
-                    app:fontFamily="roboto"
-                    app:textWeight="medium" />
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_column="2"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/cloudiness"
+                    android:tint="@color/forecast_tint_widget_bottom" />
 
-                <com.devspark.robototextview.widget.RobotoTextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_column="3"
-                    android:layout_gravity="left|start|center_vertical"
-                    android:gravity="left|start|center_vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="88 %"
-                    android:textColor="@color/forecast_font_bottom"
-                    android:textSize="15sp"
-                    app:fontFamily="roboto"
-                    app:textWeight="normal" />
-            </LinearLayout>
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|start|center_vertical"
+                        android:gravity="left|start|center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="Cloudiness"
+                        android:textColor="@color/forecast_font_bottom_headers"
+                        android:textSize="16sp"
+                        app:fontFamily="roboto"
+                        app:textWeight="medium" />
 
 
-        </TableRow>
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_gravity="left|start|center_vertical"
+                        android:gravity="left|start|center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="20 %"
+                        android:textColor="@color/forecast_font_bottom"
+                        android:textSize="15sp"
+                        app:fontFamily="roboto"
+                        app:textWeight="normal" />
 
-        <View android:layout_width="match_parent"
-            android:background="@color/forecast_frag_separator"
-            android:layout_margin="6dp"
-            android:layout_height="0.7dp"/>
+                </LinearLayout>
+            </TableRow>
 
-        <TableRow
-            android:id="@+id/llWeatherContainer4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.7dp"
+                android:layout_margin="6dp"
+                android:background="@color/forecast_frag_separator" />
 
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_column="0"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/umbrella"
-                android:tint="@color/forecast_tint_widget_bottom" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <TableRow
+                android:id="@+id/llWeatherContainer3"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_column="1"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:gravity="center"
+                android:orientation="horizontal">
 
-                <com.devspark.robototextview.widget.RobotoTextView
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_column="0"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/pressure"
+                    android:tint="@color/forecast_tint_widget_bottom" />
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left|start|center_vertical"
-                    android:gravity="left|start|center_vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="Precipitation"
-                    android:textColor="@color/forecast_font_bottom_headers"
-                    android:textSize="16sp"
-                    app:fontFamily="roboto"
-                    app:textWeight="medium" />
+                    android:layout_column="1"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <com.devspark.robototextview.widget.RobotoTextView
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|start|center_vertical"
+                        android:gravity="left|start|center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="Pressure"
+                        android:textColor="@color/forecast_font_bottom_headers"
+                        android:textSize="16sp"
+                        app:fontFamily="roboto"
+                        app:textWeight="medium" />
+
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:layout_gravity="left|start|center_vertical"
+                        android:gravity="left|start|center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="1001 mbar"
+                        android:textColor="@color/forecast_font_bottom"
+                        android:textSize="15sp"
+                        app:fontFamily="roboto"
+                        app:textWeight="normal" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_column="2"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:padding="5dp"
+                    android:src="@drawable/drop_humidity"
+                    android:tint="@color/forecast_tint_widget_bottom" />
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_column="5"
-                    android:layout_gravity="left|start|center_vertical"
-                    android:gravity="left|start|center_vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="0.5 in"
-                    android:textColor="@color/forecast_font_bottom"
-                    android:textSize="15sp"
-                    app:fontFamily="roboto"
-                    app:textWeight="normal" />
-            </LinearLayout>
+                    android:layout_column="3"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_column="2"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/ic_snowman"
-                android:tint="@color/forecast_tint_widget_bottom" />
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|start|center_vertical"
+                        android:gravity="left|start|center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="Humidity"
+                        android:textColor="@color/forecast_font_bottom_headers"
+                        android:textSize="16sp"
+                        app:fontFamily="roboto"
+                        app:textWeight="medium" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_gravity="left|start|center_vertical"
+                        android:gravity="left|start|center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="88 %"
+                        android:textColor="@color/forecast_font_bottom"
+                        android:textSize="15sp"
+                        app:fontFamily="roboto"
+                        app:textWeight="normal" />
+                </LinearLayout>
+
+
+            </TableRow>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.7dp"
+                android:layout_margin="6dp"
+                android:background="@color/forecast_frag_separator" />
+
+            <TableRow
+                android:id="@+id/llWeatherContainer4"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_column="3"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:gravity="center"
+                android:orientation="horizontal">
 
-                <com.devspark.robototextview.widget.RobotoTextView
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_column="0"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/umbrella"
+                    android:tint="@color/forecast_tint_widget_bottom" />
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left|start|center_vertical"
-                    android:gravity="left|start|center_vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="Snow"
-                    android:textColor="@color/forecast_font_bottom_headers"
-                    android:textSize="16sp"
-                    app:fontFamily="roboto"
-                    app:textWeight="medium" />
+                    android:layout_column="1"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <com.devspark.robototextview.widget.RobotoTextView
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|start|center_vertical"
+                        android:gravity="left|start|center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="Precipitation"
+                        android:textColor="@color/forecast_font_bottom_headers"
+                        android:textSize="16sp"
+                        app:fontFamily="roboto"
+                        app:textWeight="medium" />
+
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="5"
+                        android:layout_gravity="left|start|center_vertical"
+                        android:gravity="left|start|center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="0.5 in"
+                        android:textColor="@color/forecast_font_bottom"
+                        android:textSize="15sp"
+                        app:fontFamily="roboto"
+                        app:textWeight="normal" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_column="2"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/ic_snowman"
+                    android:tint="@color/forecast_tint_widget_bottom" />
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_column="5"
-                    android:layout_gravity="left|start|center_vertical"
-                    android:gravity="left|start|center_vertical"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:text="1.7 in"
-                    android:textColor="@color/forecast_font_bottom"
-                    android:textSize="15sp"
-                    app:fontFamily="roboto"
-                    app:textWeight="normal" />
-            </LinearLayout>
+                    android:layout_column="3"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-        </TableRow>
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|start|center_vertical"
+                        android:gravity="left|start|center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="Snow"
+                        android:textColor="@color/forecast_font_bottom_headers"
+                        android:textSize="16sp"
+                        app:fontFamily="roboto"
+                        app:textWeight="medium" />
 
-        <View android:layout_width="match_parent"
-            android:background="@color/forecast_frag_separator"
-            android:layout_margin="5dp"
-            android:layout_height="0.7dp"/>
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="5"
+                        android:layout_gravity="left|start|center_vertical"
+                        android:gravity="left|start|center_vertical"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="1.7 in"
+                        android:textColor="@color/forecast_font_bottom"
+                        android:textSize="15sp"
+                        app:fontFamily="roboto"
+                        app:textWeight="normal" />
+                </LinearLayout>
 
-    </TableLayout>
+            </TableRow>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.7dp"
+                android:layout_margin="5dp"
+                android:background="@color/forecast_frag_separator" />
+
+        </TableLayout>
     </FrameLayout>
 
 </LinearLayout>
