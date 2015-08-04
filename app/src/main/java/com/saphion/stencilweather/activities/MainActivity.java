@@ -20,7 +20,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -47,6 +49,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -61,6 +68,8 @@ import android.widget.Toast;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.ArgbEvaluator;
+import com.nineoldandroids.animation.ValueAnimator;
 import com.saphion.stencilweather.R;
 import com.saphion.stencilweather.adapters.RecyclerViewAdapter;
 import com.saphion.stencilweather.adapters.WeatherCardAdapter;
@@ -76,12 +85,14 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
+
+import io.codetail.animation.SupportAnimator;
+import io.codetail.animation.ViewAnimationUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -139,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     CardView card_search;
     View pb;
+    View actionsContainer;
 
     private void initialiseThings() {
 
@@ -151,6 +163,12 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh_common);
 
         card_search = (CardView) findViewById(R.id.card_search);
+
+        actionsContainer = findViewById(R.id.container_actions);
+        actionsContainer.setVisibility(View.INVISIBLE);
+
+//        initiateActions(false);
+//        initiateActions(false);
 
         pb = findViewById(R.id.progressSearch);
 
@@ -172,10 +190,28 @@ public class MainActivity extends AppCompatActivity {
         IsAdapterEmpty();
     }
 
+
     public void setToolBarColor(int color) {
         try {
-            findViewById(R.id.appbar).setBackgroundColor(color);
-            toolbar.setBackgroundColor(color);
+//            findViewById(R.id.appbar).setBackgroundColor(color);
+            toolbar.setBackgroundColor(Color.TRANSPARENT);
+
+            Integer colorFrom = Color.TRANSPARENT;
+            Drawable background = findViewById(R.id.appbar).getBackground();
+            if (background instanceof ColorDrawable)
+                colorFrom = ((ColorDrawable) background).getColor();
+            Integer colorTo = color;
+            ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+            colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+                @Override
+                public void onAnimationUpdate(ValueAnimator animator) {
+                    findViewById(R.id.appbar).setBackgroundColor((Integer) animator.getAnimatedValue());
+                }
+
+            });
+            colorAnimation.setDuration(350);
+            colorAnimation.start();
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getWindow();
@@ -214,7 +250,8 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     WeatherFragment fragment = WeatherFragment.newInstance(drawerItems.get(i).getId()).setContext(getBaseContext(), drawerItems.get(i));
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, fragment).commit();
-                }catch(Exception ignored){}
+                } catch (Exception ignored) {
+                }
             }
 
             @Override
@@ -313,7 +350,7 @@ public class MainActivity extends AppCompatActivity {
         rv.setAdapter(recyclerAdapter);
     }
 
-    public WLocation getSelectedLocation(){
+    public WLocation getSelectedLocation() {
         return drawerItems.get(navSpinner.getSelectedItemPosition());
     }
 
@@ -398,7 +435,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void actionBarContent(boolean show) {
         if (navSpinner != null)
-            navSpinner.setVisibility(show?View.VISIBLE:View.GONE);
+            navSpinner.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     public void changePosition(final int position, final WLocation wLocation) {
@@ -406,13 +443,14 @@ public class MainActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(navSpinner.getSelectedItemPosition() == position)
+                if (navSpinner.getSelectedItemPosition() == position)
                     navSpinner.setSelection(position, true);
                 try {
                     navAdapter.remove(navAdapter.getItem(position));
                     navAdapter.notifyDataSetChanged();
                     drawerItems.remove(wLocation);
-                }catch (Exception ignored){}
+                } catch (Exception ignored) {
+                }
             }
         }, 350);
 
@@ -517,6 +555,9 @@ public class MainActivity extends AppCompatActivity {
                         InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search);
                         showDark();
                         break;
+                    case R.id.action_more:
+                        initiateActions(true);
+                        return true;
                     default:
                         break;
                 }
@@ -620,10 +661,122 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void showDialog(){
+    boolean hidden = true;
+
+    public void bounceScaleAnimation(View mView, int delay){
+
+//        YoYo.with(Techniques.ZoomIn).interpolate(new BounceInterpolator()).duration(180).delay(delay).playOn(mView);
+        Animation pulse = AnimationUtils.loadAnimation(this, R.anim.pulse);
+        pulse.setStartOffset(delay);
+        mView.startAnimation(pulse);
+    }
+
+
+    public void initiateActions(boolean animate) {
+
+        // get the center for the clipping circle
+        int cx = actionsContainer.getRight() - Utils.dpToPx(25, MainActivity.this);
+        int cy = actionsContainer.getTop();
+
+        // get the final radius for the clipping circle
+        float finalRadius = (float) Math.hypot(actionsContainer.getWidth(), actionsContainer.getHeight());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            android.animation.Animator animator = android.view.ViewAnimationUtils.createCircularReveal(actionsContainer, cx, cy, 0, finalRadius);
+            animator.setInterpolator(new AccelerateDecelerateInterpolator());
+            animator.setDuration(animate?300:1);
+
+            android.animation.Animator animator_reverse = android.view.ViewAnimationUtils.createCircularReveal(actionsContainer, cx, cy, finalRadius, 0);
+            animator_reverse.setInterpolator(new AccelerateDecelerateInterpolator());
+            animator_reverse.setDuration(animate?300:1);
+
+            if (hidden) {
+                actionsContainer.setVisibility(View.VISIBLE);
+                animator.start();
+                bounceScaleAnimation(findViewById(R.id.containerFabShare), 80);
+                bounceScaleAnimation(findViewById(R.id.containerFabMap), 120);
+                bounceScaleAnimation(findViewById(R.id.containerFabGraph), 160);
+                hidden = false;
+            } else {
+                animator_reverse.addListener(new android.animation.Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(android.animation.Animator animator) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(android.animation.Animator animator) {
+                        actionsContainer.setVisibility(View.GONE);
+                        hidden = true;
+                    }
+
+                    @Override
+                    public void onAnimationCancel(android.animation.Animator animator) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(android.animation.Animator animator) {
+
+                    }
+                });
+                animator_reverse.start();
+            }
+
+        } else {
+
+            SupportAnimator animator =
+                    ViewAnimationUtils.createCircularReveal(actionsContainer, cx, cy, 0, finalRadius);
+            animator.setInterpolator(new AccelerateDecelerateInterpolator());
+            animator.setDuration(animate?300:1);
+
+            SupportAnimator animator_reverse = animator.reverse();
+//            animator.start();
+//
+            if (hidden) {
+                actionsContainer.setVisibility(View.VISIBLE);
+                animator.start();
+
+                bounceScaleAnimation(findViewById(R.id.containerFabShare), 80);
+                bounceScaleAnimation(findViewById(R.id.containerFabMap), 120);
+                bounceScaleAnimation(findViewById(R.id.containerFabGraph), 160);
+
+                hidden = false;
+            } else {
+                animator_reverse.addListener(new SupportAnimator.AnimatorListener() {
+
+                    @Override
+                    public void onAnimationStart() {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd() {
+                        actionsContainer.setVisibility(View.GONE);
+                        hidden = true;
+                    }
+
+                    @Override
+                    public void onAnimationCancel() {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat() {
+
+                    }
+                });
+                animator_reverse.start();
+            }
+        }
+
+    }
+
+    private void showDialog() {
         final View dialogView = View.inflate(MainActivity.this, R.layout.layout_add_location_point, null);
 
-        AlertDialog.Builder builder =  new AlertDialog.Builder(MainActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle("Location");
         builder.setView(dialogView);
 
@@ -777,7 +930,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawers();
         } else if (card_search.getVisibility() == View.VISIBLE) {
             InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search);

@@ -69,6 +69,15 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp" />
 
+            <include
+                layout="@layout/actions_menu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="60dp" />
+
+
+
         </RelativeLayout>
     </android.support.design.widget.AppBarLayout>
 

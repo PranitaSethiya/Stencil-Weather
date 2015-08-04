@@ -7,7 +7,11 @@
     <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_map_marker"
-        android:orderInCategory="100"
         android:title="@string/add_location"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/action_more"
+        android:icon="@drawable/ic_dots_vertical"
+        android:title="@string/more_actions"
         app:showAsAction="always"/>
 </menu>

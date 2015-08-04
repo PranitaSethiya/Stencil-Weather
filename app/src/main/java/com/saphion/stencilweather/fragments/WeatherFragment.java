@@ -22,7 +22,9 @@ import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.nineoldandroids.animation.ArgbEvaluator;
 import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.animation.ValueAnimator;
 import com.saphion.stencilweather.R;
 import com.saphion.stencilweather.activities.MainActivity;
 import com.saphion.stencilweather.climacons.RainSunIV;
@@ -31,6 +33,7 @@ import com.saphion.stencilweather.utilities.TimeHelpers;
 import com.saphion.stencilweather.utilities.Utils;
 
 import java.util.Calendar;
+import java.util.Random;
 import java.util.TimeZone;
 
 public class WeatherFragment extends Fragment {
@@ -89,8 +92,21 @@ public class WeatherFragment extends Fragment {
             calendar = Calendar
                     .getInstance(TimeZone.getTimeZone(location.getTimezone()));
 
-            SeekBar sb = (SeekBar) v.findViewById(R.id.sbTimeSeek);
-            sb.setThumb(new BitmapDrawable(mContext.getResources(), Utils.getTimeThumb(mContext, mColor, calendar.get(Calendar.HOUR), 0)));
+            final SeekBar sb = (SeekBar) v.findViewById(R.id.sbTimeSeek);
+
+            ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), Color.TRANSPARENT, mColor);
+            colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+                @Override
+                public void onAnimationUpdate(ValueAnimator animator) {
+                    sb.setThumb(new BitmapDrawable(mContext.getResources(), Utils.getTimeThumb(mContext, (Integer)animator.getAnimatedValue(), calendar.get(Calendar.HOUR), 0)));
+                }
+
+            });
+            colorAnimation.setDuration(350);
+            colorAnimation.start();
+
+
             sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
@@ -146,22 +162,22 @@ public class WeatherFragment extends Fragment {
         return v;
     }
 
-    private void setExpand(boolean expand, boolean animate) {
+    private void setExpand(boolean expand, final boolean animate) {
         if(v != null){
             RotateAnimation anim = new RotateAnimation(expand?0:180, expand?180:360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            anim.setDuration(500);
+            anim.setDuration(animate?500:1);
             anim.setFillAfter(true);
             v.findViewById(R.id.ivExpand).startAnimation(anim);
             if(expand) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        (v.findViewById(R.id.tlWeatherContainer)).setAlpha(0);
+                        (v.findViewById(R.id.tlWeatherContainer)).setAlpha(animate?0:255);
                         (v.findViewById(R.id.tlWeatherContainer)).setVisibility(View.VISIBLE);
                     }
                 }, 210);
                 YoYo.with(Techniques.FadeInDown)
-                        .duration(500).interpolate(new BounceInterpolator()).delay(200)
+                        .duration(animate?500:1).interpolate(new BounceInterpolator()).delay(200)
                         .playOn(v.findViewById(R.id.tlWeatherContainer));
 
 //                TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 0, 0);
@@ -171,7 +187,7 @@ public class WeatherFragment extends Fragment {
 //                v.findViewById(R.id.llMainWeatherContainer).startAnimation(translateAnimation);
 
                 ObjectAnimator objectAnimator= ObjectAnimator.ofFloat(v.findViewById(R.id.llMainWeatherContainer), "translationY", Utils.dpToPx(20, mContext), 0);
-                objectAnimator.setDuration(500);
+                objectAnimator.setDuration(animate?500:1);
                 objectAnimator.start();
 
 
@@ -185,7 +201,7 @@ public class WeatherFragment extends Fragment {
                     }
                 }, 510);
                 YoYo.with(Techniques.FadeOutUp)
-                        .duration(500).interpolate(new BounceInterpolator()).delay(200)
+                        .duration(animate?500:1).interpolate(new BounceInterpolator()).delay(200)
                         .playOn(v.findViewById(R.id.tlWeatherContainer));
 
 //                TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 0, Utils.dpToPx(20, mContext));
@@ -195,7 +211,7 @@ public class WeatherFragment extends Fragment {
 //                v.findViewById(R.id.llMainWeatherContainer).startAnimation(translateAnimation);
 
                 ObjectAnimator objectAnimator= ObjectAnimator.ofFloat(v.findViewById(R.id.llMainWeatherContainer), "translationY", 0, Utils.dpToPx(20, mContext));
-                objectAnimator.setDuration(500);
+                objectAnimator.setDuration(animate?500:1);
                 objectAnimator.start();
 
             }
@@ -211,7 +227,9 @@ public class WeatherFragment extends Fragment {
     }
 
     private void loadData() {
-        mColor = 0xff1e8bd4;
+        Random random = new Random();
+        mColor = (0xff000000 | random.nextInt(0x00ffffff));
+//        mColor = 0xff1e8bd4;
     }
 
     public int getColor() {
