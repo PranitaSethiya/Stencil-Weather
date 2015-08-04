@@ -41,14 +41,14 @@
     <color name="my_color_highlight_press">#28ffffff</color>
 
     <color name="forecast_tint_widget_top">#ffffff</color>
-    <color name="forecast_tint_widget_bottom">@color/main_button_blue_selected</color>
+    <color name="forecast_tint_widget_bottom">#3f51b5</color>
     <color name="forecast_font_bottom">#1e1e1e</color>
-    <color name="forecast_font_bottom_headers">@color/main_button_blue_normal</color>
+    <color name="forecast_font_bottom_headers">#3f51b5</color>
 
     <color name="forecast_frag_background">#ffffff</color>
     <color name="forecast_frag_viewpager_background">#e5eaee</color>
-    <color name="forecast_action_bar">@color/main_button_blue_normal</color>
-    <color name="forecast_frag_top">@color/main_button_blue_normal</color>
+    <color name="forecast_action_bar">#3f51b5</color>
+    <color name="forecast_frag_top">#3f51b5</color>
     <color name="forecast_frag_bottom">#1e1e1e</color>
     <color name="forecast_frag_separator">#64ffffff</color>
 </resources>

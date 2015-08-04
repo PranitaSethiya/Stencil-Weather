@@ -4,17 +4,25 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/container_actions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:gravity="center"
-        android:orientation="vertical">
+
+        android:visibility="visible">
+
+        <FrameLayout
+            android:id="@+id/flActionsFab"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:foreground="@drawable/header_shadow" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
             android:background="#f6ffffff"
             android:gravity="center"
             android:orientation="horizontal"
@@ -24,26 +32,33 @@
             android:paddingTop="10dp">
 
             <LinearLayout
+                android:id="@+id/containerFabGraph"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:id="@+id/containerFabGraph"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <android.support.design.widget.FloatingActionButton
+                <FrameLayout
                     android:id="@+id/fab_graph"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:layout_margin="5dp"
-                    android:src="@drawable/graph_ico_menu"
-                    android:tint="@color/white"
-                    app:backgroundTint="@color/main_button_red_normal"
-                    app:elevation="0.5dp"
-                    app:fabSize="normal" />
+                    android:clickable="true"
+                    android:foreground="@drawable/item_background_circle">
 
+                    <ImageButton
+
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/item_background_circle"
+                        android:clickable="false"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/fab_graph" />
+
+                </FrameLayout>
 
                 <com.devspark.robototextview.widget.RobotoTextView
                     android:layout_width="wrap_content"
@@ -60,23 +75,31 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/containerFabMap"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:id="@+id/containerFabMap"
                 android:orientation="vertical">
 
-                <android.support.design.widget.FloatingActionButton
+                <FrameLayout
                     android:id="@+id/fab_map"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:layout_margin="5dp"
-                    android:src="@drawable/show_on_map2"
-                    app:backgroundTint="@color/main_button_green_normal"
-                    app:elevation="0.5dp"
-                    app:fabSize="normal" />
+                    android:clickable="true"
+                    android:foreground="@drawable/item_background_circle">
+
+                    <ImageButton
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/item_background_circle"
+                        android:clickable="false"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/fab_map" />
+
+                </FrameLayout>
 
                 <com.devspark.robototextview.widget.RobotoTextView
                     android:layout_width="wrap_content"
@@ -93,24 +116,31 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/containerFabShare"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:id="@+id/containerFabShare"
                 android:orientation="vertical">
 
-                <android.support.design.widget.FloatingActionButton
+                <FrameLayout
                     android:id="@+id/fab_share"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:layout_margin="5dp"
-                    android:src="@drawable/ic_share_variant"
-                    android:tint="@color/white"
-                    app:backgroundTint="@color/main_button_blue_normal"
-                    app:elevation="0.5dp"
-                    app:fabSize="normal" />
+                    android:clickable="true"
+                    android:foreground="@drawable/item_background_circle">
+
+                    <ImageButton
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/item_background_circle"
+                        android:clickable="false"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/fab_share" />
+
+                </FrameLayout>
 
                 <com.devspark.robototextview.widget.RobotoTextView
                     android:layout_width="wrap_content"
@@ -128,10 +158,6 @@
 
         </LinearLayout>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:foreground="@drawable/header_shadow" />
 
-    </LinearLayout>
+    </RelativeLayout>
 </io.codetail.widget.RevealFrameLayout>

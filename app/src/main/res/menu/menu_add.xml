@@ -6,7 +6,7 @@
     tools:context=".MainActivity">
     <item
         android:id="@+id/action_search"
-        android:icon="@drawable/ic_map_marker"
+        android:icon="@drawable/ic_map_add"
         android:title="@string/add_location"
         app:showAsAction="always"/>
 

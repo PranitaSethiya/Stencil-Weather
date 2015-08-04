@@ -20,6 +20,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -31,6 +34,7 @@ import android.os.Handler;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -72,6 +76,7 @@ import com.nineoldandroids.animation.ArgbEvaluator;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.saphion.stencilweather.R;
 import com.saphion.stencilweather.adapters.RecyclerViewAdapter;
+import com.saphion.stencilweather.adapters.ShareItemViewAdapter;
 import com.saphion.stencilweather.adapters.WeatherCardAdapter;
 import com.saphion.stencilweather.fragments.WeatherFragment;
 import com.saphion.stencilweather.modules.WLocation;
@@ -94,7 +99,7 @@ import java.util.concurrent.RejectedExecutionException;
 import io.codetail.animation.SupportAnimator;
 import io.codetail.animation.ViewAnimationUtils;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private DrawerLayout mDrawerLayout;
     //    ViewPager viewPager;
@@ -122,6 +127,28 @@ public class MainActivity extends AppCompatActivity {
 
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                if (!hidden)
+                    initiateActions(true);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
 
         setupDrawerContent();
 
@@ -167,10 +194,19 @@ public class MainActivity extends AppCompatActivity {
         actionsContainer = findViewById(R.id.container_actions);
         actionsContainer.setVisibility(View.INVISIBLE);
 
-//        initiateActions(false);
-//        initiateActions(false);
+        findViewById(R.id.fab_graph).setOnClickListener(this);
+        findViewById(R.id.fab_map).setOnClickListener(this);
+        findViewById(R.id.fab_share).setOnClickListener(this);
 
         pb = findViewById(R.id.progressSearch);
+
+        findViewById(R.id.flActionsFab).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!hidden)
+                    initiateActions(true);
+            }
+        });
 
         swipeRefreshLayout.setColorSchemeResources(R.color.main_button_red_normal, R.color.main_button_green_normal, R.color.main_button_blue_normal);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -456,6 +492,68 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onClick(final View view) {
+        initiateActions(true);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                switch (view.getId()) {
+                    case R.id.fab_graph:
+
+                        break;
+                    case R.id.fab_map:
+
+                        break;
+                    case R.id.fab_share:
+
+                        AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
+
+                        View mView = LayoutInflater.from(MainActivity.this).inflate(R.layout.share_weather_layout, null);
+
+                        mBuilder.setView(mView);
+
+                        List<Drawable> packageIcons = new ArrayList<>();
+                        List<String> packageNames = new ArrayList<>();
+
+                        Intent sendIntent = new Intent();
+                        sendIntent.setAction(Intent.ACTION_SEND);
+                        sendIntent.setType("image/jpeg");
+                        List<ResolveInfo> resolveInfoList = getPackageManager()
+                                .queryIntentActivities(sendIntent, 0);
+
+                        for (ResolveInfo resolveInfo : resolveInfoList) {
+                            try {
+                                ApplicationInfo app = getPackageManager().getApplicationInfo(resolveInfo.activityInfo.packageName, 0);
+
+                                Drawable icon = getPackageManager().getApplicationIcon(app);
+                                String name = getPackageManager().getApplicationLabel(app).toString();
+
+                                packageIcons.add(icon);
+                                packageNames.add(name);
+
+                            } catch (PackageManager.NameNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        ShareItemViewAdapter shareAdapter = new ShareItemViewAdapter(packageIcons, packageNames);
+
+                        RecyclerView shareRecyclerView = (RecyclerView) mView.findViewById(R.id.rvWeatherShare);
+                        LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
+                        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                        shareRecyclerView.setLayoutManager(layoutManager);
+                        shareRecyclerView.setAdapter(shareAdapter);
+
+                        mBuilder.show();
+
+                        break;
+                }
+            }
+        }, 200);
+
+    }
+
 
     public class MyAdapter extends BaseAdapter {
         private Context context;
@@ -676,7 +774,7 @@ public class MainActivity extends AppCompatActivity {
 
         // get the center for the clipping circle
         int cx = actionsContainer.getRight() - Utils.dpToPx(25, MainActivity.this);
-        int cy = actionsContainer.getTop();
+        int cy = actionsContainer.getTop() + Utils.dpToPx(60, MainActivity.this);
 
         // get the final radius for the clipping circle
         float finalRadius = (float) Math.hypot(actionsContainer.getWidth(), actionsContainer.getHeight());
@@ -935,6 +1033,8 @@ public class MainActivity extends AppCompatActivity {
         } else if (card_search.getVisibility() == View.VISIBLE) {
             InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search);
             hideDark();
+        } else if (!hidden){
+            initiateActions(true);
         } else
             super.onBackPressed();
     }
