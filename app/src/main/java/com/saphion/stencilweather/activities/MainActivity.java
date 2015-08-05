@@ -17,12 +17,14 @@
 package com.saphion.stencilweather.activities;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -30,6 +32,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -88,8 +91,12 @@ import com.saphion.stencilweather.utilities.Utils;
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -167,6 +174,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         initialiseThings();
+
+        // Clear Cache
+        new DeleteCache().execute();
 
     }
 
@@ -513,45 +523,120 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         mBuilder.setView(mView);
 
-                        List<Drawable> packageIcons = new ArrayList<>();
-                        List<String> packageNames = new ArrayList<>();
+                        shareContainer = mView.findViewById(R.id.shareableContainer);
 
-                        Intent sendIntent = new Intent();
-                        sendIntent.setAction(Intent.ACTION_SEND);
-                        sendIntent.setType("image/jpeg");
-                        List<ResolveInfo> resolveInfoList = getPackageManager()
-                                .queryIntentActivities(sendIntent, 0);
 
-                        for (ResolveInfo resolveInfo : resolveInfoList) {
-                            try {
-                                ApplicationInfo app = getPackageManager().getApplicationInfo(resolveInfo.activityInfo.packageName, 0);
+                        final List<Drawable> packageIcons = new ArrayList<>();
+                        final List<String> appNames = new ArrayList<>();
+                        final List<String> packageNames = new ArrayList<>();
+                        final List<String> classNames = new ArrayList<>();
+                        final RecyclerView shareRecyclerView = (RecyclerView) mView.findViewById(R.id.rvWeatherShare);
+                        final View flShareableApps = mView.findViewById(R.id.flShareableApps);
+                        flShareableApps.setAlpha(0);
+                        shareRecyclerView.setVisibility(View.VISIBLE);
 
-                                Drawable icon = getPackageManager().getApplicationIcon(app);
-                                String name = getPackageManager().getApplicationLabel(app).toString();
+                        new AsyncTask<Void, Void, Void>() {
 
-                                packageIcons.add(icon);
-                                packageNames.add(name);
+                            @Override
+                            protected Void doInBackground(Void... voids) {
+                                Intent sendIntent = new Intent();
+                                sendIntent.setAction(Intent.ACTION_SEND);
+                                sendIntent.setType("image/jpeg");
+                                List<ResolveInfo> resolveInfoList = getPackageManager()
+                                        .queryIntentActivities(sendIntent, 0);
 
-                            } catch (PackageManager.NameNotFoundException e) {
-                                e.printStackTrace();
+                                Collections.sort(resolveInfoList,
+                                        new ResolveInfo.DisplayNameComparator(getPackageManager()));
+
+                                for (ResolveInfo resolveInfo : resolveInfoList) {
+                                    Drawable icon = resolveInfo.loadIcon(getPackageManager());
+                                    String name = resolveInfo.loadLabel(getPackageManager()).toString();
+
+                                    packageIcons.add(icon);
+                                    appNames.add(name);
+                                    packageNames.add(resolveInfo.activityInfo.packageName);
+                                    classNames.add(resolveInfo.activityInfo.name);
+
+                                }
+                                return null;
                             }
-                        }
 
-                        ShareItemViewAdapter shareAdapter = new ShareItemViewAdapter(packageIcons, packageNames);
+                            @Override
+                            protected void onPostExecute(Void aVoid) {
+                                super.onPostExecute(aVoid);
 
-                        RecyclerView shareRecyclerView = (RecyclerView) mView.findViewById(R.id.rvWeatherShare);
-                        LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
-                        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-                        shareRecyclerView.setLayoutManager(layoutManager);
-                        shareRecyclerView.setAdapter(shareAdapter);
+                                ShareItemViewAdapter shareAdapter = new ShareItemViewAdapter(MainActivity.this, packageIcons, appNames, packageNames, classNames);
+                                LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
+                                layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                                shareRecyclerView.setLayoutManager(layoutManager);
+                                shareRecyclerView.setAdapter(shareAdapter);
 
-                        mBuilder.show();
+                                YoYo.with(Techniques.SlideInDown).duration(500).interpolate(new OvershootInterpolator()).playOn(flShareableApps);
+
+                            }
+                        }.execute();
+
+
+
+                        mShareDialog = mBuilder.create();
+                        mShareDialog.getWindow().setWindowAnimations(R.style.DialogAnimation);
+                        mShareDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                        mShareDialog.show();
 
                         break;
                 }
             }
         }, 200);
 
+    }
+
+    View shareContainer;
+    AlertDialog mShareDialog;
+    public void share(String packageName, String className) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+//        try {
+
+            shareContainer.setDrawingCacheEnabled(true);
+            shareContainer.buildDrawingCache();
+            Bitmap icon = shareContainer.getDrawingCache();
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            icon.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            File f = new File(getExternalCacheDir() + File.separator + "temporary_" + System.currentTimeMillis()  + ".jpg");
+            try {
+                f.createNewFile();
+                FileOutputStream fo = new FileOutputStream(f);
+                fo.write(bytes.toByteArray());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
+            Log.d("Stencil Weather", "tmp file URI" + f.getAbsolutePath());
+            sendIntent
+                    .setComponent(new ComponentName(
+                            packageName,
+                            className));
+            sendIntent.setType("image/jpeg");
+            startActivity(sendIntent);
+            shareContainer = null;
+            mShareDialog.dismiss();
+            mShareDialog = null;
+//        } catch (Exception ignored){}
+
+    }
+
+
+    public class DeleteCache extends AsyncTask<Void, Void, Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                Utils.deleteFile(getExternalCacheDir());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
 

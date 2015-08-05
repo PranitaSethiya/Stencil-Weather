@@ -31,8 +31,9 @@
             android:gravity="top|start"
             android:layout_gravity="top|start"
             android:textColor="#c8000000"
-            android:textSize="11.5sp"
+            android:textSize="12sp"
             app:fontFamily="roboto"
+            app:typeface="roboto_condensed_regular"
             app:textWeight="medium" />
 
         <com.devspark.robototextview.widget.RobotoTextView
@@ -47,7 +48,8 @@
             android:text="JULY 10"
             android:id="@+id/cardDate"
             android:textColor="#c8000000"
-            android:textSize="9sp"
+            android:textSize="12sp"
+            app:typeface="roboto_condensed_regular"
             app:fontFamily="roboto"
             app:textWeight="bold" />
 
