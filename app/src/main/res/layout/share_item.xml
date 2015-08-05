@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/containerShareLinks"
+    android:layout_width="80dp"
+    android:layout_margin="3dp"
+    android:padding="2dp"
+    android:layout_height="90dp"
+    android:background="@drawable/item_background"
+    android:clickable="true"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/shareItemIcon"
+        android:layout_gravity="center"
+        android:src="@drawable/fab_graph" />
+
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/shareItemTitle"
+        android:gravity="center"
+        android:text="Show Graph"
+        android:lines="2"
+        android:textColor="@color/colorTernaryText"
+        android:textSize="12sp"
+        app:fontFamily="roboto"
+        app:textWeight="normal"
+        app:typeface="roboto_condensed_regular" />
+
+</LinearLayout>

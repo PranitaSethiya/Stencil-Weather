@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/flShareableApps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/shareableContainer"
+        android:layout_marginLeft="4.5dp"
+        android:layout_marginRight="4.5dp"
+        android:layout_marginTop="-10dp"
+        android:foreground="@drawable/header_shadow"
+        app:cardBackgroundColor="#f0f0f0"
+        app:cardCornerRadius="2dp">
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:text="Share with"
+            android:textColor="@color/main_button_blue_normal"
+            android:textSize="16sp"
+            app:fontFamily="roboto"
+            app:textWeight="bold"
+            app:typeface="roboto_condensed_regular" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvWeatherShare"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="28dp"
+            android:background="@color/colorSecondaryText" />
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/shareableContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        app:cardBackgroundColor="@color/main_button_blue_normal"
+        app:cardCornerRadius="2dp">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp">
+
+
+            <ImageView
+                android:id="@+id/ivBarCode"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/qrcode"
+                android:src="@drawable/qrcode_playstore" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_below="@+id/ivBarCode"
+                android:layout_toLeftOf="@+id/tvAppName"
+                android:src="@mipmap/ic_launcher" />
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/tvAppName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/ivBarCode"
+                android:layout_gravity="center"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="Stencil Weather"
+                android:textColor="@color/colorPrimary"
+                android:textSize="10sp"
+                app:fontFamily="roboto"
+                app:textWeight="bold"
+                app:typeface="roboto_condensed_bold" />
+
+            <ImageView
+                android:id="@+id/ivMapMarker"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/ic_map_marker" />
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/tvShareLocationName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/ivMapMarker"
+                android:gravity="center"
+                android:text="Dehradun,"
+                android:textColor="@color/colorPrimary"
+                android:textSize="12sp"
+                app:fontFamily="roboto"
+                app:textWeight="bold"
+                app:typeface="roboto_condensed_regular" />
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/tvShareLocationNameCountry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tvShareLocationName"
+                android:layout_below="@+id/tvShareLocationName"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="India"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"
+                app:fontFamily="roboto"
+                app:textWeight="bold"
+                app:typeface="roboto_condensed_regular" />
+
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/cofrain_light_d" />
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/tvShareTemperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvAppName"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="35°"
+                android:textColor="@color/colorPrimary"
+                android:textSize="60sp"
+                app:fontFamily="roboto"
+                app:textWeight="bold"
+                app:typeface="roboto_condensed_regular" />
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/tvShareHigh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tvShareTemperature"
+                android:layout_toRightOf="@+id/tvShareTemperature"
+                android:text="15º"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"
+                app:fontFamily="roboto"
+                app:textWeight="medium" />
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/cardSlash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tvShareTemperature"
+                android:layout_toRightOf="@+id/tvShareHigh"
+                android:text="/"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                app:fontFamily="roboto"
+                app:textWeight="medium" />
+
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/cardLow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tvShareTemperature"
+                android:layout_toRightOf="@+id/cardSlash"
+                android:text="9º"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                app:fontFamily="roboto"
+                app:textWeight="medium" />
+
+
+            <ImageView
+                android:id="@+id/ivHumidity"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_below="@+id/tvShareTemperature"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/drop_humidity" />
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/tvShareHumidity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/ivHumidity"
+                android:layout_gravity="center"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/ivHumidity"
+                android:gravity="center"
+                android:text="40%"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                app:fontFamily="roboto"
+                app:textWeight="bold"
+                app:typeface="roboto_condensed_regular" />
+
+            <ImageView
+                android:id="@+id/ivWind"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_below="@+id/tvShareTemperature"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@id/tvShareHumidity"
+                android:src="@drawable/windmill" />
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/tvShareWind"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/ivWind"
+                android:layout_gravity="center"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/ivWind"
+                android:gravity="center"
+                android:text="2 kmph SW"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                app:fontFamily="roboto"
+                app:textWeight="bold"
+                app:typeface="roboto_condensed_regular" />
+
+            <ImageView
+                android:id="@+id/ivPrecip"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_below="@+id/tvShareTemperature"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@id/tvShareWind"
+                android:src="@drawable/umbrella" />
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/tvSharePrecip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/ivPrecip"
+                android:layout_gravity="center"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/ivPrecip"
+                android:gravity="center"
+                android:text="0.5 in"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                app:fontFamily="roboto"
+                app:textWeight="bold"
+                app:typeface="roboto_condensed_regular" />
+
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/tvShareTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/tvAppName"
+                android:layout_gravity="center"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="6:25 AM"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                app:fontFamily="roboto"
+                app:textWeight="bold"
+                app:typeface="roboto_condensed_regular" />
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/tvShareDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/tvShareTime"
+                android:layout_gravity="center"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:gravity="center"
+                android:text="Tuesday, August 4"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                app:fontFamily="roboto"
+                app:textWeight="bold"
+                app:typeface="roboto_condensed_regular" />
+
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+
+</RelativeLayout>
