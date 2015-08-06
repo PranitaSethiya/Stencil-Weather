@@ -24,7 +24,7 @@
         android:theme="@style/Theme.DesignDemo"
         tools:replace="android:icon" >
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.SplashActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

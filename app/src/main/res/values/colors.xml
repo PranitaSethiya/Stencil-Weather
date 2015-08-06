@@ -51,4 +51,8 @@
     <color name="forecast_frag_top">#3f51b5</color>
     <color name="forecast_frag_bottom">#1e1e1e</color>
     <color name="forecast_frag_separator">#64ffffff</color>
+
+
+    <color name="sunny_yellow">#f4c042</color>
+    <color name="brown">#7a6021</color>
 </resources>

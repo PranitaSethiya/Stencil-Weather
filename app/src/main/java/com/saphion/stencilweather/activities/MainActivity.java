@@ -595,15 +595,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void share(String packageName, String className) {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-//        try {
+
+        String name = drawerItems.get(navSpinner.getSelectedItemPosition()).getName();
+        if(name.contains(",")){
+            name = name.split(",")[0];
+        }
+
+        try {
 
             shareContainer.setDrawingCacheEnabled(true);
             shareContainer.buildDrawingCache();
             Bitmap icon = shareContainer.getDrawingCache();
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             icon.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            File f = new File(getExternalCacheDir() + File.separator + "temporary_" + System.currentTimeMillis()  + ".jpg");
+            File f = new File(getExternalCacheDir() + File.separator + "shared" + File.separator + name + "_weather_" + System.currentTimeMillis()  + ".jpg");
             try {
+                f.getParentFile().mkdirs();
                 f.createNewFile();
                 FileOutputStream fo = new FileOutputStream(f);
                 fo.write(bytes.toByteArray());
@@ -611,7 +618,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 e.printStackTrace();
             }
             sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
-            Log.d("Stencil Weather", "tmp file URI" + f.getAbsolutePath());
+            sendIntent.putExtra(Intent.EXTRA_TEXT, name + " Weather shared by Stencil Weather");
+
+            Log.d("Stencil Weather", "tmp file URI " + f.getAbsolutePath());
             sendIntent
                     .setComponent(new ComponentName(
                             packageName,
@@ -621,7 +630,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             shareContainer = null;
             mShareDialog.dismiss();
             mShareDialog = null;
-//        } catch (Exception ignored){}
+        } catch (Exception ignored){}
 
     }
 
@@ -631,7 +640,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                Utils.deleteFile(getExternalCacheDir());
+                Utils.deleteFile(new File(getExternalCacheDir() + File.separator + "shared" + File.separator));
             } catch (Exception e) {
                 e.printStackTrace();
             }
