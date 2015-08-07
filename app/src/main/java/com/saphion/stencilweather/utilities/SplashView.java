@@ -10,11 +10,17 @@ import android.graphics.RectF;
 import android.os.Handler;
 import android.view.View;
 
+import java.util.Random;
+
 /**
  * Created by sachin on 6/8/15.
  */
 public class SplashView extends View {
 
+    private float sunState1;
+    private float sunState2;
+    private float sunState3;
+    private float sunFinalState;
     private float height;
     private float width;
     private Paint mPaint;
@@ -32,6 +38,8 @@ public class SplashView extends View {
     private Paint mPaintSun;
     private Paint mPaintSmile;
     int sunDimensions;
+
+    Paint clearPaint;
 
 
     public SplashView(Context context) {
@@ -51,7 +59,7 @@ public class SplashView extends View {
         ColorFilter tintColor = new LightingColorFilter(tint, 0);
         mPaint.setColorFilter(tintColor);
         mPaint.setColor(tint);
-        mPaint.setAlpha(alpha);
+//        mPaint.setAlpha(alpha);
 
         //ground points
         float groundStartX = (float) (width * 0.20);
@@ -65,15 +73,19 @@ public class SplashView extends View {
         //sun
         sunDimensions = (int) (width * 0.30);
 
-//        sunFlames = BitmapFactory.decodeResource(getResources(), R.drawable.sun_anim_flames);
-//        sunFlames = Bitmap.createScaledBitmap(sunFlames, sunDimensions, sunDimensions,
-//                true);
-
         sunFlames = flames(sunDimensions, sunDimensions, tint);
 
-        sunYCenter = height / 3;
-        sunXCenter = width / 3;
+
+        //sun states
+        sunState1 = groundEndY + sunDimensions / 10;
+        sunState2 = groundEndY - sunDimensions / 8;
+        sunState3 = groundEndY - sunDimensions / 6;
+        sunFinalState = height / 3;
+
+        sunYCenter = sunState1;
+        sunXCenter = width / 2;
         sunEyeDistance = sunDimensions / 6;
+
 
         mPaintSun = new Paint();
         mPaintSun.setAntiAlias(true);
@@ -92,32 +104,103 @@ public class SplashView extends View {
         mPaintSmile.setAlpha(alpha);
         mPaintSmile.setStrokeCap(Paint.Cap.ROUND);
         smileRect = new RectF();
-        smileRect.set(sunXCenter - sunEyeDistance / 2,
-                (float) (sunYCenter * 1.04),
-                sunXCenter + sunEyeDistance / 2,
-                (float) (sunYCenter * 1.12));
+
+
+        clearPaint = new Paint();
+//        clearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        clearPaint.setColor(background);
+
+        eyeState1 = sunXCenter - sunEyeDistance;
+        eyeState2 = sunXCenter;
+        eyeState3 = sunXCenter - sunEyeDistance / 2;
+
+        currentEyeState = eyeState1;
+
+        r = new Random();
 
     }
+
+    float incYBy = 0;
+    float timeSun = 0;
+    float incXBy = 0;
+    Random r;
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        time = time == 40 ? 0 : time + 1;
+        currentEyeState += incXBy;
+
+        if (!eyeState2Complete && currentEyeState == eyeState1) {
+            eyeHandler1.postDelayed(eyeRunnable1, 4000);
+        }
+
+        if (!eyeState2Complete && currentEyeState >= eyeState2 - 3) {
+            eyeHandler2.postDelayed(eyeRunnable2, 1500);
+            currentEyeState = eyeState2;
+            incXBy = 0;
+        }
+
+        if (eyeState2Complete && currentEyeState >= eyeState3 - 3) {
+            currentEyeState = eyeState3;
+            eyeHandler1.removeCallbacks(eyeRunnable1);
+            eyeHandler2.removeCallbacks(eyeRunnable2);
+            incXBy = 0;
+        }
+
+
+        if (timeSun != 41)
+            timeSun++;
+
+        if (timeSun == 40) {
+            incYBy = 10;
+        }
+
+        sunYCenter -= incYBy;
+
+        if (sunYCenter <= sunState2 + 3 && sunYCenter >= sunState2 - 3) {
+            if (!state1Complete) {
+                incYBy = 0;
+                sunHandler.postDelayed(new sunRunnable(0.2f), 150);
+            }
+            if (state1Complete && state3Complete) {
+                sunHandler.postDelayed(new sunRunnable(12f), 2000);
+            }
+            state1Complete = true;
+        }
+        if (!state3Complete)
+            if (sunYCenter <= sunState3 + 1 && sunYCenter >= sunState3 - 1) {
+                incYBy = 0;
+                sunHandler.postDelayed(new sunRunnable(-8f), 500);
+                smileHandler.postDelayed(smileRunnable, 180);
+            }
+
+        if (sunYCenter <= sunFinalState + 10 && sunYCenter >= sunFinalState - 10) {
+            incYBy = 0;
+        }
+
+        blink = blink == blinkAt ? 0 : blink + 1;
+
+        smileRect.set(sunXCenter - sunEyeDistance / 2,
+                sunYCenter + sunEyeDistance / 2,
+                sunXCenter + sunEyeDistance / 2,
+                sunYCenter + sunEyeDistance);
 
         canvas.save();
 
         canvas.rotate(angle, sunXCenter, sunYCenter);
 
         canvas.drawBitmap(sunFlames, sunXCenter - sunDimensions / 2,
-                sunYCenter - sunDimensions / 2, mPaint);
+                sunYCenter - sunDimensions / 2, mPaintSun);
 
         canvas.restore();
 
-        if (time != 0) {
+        if (blink != 0) {
             mPaintSun.setStyle(Paint.Style.FILL);
-            canvas.drawCircle(sunXCenter - sunEyeDistance / 2, sunYCenter, sunDimensions / 40, mPaintSun);
-            canvas.drawCircle(sunXCenter + sunEyeDistance / 2, sunYCenter, sunDimensions / 40, mPaintSun);
+            canvas.drawCircle(currentEyeState, sunYCenter, sunDimensions / 40, mPaintSun);
+            canvas.drawCircle(currentEyeState + sunEyeDistance, sunYCenter, sunDimensions / 40, mPaintSun);
+        } else {
+            blinkAt = (r.nextInt(60) + 40);
         }
 
         mPaintSun.setStyle(Paint.Style.STROKE);
@@ -125,12 +208,15 @@ public class SplashView extends View {
 
         canvas.drawRoundRect(groundRect, 10, 10, mPaint);
 
+        if(state3Complete)
+            canvas.drawArc(smileRect,
+                    10,
+                    160,
+                    false,
+                    mPaintSmile);
 
-        canvas.drawArc(smileRect,
-                10,
-                160,
-                false,
-                mPaintSmile);
+
+        canvas.drawRect(0, groundRect.bottom, width, height, clearPaint);
 
 
         if (angle++ > 360)
@@ -138,6 +224,16 @@ public class SplashView extends View {
 
         mHandler.postDelayed(runnable, 20);
     }
+
+    //eyes
+    float eyeState1;
+    float eyeState2;
+    float eyeState3;
+    float currentEyeState;
+    int blinkAt = 40;
+
+    boolean state1Complete = false;
+    boolean state3Complete = false;
 
     Handler mHandler = new Handler();
     Runnable runnable = new Runnable() {
@@ -148,7 +244,24 @@ public class SplashView extends View {
         }
     };
 
-    int time = 0;
+    public class sunRunnable implements Runnable {
+
+        private float yVal;
+
+        public sunRunnable(float yVal) {
+
+            this.yVal = yVal;
+        }
+
+        @Override
+        public void run() {
+            incYBy = yVal;
+        }
+    }
+
+    int blink = 0;
+
+    Handler sunHandler = new Handler();
 
 
     public Bitmap flames(int height, int width, int tint) {
@@ -183,4 +296,31 @@ public class SplashView extends View {
         return circleBitmap;
 
     }
+
+    Handler eyeHandler1 = new Handler();
+    Runnable eyeRunnable1 = new Runnable() {
+        @Override
+        public void run() {
+            incXBy = 5f;
+        }
+    };
+
+    Handler eyeHandler2 = new Handler();
+    Runnable eyeRunnable2 = new Runnable() {
+        @Override
+        public void run() {
+            eyeState2Complete = true;
+            incXBy = -5f;
+        }
+    };
+
+    boolean eyeState2Complete = false;
+
+    Handler smileHandler = new Handler();
+    Runnable smileRunnable = new Runnable() {
+        @Override
+        public void run() {
+            state3Complete = true;
+        }
+    };
 }
