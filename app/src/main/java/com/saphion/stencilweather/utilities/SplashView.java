@@ -10,6 +10,8 @@ import android.graphics.RectF;
 import android.os.Handler;
 import android.view.View;
 
+import com.saphion.stencilweather.activities.SplashActivity;
+
 import java.util.Random;
 
 /**
@@ -26,6 +28,7 @@ public class SplashView extends View {
     private Paint mPaint;
     private Bitmap sunFlames;
     int angle = 0;
+    SplashActivity mActivity;
 
 
     private RectF smileRect;
@@ -46,10 +49,11 @@ public class SplashView extends View {
         super(context);
     }
 
-    public SplashView(Context context, float height, float width, int tint, int background) {
-        super(context);
+    public SplashView(SplashActivity mActivity, float height, float width, int tint, int background) {
+        super(mActivity);
         this.height = height;
         this.width = width;
+        this.mActivity = mActivity;
 
         int alpha = 160;
 
@@ -62,9 +66,9 @@ public class SplashView extends View {
 //        mPaint.setAlpha(alpha);
 
         //ground points
-        float groundStartX = (float) (width * 0.20);
+        float groundStartX = (float) (width * 0.05);
         float groundStartY = (float) (height * 0.79);
-        float groundEndX = (float) (width * 0.80);
+        float groundEndX = (float) (width * 0.95);
         float groundEndY = (float) (height * 0.80);
 
         groundRect = new RectF();
@@ -171,12 +175,13 @@ public class SplashView extends View {
         if (!state3Complete)
             if (sunYCenter <= sunState3 + 1 && sunYCenter >= sunState3 - 1) {
                 incYBy = 0;
-                sunHandler.postDelayed(new sunRunnable(-8f), 500);
-                smileHandler.postDelayed(smileRunnable, 180);
+                sunHandler.postDelayed(new sunRunnable(-8f), 700);
+                smileHandler.postDelayed(smileRunnable, 720);
             }
 
         if (sunYCenter <= sunFinalState + 10 && sunYCenter >= sunFinalState - 10) {
             incYBy = 0;
+            mActivity.onAnimationComplete();
         }
 
         blink = blink == blinkAt ? 0 : blink + 1;
@@ -234,6 +239,7 @@ public class SplashView extends View {
 
     boolean state1Complete = false;
     boolean state3Complete = false;
+
 
     Handler mHandler = new Handler();
     Runnable runnable = new Runnable() {

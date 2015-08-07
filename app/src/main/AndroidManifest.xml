@@ -54,6 +54,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.saphion.stencilweather.activities.MainActivity" />
         </activity>
+
+        <activity android:name=".activities.MainActivity"/>
     </application>
 
 </manifest>
