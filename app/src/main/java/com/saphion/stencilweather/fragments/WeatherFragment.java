@@ -85,7 +85,7 @@ public class WeatherFragment extends Fragment {
 
         FrameLayout flContainer = (FrameLayout) v.findViewById(R.id.flConditionIcon);
         try {
-            ImageView iv = new RainSunIV(mContext, Utils.dpToPx(160, mContext), Utils.dpToPx(160, mContext), mColor, Color.WHITE);
+            ImageView iv = new RainSunIV(mContext, Utils.dpToPx(140, mContext), Utils.dpToPx(140, mContext), mColor, Color.WHITE);
             flContainer.addView(iv);
 
 
@@ -227,9 +227,11 @@ public class WeatherFragment extends Fragment {
     }
 
     private void loadData() {
-        Random random = new Random();
-        mColor = (0xff000000 | random.nextInt(0x00ffffff));
+//        Random random = new Random();
+//        mColor = (0xff000000 | random.nextInt(0x00ffffff));
 //        mColor = 0xff1e8bd4;
+        Random r = new Random();
+        this.mColor = Utils.getTemperatureColor(getActivity(), r.nextInt(47) - 11);
     }
 
     public int getColor() {

@@ -1,0 +1,18 @@
+<resources>
+    <!--
+    TODO: Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=02:23:F4:D8:F8:B1:BA:D7:FD:B2:49:8C:4F:71:24:31:58:16:ED:07%3Bcom.saphion.stencilweather.activities
+
+    You can also add your credentials to an existing key, using this line:
+    02:23:F4:D8:F8:B1:BA:D7:FD:B2:49:8C:4F:71:24:31:58:16:ED:07;com.saphion.stencilweather.activities
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" translatable="false" templateMergeStrategy="preserve">
+        YOUR_KEY_HERE
+    </string>
+</resources>

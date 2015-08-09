@@ -23,6 +23,8 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.saphion.stencilweather.R;
 import com.saphion.stencilweather.activities.MainActivity;
 
+import io.codetail.animation.SupportAnimator;
+
 
 public class InitiateSearch {
 
@@ -65,37 +67,76 @@ public class InitiateSearch {
                 animatorHide.setDuration(300);
                 animatorHide.start();
             } else {
-                ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search.getWindowToken(), 0);
+//                ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search.getWindowToken(), 0);
 
-                YoYo.with(Techniques.SlideOutRight)
-                        .duration(500).interpolate(new BounceInterpolator()).withListener(new com.nineoldandroids.animation.Animator.AnimatorListener() {
+                final io.codetail.animation.SupportAnimator animatorHide = io.codetail.animation.ViewAnimationUtils.createCircularReveal(search,
+                        search.getWidth() - (int) convertDpToPixel(56, activity),
+                        (int) convertDpToPixel(23, activity),
+                        (float) Math.hypot(search.getWidth(), search.getHeight()),
+                        0);
+                animatorHide.addListener(new SupportAnimator.AnimatorListener() {
                     @Override
-                    public void onAnimationStart(com.nineoldandroids.animation.Animator animation) {
+                    public void onAnimationStart() {
 
                     }
 
                     @Override
-                    public void onAnimationEnd(com.nineoldandroids.animation.Animator animation) {
+                    public void onAnimationEnd() {
                         search.setVisibility(View.GONE);
-                        editText.setText("");
+                        ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search.getWindowToken(), 0);
+                        listView.setVisibility(View.GONE);
                         toolbarMain.setNavigationIcon(R.drawable.ic_menu);
                         ((MainActivity)activity).actionBarContent(true);
                         toolbarMain.getMenu().clear();
                         toolbarMain.inflateMenu(R.menu.menu_add);
-                        search.setEnabled(false);
+                    }
+
+                    @Override
+                    public void onAnimationCancel() {
 
                     }
 
                     @Override
-                    public void onAnimationCancel(com.nineoldandroids.animation.Animator animation) {
+                    public void onAnimationRepeat() {
 
                     }
+                });
+                animatorHide.setDuration(300);
+                animatorHide.start();
 
-                    @Override
-                    public void onAnimationRepeat(com.nineoldandroids.animation.Animator animation) {
+//                YoYo.with(Techniques.SlideOutRight)
+//                        .duration(500).interpolate(new BounceInterpolator()).withListener(new com.nineoldandroids.animation.Animator.AnimatorListener() {
+//                    @Override
+//                    public void onAnimationStart(com.nineoldandroids.animation.Animator animation) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onAnimationEnd(com.nineoldandroids.animation.Animator animation) {
+//                        search.setVisibility(View.GONE);
+//                        editText.setText("");
+//                        toolbarMain.setNavigationIcon(R.drawable.ic_menu);
+//                        ((MainActivity)activity).actionBarContent(true);
+//                        toolbarMain.getMenu().clear();
+//                        toolbarMain.inflateMenu(R.menu.menu_add);
+//                        search.setEnabled(false);
+//
+//                    }
+//
+//                    @Override
+//                    public void onAnimationCancel(com.nineoldandroids.animation.Animator animation) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onAnimationRepeat(com.nineoldandroids.animation.Animator animation) {
+//
+//                    }
+//                }).playOn(search);
 
-                    }
-                }).playOn(search);
+
+
+
             }
 
 
@@ -152,13 +193,61 @@ public class InitiateSearch {
                     }
                 });
             } else {
+//                search.setVisibility(View.VISIBLE);
+//                YoYo.with(Techniques.SlideInRight)
+//                        .duration(500).interpolate(new BounceInterpolator())
+//                        .playOn(search);
+//                search.setEnabled(true);
+//                listView.setVisibility(View.VISIBLE);
+//                ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                final io.codetail.animation.SupportAnimator animator = io.codetail.animation.ViewAnimationUtils.createCircularReveal(search,
+                        search.getWidth() - (int) convertDpToPixel(56, activity),
+                        (int) convertDpToPixel(23, activity),
+                        0,
+                        (float) Math.hypot(search.getWidth(), search.getHeight()));
+                animator.addListener(new SupportAnimator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart() {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd() {
+                        ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                    }
+
+                    @Override
+                    public void onAnimationCancel() {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat() {
+
+                    }
+                });
                 search.setVisibility(View.VISIBLE);
-                YoYo.with(Techniques.SlideInRight)
-                        .duration(500).interpolate(new BounceInterpolator())
-                        .playOn(search);
-                search.setEnabled(true);
-                listView.setVisibility(View.VISIBLE);
-                ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                if (search.getVisibility() == View.VISIBLE) {
+                    animator.setDuration(300);
+                    animator.start();
+                    search.setEnabled(true);
+                }
+                fade_in.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        listView.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
             }
 
             editText.requestFocus();

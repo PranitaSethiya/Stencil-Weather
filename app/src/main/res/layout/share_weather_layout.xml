@@ -184,12 +184,24 @@
                 app:fontFamily="roboto"
                 app:textWeight="medium" />
 
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/tvShareCondition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvShareTemperature"
+                android:text="Light Rain"
+                android:layout_marginLeft="2dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"
+                app:fontFamily="roboto"
+                app:textWeight="medium" />
+
 
             <ImageView
                 android:id="@+id/ivHumidity"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_below="@+id/tvShareTemperature"
+                android:layout_below="@+id/tvShareCondition"
                 android:layout_marginTop="5dp"
                 android:src="@drawable/drop_humidity" />
 
@@ -215,7 +227,7 @@
                 android:id="@+id/ivWind"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_below="@+id/tvShareTemperature"
+                android:layout_below="@+id/tvShareCondition"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_toRightOf="@id/tvShareHumidity"
@@ -243,7 +255,7 @@
                 android:id="@+id/ivPrecip"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_below="@+id/tvShareTemperature"
+                android:layout_below="@+id/tvShareCondition"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_toRightOf="@id/tvShareWind"

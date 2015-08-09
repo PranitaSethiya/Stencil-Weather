@@ -550,4 +550,41 @@ public class Utils {
 
         return mBitmap;
     }
+
+
+    public static int getTemperatureColor(Context mContext, float temp) {
+        int color = mContext.getResources().getColor(R.color.main_button_blue_normal);
+
+        if (temp < -10)
+            color = mContext.getResources().getColor(R.color.primary_indigo);
+        else if (temp >=-10 && temp <=-5)
+            color = mContext.getResources().getColor(R.color.primary_blue);
+        else if (temp >-5 && temp < 5)
+            color = mContext.getResources().getColor(R.color.primary_light_blue);
+        else if (temp >= 5 && temp < 10)
+            color = mContext.getResources().getColor(R.color.primary_teal);
+        else if (temp >= 10 && temp < 15)
+            color = mContext.getResources().getColor(R.color.primary_light_green);
+        else if (temp >= 15 && temp < 20)
+            color = mContext.getResources().getColor(R.color.primary_green);
+        else if (temp >= 20 && temp < 25)
+            color = mContext.getResources().getColor(R.color.primary_lime);
+        else if (temp >= 25 && temp < 28)
+            color = mContext.getResources().getColor(R.color.primary_yellow);
+        else if (temp >= 28 && temp < 32)
+            color = mContext.getResources().getColor(R.color.primary_amber);
+        else if (temp >= 32 && temp < 35)
+            color = mContext.getResources().getColor(R.color.primary_orange);
+        else if (temp >= 35)
+            color = mContext.getResources().getColor(R.color.primary_red);
+
+        return color;
+
+    }
+
+    public static float spToPx(Context context, Float i) {
+        float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
+        return i * scaledDensity;
+    }
+
 }

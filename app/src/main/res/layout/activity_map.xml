@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/main_button_blue_normal"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/main_button_blue_normal"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:foreground="@drawable/header_shadow">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/view"
+                android:layout_alignParentTop="true" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_above="@+id/appbarBottom"
+                android:background="@drawable/header_shadow" />
+
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/appbarBottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@color/main_button_blue_normal"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/ll"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:divider="?android:listDivider"
+                        android:dividerPadding="12dp"
+                        android:orientation="horizontal"
+                        android:showDividers="middle">
+
+                        <ImageView
+                            android:id="@+id/map_left"
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="@drawable/item_background"
+                            android:clickable="true"
+                            android:paddingBottom="2dp"
+                            android:paddingTop="2dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_arrow_left" />
+
+
+                        <ImageView
+                            android:id="@+id/map_right"
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="@drawable/item_background"
+                            android:clickable="true"
+                            android:paddingBottom="2dp"
+                            android:paddingTop="2dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_arrow_right" />
+
+                        <ImageView
+                            android:id="@+id/map_goto"
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="@drawable/item_background"
+                            android:clickable="true"
+                            android:paddingBottom="2dp"
+                            android:paddingTop="2dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/goto_icon" />
+
+                        <ImageView
+                            android:id="@+id/map_switch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="@drawable/item_background"
+                            android:clickable="true"
+                            android:paddingBottom="2dp"
+                            android:paddingTop="2dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_dots_vertical" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llaction"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#ff002e3e"
+                        android:divider="?android:listDivider"
+                        android:dividerPadding="12dp"
+                        android:orientation="horizontal"
+                        android:showDividers="middle"
+                        android:visibility="invisible"
+                        android:weightSum="2">
+
+                        <TextView
+                            android:id="@+id/tvAddLocation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="@drawable/item_background"
+                            android:clickable="true"
+                            android:gravity="center"
+                            android:text="Add"
+                            android:textColor="#fff"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvShowWeather"
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:background="@drawable/item_background"
+                            android:clickable="true"
+                            android:gravity="center"
+                            android:text="Show weather"
+                            android:textColor="#fff"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </FrameLayout>
+
+            </android.support.design.widget.AppBarLayout>
+
+        </RelativeLayout>
+    </FrameLayout>
+</LinearLayout>

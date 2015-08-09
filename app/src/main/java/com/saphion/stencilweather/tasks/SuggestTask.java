@@ -71,6 +71,7 @@ public class SuggestTask implements Runnable {
 				location.setLatitude(oneObject.getDouble("lat"));
 				location.setLongitude(oneObject.getDouble("lon"));
 				location.setTimezone(oneObject.getString("tz"));
+				location.setUniqueID(oneObject.getString("zmw"));
 				locations.add(location);
 			}
 		} catch (JSONException e) {

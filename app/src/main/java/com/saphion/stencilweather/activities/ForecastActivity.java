@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -106,16 +105,16 @@ public class ForecastActivity extends AppCompatActivity{
 
     private void setupViewPager(ViewPager viewPager) {
         final Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(ForecastFragment.newInstance(0).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "MON", "27", "July, 2015");
-        adapter.addFragment(ForecastFragment.newInstance(1).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "TUE", "28", "July, 2015");
-        adapter.addFragment(ForecastFragment.newInstance(2).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "WED", "29", "July, 2015");
-        adapter.addFragment(ForecastFragment.newInstance(3).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "THU", "30", "July, 2015");
-        adapter.addFragment(ForecastFragment.newInstance(4).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "FRI", "31", "July, 2015");
-        adapter.addFragment(ForecastFragment.newInstance(5).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "SAT", "1", "August, 2015");
-        adapter.addFragment(ForecastFragment.newInstance(6).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "SAT", "2", "August, 2015");
-        adapter.addFragment(ForecastFragment.newInstance(7).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "SUN", "3", "August, 2015");
-        adapter.addFragment(ForecastFragment.newInstance(8).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "MON", "4", "August, 2015");
-        adapter.addFragment(ForecastFragment.newInstance(9).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false)), "TUE", "5", "August, 2015");
+        adapter.addFragment(ForecastFragment.newInstance(0).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false, "00")), "MON", "27", "July, 2015");
+        adapter.addFragment(ForecastFragment.newInstance(1).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false, "00")), "TUE", "28", "July, 2015");
+        adapter.addFragment(ForecastFragment.newInstance(2).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false, "00")), "WED", "29", "July, 2015");
+        adapter.addFragment(ForecastFragment.newInstance(3).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false, "00")), "THU", "30", "July, 2015");
+        adapter.addFragment(ForecastFragment.newInstance(4).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false, "00")), "FRI", "31", "July, 2015");
+        adapter.addFragment(ForecastFragment.newInstance(5).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false, "00")), "SAT", "1", "August, 2015");
+        adapter.addFragment(ForecastFragment.newInstance(6).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false, "00")), "SAT", "2", "August, 2015");
+        adapter.addFragment(ForecastFragment.newInstance(7).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false, "00")), "SUN", "3", "August, 2015");
+        adapter.addFragment(ForecastFragment.newInstance(8).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false, "00")), "MON", "4", "August, 2015");
+        adapter.addFragment(ForecastFragment.newInstance(9).setContext(getBaseContext(), new WLocation("", "Asia/Kolkata", 0d, 0d, false, "00")), "TUE", "5", "August, 2015");
         viewPager.setAdapter(adapter);
 
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);

@@ -19,17 +19,19 @@ public class WLocation extends SugarRecord<WLocation> {
     private Double latitude;
     private Double longitude;
     private Boolean isMyLocation;
+    private String uniqueID;
 
     public WLocation() {
     }
 
 
-    public WLocation(String name, String timezone, Double latitude, Double longitude, Boolean isMyLocation) {
+    public WLocation(String name, String timezone, Double latitude, Double longitude, Boolean isMyLocation, String uniqueID) {
         this.name = name;
         this.timezone = timezone;
         this.latitude = latitude;
         this.longitude = longitude;
         this.isMyLocation = isMyLocation;
+        this.uniqueID = uniqueID;
     }
 
     public String getName() {
@@ -83,21 +85,21 @@ public class WLocation extends SugarRecord<WLocation> {
 
 
     public long checkAndSave() {
+        //FIXME Add check for my location
         List<WLocation> duplicates = Select.from(WLocation.class)
-                .where(Condition.prop("NAME").eq(this.name),
-                        Condition.prop("LATITUDE").eq(this.latitude),
-                        Condition.prop("LONGITUDE").eq(this.longitude)).list();
+                .where(Condition.prop("UNIQUE_ID").eq(this.uniqueID)).list();
         Log.d("Stencil", "duplicates: " + duplicates.size() + "");
         if(duplicates.size() == 0) {
             this.save();
+
+            //Check if saved and return the saved ID
             List<WLocation> duplicates2 = Select.from(WLocation.class)
-                    .where(Condition.prop("NAME").eq(this.name),
-                            Condition.prop("LATITUDE").eq(this.latitude),
-                            Condition.prop("LONGITUDE").eq(this.longitude)).list();
+                    .where(Condition.prop("UNIQUE_ID").eq(this.uniqueID)).list();
             Log.d("Stencil", "duplicates: " + duplicates.size() + "");
             if(duplicates2.size() > 0)  return duplicates2.get(0).getId();
             return -1;
         }
+
         WLocation duplicate = duplicates.get(0);
         if(!duplicate.isMyLocation() && this.isMyLocation()){
             duplicate.setIsMyLocation(true);
@@ -105,5 +107,13 @@ public class WLocation extends SugarRecord<WLocation> {
             return duplicate.getId();
         }
         return -1;
+    }
+
+    public String getUniqueID() {
+        return uniqueID;
+    }
+
+    public void setUniqueID(String uniqueID) {
+        this.uniqueID = uniqueID;
     }
 }

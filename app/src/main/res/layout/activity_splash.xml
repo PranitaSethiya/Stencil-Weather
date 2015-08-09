@@ -17,7 +17,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="150dp"
-        android:text="Hello"
+        android:text="Hello,"
         android:textColor="#fff"
         android:textSize="35sp"
         app:fontFamily="roboto"

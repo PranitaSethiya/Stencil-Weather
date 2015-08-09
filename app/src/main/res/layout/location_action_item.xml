@@ -21,7 +21,7 @@
             android:layout_height="50dp"
             android:layout_gravity="center"
             android:id="@+id/ivListIndicator"
-            android:src="@drawable/ic_map_marker_radius"
+            android:src="@drawable/ic_map_marker"
             android:tint="#73000000" />
 
         <com.devspark.robototextview.widget.RobotoTextView

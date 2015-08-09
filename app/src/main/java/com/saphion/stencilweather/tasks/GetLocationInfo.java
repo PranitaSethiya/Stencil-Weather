@@ -1,260 +1,230 @@
 package com.saphion.stencilweather.tasks;
 
-import java.io.IOException;
-import java.util.TimeZone;
+import android.util.Log;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
+import com.google.android.gms.maps.model.LatLng;
+import com.saphion.stencilweather.utilities.RestUtils;
+
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
-import android.location.Location;
-import android.util.Log;
-
-import com.google.android.gms.maps.model.LatLng;
+import java.io.IOException;
+import java.util.TimeZone;
 
 
 public class GetLocationInfo {
 
-	final String URL1 = "http://maps.google.com/maps/api/geocode/json?address=";
-	final String URL2 = "&sensor=false";
+    final String URL1 = "http://maps.google.com/maps/api/geocode/json?address=";
+    final String URL2 = "&sensor=false";
 
-	public LatLng getll(String city) throws ClientProtocolException,
-			IOException, JSONException {
+    public LatLng getll(String city) throws
+            IOException, JSONException {
 
-		city = city.trim().replaceAll(" ", "+");
+        city = city.trim().replaceAll(" ", "+");
 
-		StringBuilder url = new StringBuilder((URL1 + city + URL2).trim());
+        StringBuilder url = new StringBuilder((URL1 + city + URL2).trim());
 
-		Log.d("Full lat lon URL", url.toString());
+        Log.d("Full lat lon URL", url.toString());
 
-		HttpGet get = new HttpGet(url.toString());
-		DefaultHttpClient client = new DefaultHttpClient();
-		HttpResponse r = client.execute(get);
-		int status = r.getStatusLine().getStatusCode();
-		if (status == 200) {
-			HttpEntity e = r.getEntity();
-			String data = EntityUtils.toString(e);
-			Log.d("json", data.toString());
-			JSONObject jObject = new JSONObject(data);
-			Log.d("Length", jObject.length() + "");
 
-			JSONObject jo = jObject.getJSONArray("results").getJSONObject(0);
-			jo = jo.getJSONObject("geometry").getJSONObject("location");
+        String data = RestUtils.GET(url.toString());
+        Log.d("json", data);
+        JSONObject jObject = new JSONObject(data);
+        Log.d("Length", jObject.length() + "");
 
-			Log.d("Lat", jo.getString("lat"));
-			Log.d("lon", jo.getString("lng"));
+        JSONObject jo = jObject.getJSONArray("results").getJSONObject(0);
+        jo = jo.getJSONObject("geometry").getJSONObject("location");
 
-			return new LatLng(Double.parseDouble(jo.getString("lat")),
-					Double.parseDouble(jo.getString("lng")));
+        Log.d("Lat", jo.getString("lat"));
+        Log.d("lon", jo.getString("lng"));
 
-		} else {
+        return new LatLng(Double.parseDouble(jo.getString("lat")),
+                Double.parseDouble(jo.getString("lng")));
 
-		}
-		return null;
-	}
 
-	public String getAddress(Context context, LatLng latlon)
-			throws ClientProtocolException, IOException, JSONException {
+    }
 
-		String city = latlon.latitude + "," + latlon.longitude;
-		city = city.trim().replaceAll(" ", "+");
+    public String getAddress(LatLng latlon)
+            throws IOException, JSONException {
 
-		StringBuilder url = new StringBuilder((URL1 + city + URL2).trim());
+        String city = latlon.latitude + "," + latlon.longitude;
+        city = city.trim().replaceAll(" ", "+");
 
-		Log.d("Full lat lon URL", url.toString());
+        StringBuilder url = new StringBuilder((URL1 + city + URL2).trim());
 
-		HttpGet get = new HttpGet(url.toString());
-		DefaultHttpClient client = new DefaultHttpClient();
-		HttpResponse r = client.execute(get);
-		int status = r.getStatusLine().getStatusCode();
-		if (status == 200) {
-			HttpEntity e = r.getEntity();
-			String data = EntityUtils.toString(e);
-			Log.d("json", data.toString());
-			JSONObject jObject = new JSONObject(data);
-			Log.d("Length", jObject.length() + "");
-			JSONArray jArray = jObject.getJSONArray("results");
-			if (jArray.length() <= 0)
-				return "empty";
-			JSONObject jo = jArray.getJSONObject(0);
-			jArray = jo.getJSONArray("address_components");
-			if (jArray.length() <= 0)
-				return "empty";
-			String toRet = "";
-			String subl = "", local = "", country = "", admin1 = "", admin2 = "";
-			for (int i = 0; i < jArray.length(); i++) {
-				String check = jArray.getJSONObject(i).getJSONArray("types")
-						.getString(0);
-				if (check.equalsIgnoreCase("sublocality")) {
-					subl = jArray.getJSONObject(i).getString("long_name");
+        Log.d("Full lat lon URL", url.toString());
+        String data = RestUtils.GET(url.toString());
+        Log.d("json", data);
+        JSONObject jObject = new JSONObject(data);
+        Log.d("Length", jObject.length() + "");
+        JSONArray jArray = jObject.getJSONArray("results");
+        if (jArray.length() <= 0)
+            return "empty";
+        JSONObject jo = jArray.getJSONObject(0);
+        jArray = jo.getJSONArray("address_components");
+        if (jArray.length() <= 0)
+            return "empty";
+        String toRet = "";
+        String subl = "", local = "", country = "", admin1 = "", admin2 = "";
+        for (int i = 0; i < jArray.length(); i++) {
+            String check = jArray.getJSONObject(i).getJSONArray("types")
+                    .getString(0);
+            if (check.equalsIgnoreCase("sublocality")) {
+                subl = jArray.getJSONObject(i).getString("long_name");
 
-				}
-				if (check.equalsIgnoreCase("locality")) {
-					local = jArray.getJSONObject(i).getString("long_name");
-				}
+            }
+            if (check.equalsIgnoreCase("locality")) {
+                local = jArray.getJSONObject(i).getString("long_name");
+            }
 
-				if (check.equalsIgnoreCase("country")) {
-					country = jArray.getJSONObject(i).getString("long_name");
-				}
+            if (check.equalsIgnoreCase("country")) {
+                country = jArray.getJSONObject(i).getString("long_name");
+            }
 
-				if (check.equalsIgnoreCase("administrative_area_level_2")) {
-					admin2 = jArray.getJSONObject(i).getString("long_name");
-				}
-				if (check.equalsIgnoreCase("administrative_area_level_1")) {
-					admin1 = jArray.getJSONObject(i).getString("long_name");
-				}
-			}
+            if (check.equalsIgnoreCase("administrative_area_level_2")) {
+                admin2 = jArray.getJSONObject(i).getString("long_name");
+            }
+            if (check.equalsIgnoreCase("administrative_area_level_1")) {
+                admin1 = jArray.getJSONObject(i).getString("long_name");
+            }
+        }
 
-			Log.d("sub", subl);
-			Log.d("local", local);
-			Log.d("country", country);
-			Log.d("admin1", admin1);
-			Log.d("admin2", admin2);
+        Log.d("sub", subl);
+        Log.d("local", local);
+        Log.d("country", country);
+        Log.d("admin1", admin1);
+        Log.d("admin2", admin2);
 
-			if (!subl.isEmpty()) {
-				toRet = subl;
-			}
+        if (!subl.isEmpty()) {
+            toRet = subl;
+        }
 
-			if (!toRet.isEmpty() && !local.isEmpty()) {
-				toRet = toRet + ", " + local;
-			} else if (!local.isEmpty()) {
+        if (!toRet.isEmpty() && !local.isEmpty()) {
+            toRet = toRet + ", " + local;
+        } else if (!local.isEmpty()) {
 
-				toRet = local;
-			}
+            toRet = local;
+        }
 
-			if (subl.isEmpty() && !admin2.isEmpty()) {
-				if (!admin2.equalsIgnoreCase(local))
-					if (toRet.isEmpty())
-						toRet = admin2;
-					else
-						toRet = toRet + ", " + admin2;
-			}
+        if (subl.isEmpty() && !admin2.isEmpty()) {
+            if (!admin2.equalsIgnoreCase(local))
+                if (toRet.isEmpty())
+                    toRet = admin2;
+                else
+                    toRet = toRet + ", " + admin2;
+        }
 
-			if (local.isEmpty() && !admin1.isEmpty()) {
-				if (!admin1.equalsIgnoreCase(admin2)
-						&& !admin1.equalsIgnoreCase(subl))
-					if (toRet.isEmpty())
-						toRet = admin1;
-					else
-						toRet = toRet + ", " + admin1;
-			}
+        if (local.isEmpty() && !admin1.isEmpty()) {
+            if (!admin1.equalsIgnoreCase(admin2)
+                    && !admin1.equalsIgnoreCase(subl))
+                if (toRet.isEmpty())
+                    toRet = admin1;
+                else
+                    toRet = toRet + ", " + admin1;
+        }
 
-			if (!toRet.isEmpty() && !country.isEmpty()) {
-				if (!country.equalsIgnoreCase(admin2)
-						&& !country.equalsIgnoreCase(subl)
-						&& !country.equalsIgnoreCase(admin1)
-						&& !country.equalsIgnoreCase(local))
-					toRet = toRet + ", " + country;
-			} else if (!country.isEmpty()) {
-				toRet = country;
-			}
+        if (!toRet.isEmpty() && !country.isEmpty()) {
+            if (!country.equalsIgnoreCase(admin2)
+                    && !country.equalsIgnoreCase(subl)
+                    && !country.equalsIgnoreCase(admin1)
+                    && !country.equalsIgnoreCase(local))
+                toRet = toRet + ", " + country;
+        } else if (!country.isEmpty()) {
+            toRet = country;
+        }
 
-			return toRet;
+        return toRet;
 
-		} else {
 
-		}
-		return "empty";
-	}
+    }
 
-	static String URL3 = "http://api.worldweatheronline.com/free/v1/tz.ashx?key=45kcy9gjhkcxdayzgta7nwvx&q=";
-	static String URL4 = "&format=json";
+    static String URL3 = "http://api.worldweatheronline.com/free/v1/tz.ashx?key=45kcy9gjhkcxdayzgta7nwvx&q=";
+    static String URL4 = "&format=json";
 
-	public TimeZone getTimezone(double latitude, double longitude)
-			throws ClientProtocolException, IOException, JSONException {
+    public TimeZone getTimezone(double latitude, double longitude)
+            throws IOException, JSONException {
 
-		String latitudeStr = latitude + "";
-		String longitudeStr = longitude + "";
+        String latitudeStr = latitude + "";
+        String longitudeStr = longitude + "";
 
-		Log.d("Weather", "Lat " + latitudeStr + " & lon " + longitudeStr);
-		if (latitudeStr.contains("E"))
-			if (latitudeStr.contains(".")) {
+        Log.d("Weather", "Lat " + latitudeStr + " & lon " + longitudeStr);
+        if (latitudeStr.contains("E"))
+            if (latitudeStr.contains(".")) {
 
-				if (latitudeStr.indexOf(".") != 2 || latitudeStr.indexOf(".") != 3) {
+                if (latitudeStr.indexOf(".") != 2 || latitudeStr.indexOf(".") != 3) {
 
-					latitudeStr = latitudeStr.substring(0, latitudeStr.indexOf("."))
-							+ latitudeStr.substring(latitudeStr.indexOf(".") + 1);
+                    latitudeStr = latitudeStr.substring(0, latitudeStr.indexOf("."))
+                            + latitudeStr.substring(latitudeStr.indexOf(".") + 1);
 
-					latitudeStr = latitudeStr.substring(0, 2) + "." + latitudeStr.substring(2);
-					Log.d("Weather", latitudeStr);
-				}
-			} else {
-				latitudeStr = latitudeStr.substring(0, 2) + "." + latitudeStr.substring(2);
-			}
-		if (longitudeStr.contains("E"))
-			if (longitudeStr.contains(".")) {
-				if (longitudeStr.indexOf(".") != 2 || longitudeStr.indexOf(".") != 3) {
+                    latitudeStr = latitudeStr.substring(0, 2) + "." + latitudeStr.substring(2);
+                    Log.d("Weather", latitudeStr);
+                }
+            } else {
+                latitudeStr = latitudeStr.substring(0, 2) + "." + latitudeStr.substring(2);
+            }
+        if (longitudeStr.contains("E"))
+            if (longitudeStr.contains(".")) {
+                if (longitudeStr.indexOf(".") != 2 || longitudeStr.indexOf(".") != 3) {
 
-					longitudeStr = longitudeStr.substring(0, longitudeStr.indexOf("."))
-							+ longitudeStr.substring(longitudeStr.indexOf(".") + 1);
-					;
+                    longitudeStr = longitudeStr.substring(0, longitudeStr.indexOf("."))
+                            + longitudeStr.substring(longitudeStr.indexOf(".") + 1);
+                    ;
 
-					longitudeStr = longitudeStr.substring(0, 2) + "." + longitudeStr.substring(2);
-					Log.d("Weather", longitudeStr);
-				}
-			} else {
-				longitudeStr = longitudeStr.substring(0, 2) + "." + longitudeStr.substring(2);
-			}
+                    longitudeStr = longitudeStr.substring(0, 2) + "." + longitudeStr.substring(2);
+                    Log.d("Weather", longitudeStr);
+                }
+            } else {
+                longitudeStr = longitudeStr.substring(0, 2) + "." + longitudeStr.substring(2);
+            }
 
-		if (latitudeStr.contains("E")) {
-			latitudeStr = latitudeStr.substring(0, latitudeStr.indexOf("E"))
-					+ latitudeStr.substring(latitudeStr.indexOf("E") + 1);
-		}
-		if (longitudeStr.contains("E")) {
-			longitudeStr = longitudeStr.substring(0, longitudeStr.indexOf("E"))
-					+ longitudeStr.substring(longitudeStr.indexOf("E") + 1);
-		}
+        if (latitudeStr.contains("E")) {
+            latitudeStr = latitudeStr.substring(0, latitudeStr.indexOf("E"))
+                    + latitudeStr.substring(latitudeStr.indexOf("E") + 1);
+        }
+        if (longitudeStr.contains("E")) {
+            longitudeStr = longitudeStr.substring(0, longitudeStr.indexOf("E"))
+                    + longitudeStr.substring(longitudeStr.indexOf("E") + 1);
+        }
 
-		String url = URL3 + latitudeStr + "," + longitudeStr + URL4;
+        String url = URL3 + latitudeStr + "," + longitudeStr + URL4;
 
-		Log.d("getTimezone", url);
+        Log.d("getTimezone", url);
 
-		HttpGet get = new HttpGet(url.toString());
-		DefaultHttpClient client = new DefaultHttpClient();
-		HttpResponse r = client.execute(get);
-		int status = r.getStatusLine().getStatusCode();
-		if (status == 200) {
-			HttpEntity e = r.getEntity();
-			String data = EntityUtils.toString(e);
-			Log.d("Stencil", data.toString());
-			JSONObject jObject = new JSONObject(data);
-			// Log.d("Length", jObject.length() + "");
 
-			JSONObject jo = jObject.getJSONObject("data");
-			JSONObject jobj = jo.getJSONArray("time_zone").getJSONObject(0);
-			String mytzone = jobj.getString("utcOffset");
-			String hour = "", minutes = "";
-			String sign = "+";
-			if (mytzone.contains(".")) {
-				if (mytzone.contains("-")) {
-					sign = "-";
-					hour = (mytzone.substring(mytzone.indexOf("-"),
-							mytzone.indexOf(".")));
-				} else {
-					hour = mytzone.substring(0, mytzone.indexOf("."));
-					sign = "+";
-				}
-				minutes = mytzone.substring(mytzone.indexOf(".") + 1);
-			}
-			if ((hour).length() == 1) {
-				hour = "0" + hour;
-			}
-			if (Integer.parseInt(minutes) == 50) {
-				minutes = "30";
-			} else {
-				minutes = "00";
-			}
+        String data = RestUtils.GET(url);
+        Log.d("Stencil", data);
+        JSONObject jObject = new JSONObject(data);
+        // Log.d("Length", jObject.length() + "");
 
-			return TimeZone.getTimeZone("GMT" + sign + hour + minutes);
+        JSONObject jo = jObject.getJSONObject("data");
+        JSONObject jobj = jo.getJSONArray("time_zone").getJSONObject(0);
+        String mytzone = jobj.getString("utcOffset");
+        String hour = "", minutes = "";
+        String sign = "+";
+        if (mytzone.contains(".")) {
+            if (mytzone.contains("-")) {
+                sign = "-";
+                hour = (mytzone.substring(mytzone.indexOf("-"),
+                        mytzone.indexOf(".")));
+            } else {
+                hour = mytzone.substring(0, mytzone.indexOf("."));
+                sign = "+";
+            }
+            minutes = mytzone.substring(mytzone.indexOf(".") + 1);
+        }
+        if ((hour).length() == 1) {
+            hour = "0" + hour;
+        }
+        if (Integer.parseInt(minutes) == 50) {
+            minutes = "30";
+        } else {
+            minutes = "00";
+        }
 
-		}
-		return TimeZone.getDefault();
-	}
+        return TimeZone.getTimeZone("GMT" + sign + hour + minutes);
+
+
+    }
 }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <group
+        android:id="@+id/group2"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/submenu_normal"
+            android:title="Normal"/>
+        <item
+            android:id="@+id/submenu_hybrid"
+            android:title="Hybrid"/>
+        <item
+            android:id="@+id/submenu_satellite"
+            android:title="Satellite"/>
+        <item
+            android:id="@+id/submenu_terrain"
+            android:title="Terrain"/>
+    </group>
+
+</menu>
