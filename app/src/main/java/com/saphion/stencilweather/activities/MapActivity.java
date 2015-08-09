@@ -1,8 +1,8 @@
 package com.saphion.stencilweather.activities;
 
+
+
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,7 +11,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Style;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
@@ -19,18 +18,19 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.view.ActionMode;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -60,7 +60,7 @@ import com.saphion.stencilweather.utilities.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapActivity extends AppCompatActivity implements OnClickListener {
+public class MapActivity extends AppCompatActivity implements View.OnClickListener {
 
 	// Google Map
 	private GoogleMap googleMap;
@@ -103,7 +103,7 @@ public class MapActivity extends AppCompatActivity implements OnClickListener {
 			googleMap.setMyLocationEnabled(true);
 
 		findViewById(R.id.map_switch)
-				.setOnClickListener(new OnClickListener() {
+				.setOnClickListener(new View.OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
@@ -194,7 +194,7 @@ public class MapActivity extends AppCompatActivity implements OnClickListener {
 			public boolean onMarkerClick(Marker mrkr) {
 				if (markersUnExp.contains(mrkr)) {
 					currPos = markersUnExp.indexOf(mrkr);
-					MoveToAndExpand(mrkr.getPosition(), currPos);
+					moveToAndExpand(mrkr.getPosition(), currPos);
 					try {
 						mode.finish();
 					} catch (Exception ex) {
@@ -202,7 +202,7 @@ public class MapActivity extends AppCompatActivity implements OnClickListener {
 
 				} else if (markersExp.contains(mrkr)) {
 					currPos = markersExp.indexOf(mrkr);
-					MoveToAndExpand(mrkr.getPosition(), currPos);
+					moveToAndExpand(mrkr.getPosition(), currPos);
 					try {
 						mode.finish();
 					} catch (Exception ex) {
@@ -269,6 +269,21 @@ public class MapActivity extends AppCompatActivity implements OnClickListener {
 
 		// Inflate our menu resource into the PopupMenu's Menu
 		popup.getMenuInflater().inflate(R.menu.map_actions, popup.getMenu());
+
+        switch (googleMap.getMapType()) {
+            case GoogleMap.MAP_TYPE_NORMAL:
+                popup.getMenu().getItem(0).setChecked(true);
+                break;
+            case GoogleMap.MAP_TYPE_HYBRID:
+                popup.getMenu().getItem(1).setChecked(true);
+                break;
+            case GoogleMap.MAP_TYPE_SATELLITE:
+                popup.getMenu().getItem(2).setChecked(true);
+                break;
+            case GoogleMap.MAP_TYPE_TERRAIN:
+                popup.getMenu().getItem(3).setChecked(true);
+                break;
+        }
 
 
 		// Set a listener so we are notified if a menu item is clicked
@@ -337,7 +352,7 @@ public class MapActivity extends AppCompatActivity implements OnClickListener {
 		if (markersExp.size() > 0) {
 
 			Work();
-			MoveToAndExpand(new LatLng(mLocation.get(0).getLatitude(), mLocation.get(0).getLongitude()), 0);
+			moveToAndExpand(new LatLng(mLocation.get(0).getLatitude(), mLocation.get(0).getLongitude()), 0);
 			CameraPosition cameraPosition = new CameraPosition.Builder()
 					.zoom(zoom).target(new LatLng(mLocation.get(0).getLatitude(), mLocation.get(0).getLongitude())).build();
 
@@ -364,7 +379,9 @@ public class MapActivity extends AppCompatActivity implements OnClickListener {
 
 	}
 
-	public void MoveToAndExpand(LatLng ll, int position) {
+	public void moveToAndExpand(LatLng ll, int position) {
+
+        Log.d("Stencil Weather", "Moving to: " + ll.latitude + ", " + ll.longitude);
 
 		CameraPosition cameraPosition = new CameraPosition.Builder().zoom(zoom)
 				.target(ll).build();
@@ -391,7 +408,7 @@ public class MapActivity extends AppCompatActivity implements OnClickListener {
 	}
 
 	public class DoWorkExpand extends
-			AsyncTask<Object, Void, ArrayList<Bitmap>> {
+            AsyncTask<Object, Void, ArrayList<Bitmap>> {
 
 		@Override
 		protected void onPostExecute(ArrayList<Bitmap> result) {
@@ -506,7 +523,7 @@ public class MapActivity extends AppCompatActivity implements OnClickListener {
 		Paint stkPaint = new Paint(Paint.FILTER_BITMAP_FLAG
 				| Paint.ANTI_ALIAS_FLAG);
 		stkPaint.setTextSize(mPaint.getTextSize());
-		stkPaint.setStyle(Style.STROKE);
+		stkPaint.setStyle(Paint.Style.STROKE);
 		stkPaint.setStrokeWidth(Utils.spToPx(context, .1f));
 		stkPaint.setColor(Color.WHITE);
 		c.drawText(condition, w, h, stkPaint);
@@ -583,15 +600,14 @@ public class MapActivity extends AppCompatActivity implements OnClickListener {
 
 			if (display.equalsIgnoreCase("empty")) {
 				Toast.makeText(getBaseContext(),
-						"Not a valid location, try again", Toast.LENGTH_LONG)
+                        "Not a valid location, try again", Toast.LENGTH_LONG)
 						.show();
 				return;
 
 			}
 
 
-
-			mode = startActionMode(new ActionModes(display, latLng.latitude
+			mode = startSupportActionMode(new ActionModes(display, latLng.latitude
 					+ "", latLng.longitude + ""));
 
 			super.onPostExecute(mVoid);
@@ -659,8 +675,8 @@ public class MapActivity extends AppCompatActivity implements OnClickListener {
 		DisplayMetrics displayMetrics = new DisplayMetrics();
 		((Activity) context).getWindowManager().getDefaultDisplay()
 				.getMetrics(displayMetrics);
-		view.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT));
+		view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+				ViewGroup.LayoutParams.WRAP_CONTENT));
 		view.measure(Utils.dpToPx(180, context),
 				Utils.dpToPx(100, context));
 		view.layout(0, 0, Utils.dpToPx(180, context),
@@ -732,11 +748,11 @@ public class MapActivity extends AppCompatActivity implements OnClickListener {
 			if (currPos == -1) {
 				currPos = markersExp.size() - 1;
 			}
-			MoveToAndExpand(markersExp.get(currPos).getPosition(), currPos);
+			moveToAndExpand(markersExp.get(currPos).getPosition(), currPos);
 			break;
 		case R.id.map_right:
 			currPos = (currPos + 1) % markersExp.size();
-			MoveToAndExpand(markersExp.get(currPos).getPosition(), currPos);
+			moveToAndExpand(markersExp.get(currPos).getPosition(), currPos);
 			break;
 		case R.id.tvAddLocation:
 			new AddLoc(mMarker.getPosition(), mMarker.getTitle()).execute();
@@ -818,8 +834,8 @@ public class MapActivity extends AppCompatActivity implements OnClickListener {
 			markersUnExp.add(googleMap.addMarker(mMarkerOptions));
 			markersUnExp.get(markersUnExp.size() - 1).setVisible(true);
 
-			MoveToAndExpand(new LatLng(mLocation.get(mLocation.size() - 1).getLatitude(), mLocation.get(mLocation.size() - 1).getLongitude()),
-					mLocation.size() - 1);
+			moveToAndExpand(new LatLng(mLocation.get(mLocation.size() - 1).getLatitude(), mLocation.get(mLocation.size() - 1).getLongitude()),
+                    mLocation.size() - 1);
 
 			super.onPostExecute(tz);
 		}
@@ -828,7 +844,7 @@ public class MapActivity extends AppCompatActivity implements OnClickListener {
 
 	private void startAndBuildDialog() {
 
-		Builder builder = new Builder(MapActivity.this);
+		AlertDialog.Builder builder = new AlertDialog.Builder(MapActivity.this);
 		final View view = LayoutInflater.from(getBaseContext()).inflate(
 				R.layout.layout_add_location_point, null);
 		builder.setView(view);
@@ -873,16 +889,7 @@ public class MapActivity extends AppCompatActivity implements OnClickListener {
         builder.setNegativeButton("CANCEL", null);
 
 		final AlertDialog ad = builder.create();
-		try {
-			ad.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
-            ad.getWindow().setWindowAnimations(R.style.DialogAnimation);
-		} catch (Exception ex) {
-		}
-		try {
-			ad.getActionBar().hide();
-		} catch (Exception ex) {
-
-		}
+        ad.getWindow().setWindowAnimations(R.style.DialogAnimation);
         ad.show();
 
 	}

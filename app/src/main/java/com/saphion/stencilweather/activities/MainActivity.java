@@ -42,6 +42,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
@@ -57,6 +58,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -93,6 +95,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -223,6 +226,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 }, 3000);
+            }
+        });
+
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+                if(listView.getAdapter() != null)
+                    if(!listView.getAdapter().isEmpty())
+                        Utils.hideKeyboard(edit_text_search, MainActivity.this);
             }
         });
 
@@ -706,7 +723,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            viewHolder.textView.setText(objects.get(position).getName());
+            String name = objects.get(position).getName();
+            String splitWord = edit_text_search.getText().toString();
+
+            Log.d("Stencil Weather", "Split Word: " + splitWord);
+            Log.d("Stencil Weather", "Complete Word: " + name);
+
+            try {
+                if(!splitWord.isEmpty())
+                viewHolder.textView.setText(Html.fromHtml("<b>" + (splitWord.charAt(0) + "").toUpperCase(Locale.getDefault()) + splitWord.substring(1, splitWord.length()) + "</b>"
+                        + name.substring(name.indexOf(splitWord) + splitWord.length())));
+                else
+                    viewHolder.textView.setText(name);
+            }catch(Exception ex){
+                viewHolder.textView.setText(name);
+                ex.printStackTrace();
+                Log.e("Stencil Error", ex.getLocalizedMessage());
+            }
 
             return convertView;
         }

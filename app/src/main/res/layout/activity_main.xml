@@ -34,9 +34,9 @@
                         android:layout_height="40dp"
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
-                        android:padding="10dp"
-                        android:src="@drawable/ic_map_marker_radius"
-                        android:tint="#ff000000" />
+                        android:padding="5dp"
+                        android:src="@drawable/ic_map_icon"
+                        />
 
                     <com.devspark.robototextview.widget.RobotoTextView
                         android:layout_width="0dp"

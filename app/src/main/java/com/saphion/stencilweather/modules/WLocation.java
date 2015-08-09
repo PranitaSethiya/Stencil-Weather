@@ -51,7 +51,7 @@ public class WLocation extends SugarRecord<WLocation> {
     }
 
     public double getLatitude() {
-        return longitude;
+        return latitude;
     }
 
     public void setLatitude(Double latitude) {

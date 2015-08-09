@@ -31,6 +31,7 @@ public class InitiateSearch {
     public static void handleToolBar(final Activity activity, final CardView search, final Toolbar toolbarMain, /*final View view,*/ final ListView listView, final EditText editText) {
         final Animation fade_in = AnimationUtils.loadAnimation(activity.getApplicationContext(), android.R.anim.fade_in);
         if (search.getVisibility() == View.VISIBLE) {
+            editText.setText("");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 final Animator animatorHide = ViewAnimationUtils.createCircularReveal(search,
                     search.getWidth() - (int) convertDpToPixel(56, activity),
