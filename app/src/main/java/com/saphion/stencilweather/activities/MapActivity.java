@@ -17,6 +17,7 @@ import android.graphics.drawable.NinePatchDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Interpolator;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -56,6 +58,7 @@ import com.saphion.stencilweather.modules.WLocation;
 import com.saphion.stencilweather.modules.WeatherItem;
 import com.saphion.stencilweather.tasks.GetLocationInfo;
 import com.saphion.stencilweather.utilities.Utils;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +69,8 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 	private GoogleMap googleMap;
 	MarkerOptions marker = new MarkerOptions();
     private Toolbar toolbar;
+    SlidingUpPanelLayout slidingLayout;
+    View pbActionMode;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,13 +82,85 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
         toolbar.setTitle("Weather Map");
 
-        setToolBarColor(getResources().getColor(R.color.main_button_blue_normal));
+        setToolBarColor(getResources().getColor(R.color.map_blue));
 
         setSupportActionBar(toolbar);
 
         final ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_close);
         ab.setDisplayHomeAsUpEnabled(true);
+
+        pbActionMode = findViewById(R.id.pbActionMode);
+        slidingLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        slidingLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View view, float v) {
+
+            }
+
+            @Override
+            public void onPanelCollapsed(View view) {
+
+            }
+
+            @Override
+            public void onPanelExpanded(View view) {
+
+            }
+
+            @Override
+            public void onPanelAnchored(View view) {
+
+            }
+
+            @Override
+            public void onPanelHidden(View view) {
+                slidingLayout.setFloatingActionButtonVisibility(View.GONE);
+            }
+
+            @Override
+            public void onPanelHiddenExecuted(View view, Interpolator interpolator, int i) {
+
+            }
+
+            @Override
+            public void onPanelShownExecuted(View view, Interpolator interpolator, int i) {
+
+            }
+
+            @Override
+            public void onPanelExpandedStateY(View view, boolean b) {
+
+            }
+
+            @Override
+            public void onPanelCollapsedStateY(View view, boolean b) {
+
+            }
+
+            @Override
+            public void onPanelLayout(View view, SlidingUpPanelLayout.PanelState panelState) {
+
+            }
+        });
+//        findViewById(R.id.rlSlidingViewContainer).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+//            }
+//        });
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                slidingLayout.setFloatingActionButtonVisibility(View.GONE);
+            }
+        }, 50);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                findViewById(R.id.fab).setVisibility(View.GONE);
+            }
+        }, 50);
 
 		try {
 			// Loading map
@@ -102,127 +179,146 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
 			googleMap.setMyLocationEnabled(true);
 
-		findViewById(R.id.map_switch)
-				.setOnClickListener(new View.OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-
-						showPopupMenu(v);
-
-					}
-				});
-
-		findViewById(R.id.map_left).setOnClickListener(this);
-		findViewById(R.id.map_right).setOnClickListener(this);
-		findViewById(R.id.map_goto).setOnClickListener(this);
+		//FIXME
+//		findViewById(R.id.map_switch)
+//				.setOnClickListener(new View.OnClickListener() {
+//
+//					@Override
+//					public void onClick(View v) {
+//
+//						showPopupMenu(v);
+//
+//					}
+//				});
+//
+//		findViewById(R.id.map_left).setOnClickListener(this);
+//		findViewById(R.id.map_right).setOnClickListener(this);
+//		findViewById(R.id.map_goto).setOnClickListener(this);
 
 		googleMap.setOnMapLongClickListener(new OnMapLongClickListener() {
 
-			@Override
-			public void onMapLongClick(LatLng latlng) {
-				try {
-					 mode.finish();
-				} catch (Exception ex) {
-				}
+            @Override
+            public void onMapLongClick(LatLng latlng) {
+                try {
+                    mode.finish();
+                } catch (Exception ex) {
+                }
 
-				mLoc = 0;
+                mLoc = 0;
 
-				CameraPosition cameraPosition = new CameraPosition.Builder()
-						.target(new LatLng(latlng.latitude, latlng.longitude))
-						.zoom(zoom).build();
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(new LatLng(latlng.latitude, latlng.longitude))
+                        .zoom(zoom).build();
 
-				googleMap.animateCamera(CameraUpdateFactory
-						.newCameraPosition(cameraPosition));
+                googleMap.animateCamera(CameraUpdateFactory
+                        .newCameraPosition(cameraPosition));
 
-				new AddMarker(latlng).execute();
-			}
-		});
+                new AddMarker(latlng).execute();
+
+
+
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        (findViewById(R.id.rlSlidingViewContainer)).setAlpha(0);
+//                        (findViewById(R.id.rlSlidingViewContainer)).setVisibility(View.VISIBLE);
+//                    }
+//                }, 10);
+//                YoYo.with(Techniques.BounceInUp)
+//                        .duration(500).interpolate(new OvershootInterpolator())
+//                        .playOn(findViewById(R.id.rlSlidingViewContainer));
+            }
+        });
 
 		googleMap.setOnMapClickListener(new OnMapClickListener() {
 
-			@Override
-			public void onMapClick(LatLng arg0) {
-				try {
-					if (mMarker != null)
-						mMarker.remove();
-				} catch (Exception ex) {
-				}
-				try {
-					mode.finish();
-				} catch (Exception ex) {
-				}
+            @Override
+            public void onMapClick(LatLng arg0) {
+                try {
+                    if (mMarker != null)
+                        mMarker.remove();
+                } catch (Exception ex) {
+                }
+                try {
+                    mode.finish();
+                } catch (Exception ex) {
+                }
 
-			}
-		});
+//                slidingLayout.setFloatingActionButtonVisibility(View.GONE);
+                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+
+            }
+        });
 
 		googleMap
 				.setOnMyLocationButtonClickListener(new OnMyLocationButtonClickListener() {
 
-					@Override
-					public boolean onMyLocationButtonClick() {
-						try {
-							try {
-								mode.finish();
-							} catch (Exception ex) {
-							}
+                    @Override
+                    public boolean onMyLocationButtonClick() {
+                        try {
+                            try {
+                                mode.finish();
+                            } catch (Exception ex) {
+                            }
 
-							mLoc = 1;
+                            mLoc = 1;
 
-							new AddMarker(new LatLng(googleMap
+                            new AddMarker(new LatLng(googleMap
                                     .getMyLocation().getLatitude(), googleMap
                                     .getMyLocation().getLongitude())).execute();
-							CameraPosition cameraPosition = new CameraPosition.Builder()
-									.target(new LatLng(googleMap
-											.getMyLocation().getLatitude(),
-											googleMap.getMyLocation()
-													.getLongitude())).zoom(12)
-									.build();
+                            CameraPosition cameraPosition = new CameraPosition.Builder()
+                                    .target(new LatLng(googleMap
+                                            .getMyLocation().getLatitude(),
+                                            googleMap.getMyLocation()
+                                                    .getLongitude())).zoom(12)
+                                    .build();
 
-							googleMap.animateCamera(CameraUpdateFactory
-									.newCameraPosition(cameraPosition));
+                            googleMap.animateCamera(CameraUpdateFactory
+                                    .newCameraPosition(cameraPosition));
 
-						} catch (Exception ex) {
-						}
-						return true;
-					}
-				});
+                        } catch (Exception ex) {
+                        }
+                        return true;
+                    }
+                });
 
 		googleMap.setOnMarkerClickListener(new OnMarkerClickListener() {
 
-			@Override
-			public boolean onMarkerClick(Marker mrkr) {
-				if (markersUnExp.contains(mrkr)) {
-					currPos = markersUnExp.indexOf(mrkr);
-					moveToAndExpand(mrkr.getPosition(), currPos);
-					try {
-						mode.finish();
-					} catch (Exception ex) {
-					}
+            @Override
+            public boolean onMarkerClick(Marker mrkr) {
+                if (markersUnExp.contains(mrkr)) {
+                    currPos = markersUnExp.indexOf(mrkr);
+                    moveToAndExpand(mrkr.getPosition(), currPos);
+                    try {
+                        mode.finish();
+                    } catch (Exception ex) {
+                    }
 
-				} else if (markersExp.contains(mrkr)) {
-					currPos = markersExp.indexOf(mrkr);
-					moveToAndExpand(mrkr.getPosition(), currPos);
-					try {
-						mode.finish();
-					} catch (Exception ex) {
-					}
-				} else {
+                } else if (markersExp.contains(mrkr)) {
+                    currPos = markersExp.indexOf(mrkr);
+                    moveToAndExpand(mrkr.getPosition(), currPos);
+                    try {
+                        mode.finish();
+                    } catch (Exception ex) {
+                    }
+                } else {
 
-					return false;
-				}
+                    return false;
+                }
 
-				return true;
-			}
-		});
+                return true;
+            }
+        });
 
 		googleMap.setOnCameraChangeListener(new OnCameraChangeListener() {
 
-			@Override
-			public void onCameraChange(CameraPosition arg0) {
-				zoom = arg0.zoom;
-			}
-		});
+            @Override
+            public void onCameraChange(CameraPosition arg0) {
+                zoom = arg0.zoom;
+            }
+        });
+
+
 
 	}
 
@@ -241,7 +337,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                 @Override
                 public void onAnimationUpdate(ValueAnimator animator) {
                     findViewById(R.id.appbar).setBackgroundColor((Integer) animator.getAnimatedValue());
-                    findViewById(R.id.appbarBottom).setBackgroundColor((Integer) animator.getAnimatedValue());
+//                    findViewById(R.id.appbarBottom).setBackgroundColor((Integer) animator.getAnimatedValue());
                 }
 
             });
@@ -331,9 +427,9 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
 	private void loadData() {
 		
-
-		findViewById(R.id.tvAddLocation).setOnClickListener(this);
-		findViewById(R.id.tvShowWeather).setOnClickListener(this);
+		//FIXME
+//		findViewById(R.id.tvAddLocation).setOnClickListener(this);
+//		findViewById(R.id.tvShowWeather).setOnClickListener(this);
 
 		mLocation = WLocation.listAll(WLocation.class);
 
@@ -567,12 +663,15 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                 marker.draggable(false);
 
                 marker.icon(BitmapDescriptorFactory
-                        .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                        .defaultMarker(BitmapDescriptorFactory.HUE_RED));
 
                 // marker.snippet("Testing snippet");
 
                 // adding marker
                 mMarker = googleMap.addMarker(marker);
+
+                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                pbActionMode.setVisibility(View.VISIBLE);
 			} catch (Exception ex) {
 			}
 
@@ -598,17 +697,22 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 		@Override
 		protected void onPostExecute(Void mVoid) {
 
+            pbActionMode.setVisibility(View.GONE);
+
 			if (display.equalsIgnoreCase("empty")) {
 				Toast.makeText(getBaseContext(),
                         "Not a valid location, try again", Toast.LENGTH_LONG)
 						.show();
+                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
 				return;
 
 			}
 
+            slidingLayout.setFloatingActionButtonVisibility(View.VISIBLE);
 
-			mode = startSupportActionMode(new ActionModes(display, latLng.latitude
-					+ "", latLng.longitude + ""));
+
+//			mode = startSupportActionMode(new ActionModes(display, latLng.latitude
+//					+ "", latLng.longitude + ""));
 
 			super.onPostExecute(mVoid);
 		}
@@ -640,10 +744,11 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 			mode.setTitle(title);
 			mode.setSubtitle(subtitle);
 
-			findViewById(R.id.ll)
-					.setVisibility(View.INVISIBLE);
-			findViewById(R.id.llaction)
-					.setVisibility(View.VISIBLE);
+			//FIXME
+//			findViewById(R.id.ll)
+//					.setVisibility(View.INVISIBLE);
+//			findViewById(R.id.llaction)
+//					.setVisibility(View.VISIBLE);
 
 			return true;
 		}
@@ -661,9 +766,10 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
 		@Override
 		public void onDestroyActionMode(ActionMode actionMode) {
-			findViewById(R.id.ll).setVisibility(View.VISIBLE);
-			findViewById(R.id.llaction)
-					.setVisibility(View.INVISIBLE);
+			//FIXME
+//			findViewById(R.id.ll).setVisibility(View.VISIBLE);
+//			findViewById(R.id.llaction)
+//					.setVisibility(View.INVISIBLE);
 			mMarker.remove();
             if(getSupportActionBar() != null)
                 getSupportActionBar().show();
@@ -742,29 +848,30 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.map_left:
-			currPos = (currPos - 1) % markersExp.size();
-			if (currPos == -1) {
-				currPos = markersExp.size() - 1;
-			}
-			moveToAndExpand(markersExp.get(currPos).getPosition(), currPos);
-			break;
-		case R.id.map_right:
-			currPos = (currPos + 1) % markersExp.size();
-			moveToAndExpand(markersExp.get(currPos).getPosition(), currPos);
-			break;
-		case R.id.tvAddLocation:
-			new AddLoc(mMarker.getPosition(), mMarker.getTitle()).execute();
-			mode.finish();
-			break;
-		case R.id.tvShowWeather:
-			mode.finish();
-			break;
-		case R.id.map_goto:
-			startAndBuildDialog();
-			break;
-		}
+		//FIXME
+//		switch (v.getId()) {
+//		case R.id.map_left:
+//			currPos = (currPos - 1) % markersExp.size();
+//			if (currPos == -1) {
+//				currPos = markersExp.size() - 1;
+//			}
+//			moveToAndExpand(markersExp.get(currPos).getPosition(), currPos);
+//			break;
+//		case R.id.map_right:
+//			currPos = (currPos + 1) % markersExp.size();
+//			moveToAndExpand(markersExp.get(currPos).getPosition(), currPos);
+//			break;
+//		case R.id.tvAddLocation:
+//			new AddLoc(mMarker.getPosition(), mMarker.getTitle()).execute();
+//			mode.finish();
+//			break;
+//		case R.id.tvShowWeather:
+//			mode.finish();
+//			break;
+//		case R.id.map_goto:
+//			startAndBuildDialog();
+//			break;
+//		}
 
 	}
 

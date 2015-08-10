@@ -31,6 +31,8 @@
     <color name="transparent">#00ffffff</color>
 
     <color name="white">#ffffff</color>
+    <color name="black">#f000</color>
+    <color name="black_matt">#ff1e1e1e</color>
 
 
     <color name="dark_blue">#243678</color>
@@ -91,4 +93,10 @@
     <color name="option11">#3f51b5</color>
     <color name="option12">#592EA6</color>
     <color name="option13">#795548</color>
+
+
+    <color name="transparent_white">#b4ffffff</color>
+    <color name="transparent_black">#b4000000</color>
+
+    <color name="map_blue">#4285F4</color>
 </resources>

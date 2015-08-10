@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -22,154 +23,106 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout
+    <com.sothree.slidinguppanel.FloatingActionButtonLayout
+        android:id="@+id/fab_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        sothree:umanoFabMode="circular_reveal"
         android:foreground="@drawable/header_shadow">
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <com.sothree.slidinguppanel.SlidingUpPanelLayout
+            android:id="@+id/sliding_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            sothree:umanoDragView="@+id/rlSlidingViewContainer"
+            sothree:umanoPanelHeight="130dp"
+            sothree:umanoAnchorPoint="0.75"
+            sothree:umanoShadowHeight="4dp"
+            sothree:umanoInitialState="hidden">
 
-            <fragment
-                android:id="@+id/map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/view"
-                android:layout_alignParentTop="true" />
+                android:layout_height="match_parent">
 
-            <View
-                android:id="@+id/view"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:rotation="180"
-                android:layout_above="@+id/appbarBottom"
-                android:background="@drawable/header_shadow" />
-
-            <android.support.design.widget.AppBarLayout
-                android:id="@+id/appbarBottom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:background="@color/main_button_blue_normal"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-                <FrameLayout
+                <fragment
+                    android:id="@+id/map"
+                    android:layout_marginTop="?android:attr/actionBarSize"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true" />
+
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/card"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="20dp"
+                    android:clickable="false"
+                    card_view:cardBackgroundColor="@color/transparent_white"
+                    card_view:cardCornerRadius="2dp">
 
                     <LinearLayout
-                        android:id="@+id/ll"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:divider="?android:listDivider"
-                        android:dividerPadding="12dp"
-                        android:orientation="horizontal"
-                        android:showDividers="middle">
+                        android:orientation="horizontal">
 
-                        <ImageView
-                            android:id="@+id/map_left"
-                            android:layout_width="wrap_content"
-                            android:layout_height="50dp"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
+                        <ImageButton
+                            android:layout_width="50dp"
+                            android:layout_height="40dp"
                             android:background="@drawable/item_background"
-                            android:clickable="true"
-                            android:paddingBottom="2dp"
-                            android:paddingTop="2dp"
-                            android:scaleType="centerInside"
-                            android:tint="@color/white"
-                            android:src="@drawable/ic_arrow_left" />
+                            android:padding="15dp"
+                            android:src="@drawable/ic_arrow_left"
+                            android:tint="@color/transparent_black" />
 
+                        <View
+                            android:layout_width="0.5dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@color/colorTernaryText" />
 
-                        <ImageView
-                            android:id="@+id/map_right"
-                            android:layout_width="wrap_content"
-                            android:tint="@color/white"
-                            android:layout_height="50dp"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
+                        <ImageButton
+                            android:layout_width="50dp"
+                            android:layout_height="40dp"
                             android:background="@drawable/item_background"
-                            android:clickable="true"
-                            android:paddingBottom="2dp"
-                            android:paddingTop="2dp"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/ic_arrow_right" />
+                            android:padding="15dp"
+                            android:src="@drawable/ic_arrow_right"
+                            android:tint="@color/transparent_black" />
 
-                        <ImageView
-                            android:id="@+id/map_goto"
-                            android:layout_width="wrap_content"
-                            android:layout_height="50dp"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:background="@drawable/item_background"
-                            android:clickable="true"
-                            android:tint="@color/white"
-                            android:paddingBottom="2dp"
-                            android:paddingTop="2dp"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/goto_icon" />
-
-                        <ImageView
-                            android:id="@+id/map_switch"
-                            android:layout_width="wrap_content"
-                            android:layout_height="50dp"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:tint="@color/white"
-                            android:background="@drawable/item_background"
-                            android:clickable="true"
-                            android:paddingBottom="2dp"
-                            android:paddingTop="2dp"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/ic_dots_vertical" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/llaction"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="#ff002e3e"
-                        android:divider="?android:listDivider"
-                        android:dividerPadding="12dp"
-                        android:orientation="horizontal"
-                        android:showDividers="middle"
-                        android:visibility="invisible"
-                        android:weightSum="2">
+                </android.support.v7.widget.CardView>
 
-                        <TextView
-                            android:id="@+id/tvAddLocation"
-                            android:layout_width="wrap_content"
-                            android:layout_height="50dp"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:background="@drawable/item_background"
-                            android:clickable="true"
-                            android:gravity="center"
-                            android:text="Add"
-                            android:textColor="#fff"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/tvShowWeather"
-                            android:layout_width="wrap_content"
-                            android:layout_height="50dp"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:background="@drawable/item_background"
-                            android:clickable="true"
-                            android:gravity="center"
-                            android:text="Show weather"
-                            android:textColor="#fff"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </FrameLayout>
+            </RelativeLayout>
 
-            </android.support.design.widget.AppBarLayout>
 
-        </RelativeLayout>
-    </FrameLayout>
-</LinearLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:id="@+id/rlSlidingViewContainer"
+                android:clickable="false"
+                android:focusable="false"
+                android:layout_marginTop="?android:attr/actionBarSize"
+                android:layout_height="match_parent">
+
+                <include layout="@layout/sliding_map_layout" />
+
+            </FrameLayout>
+
+        </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:backgroundTint="@color/map_blue"
+            app:elevation="3dp"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/ic_map_add" />
+    </com.sothree.slidinguppanel.FloatingActionButtonLayout>
+</FrameLayout>
