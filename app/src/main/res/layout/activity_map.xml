@@ -36,10 +36,10 @@
             android:layout_height="match_parent"
             android:gravity="bottom"
             sothree:umanoDragView="@+id/rlSlidingViewContainer"
-            sothree:umanoPanelHeight="130dp"
-            sothree:umanoAnchorPoint="0.75"
+            sothree:umanoPanelHeight="0dp"
+            sothree:umanoAnchorPoint="0.42"
             sothree:umanoShadowHeight="4dp"
-            sothree:umanoInitialState="hidden">
+            sothree:umanoInitialState="collapsed">
 
 
             <RelativeLayout
@@ -105,9 +105,10 @@
                 android:layout_width="match_parent"
                 android:id="@+id/rlSlidingViewContainer"
                 android:clickable="false"
+                android:background="@color/map_blue"
                 android:focusable="false"
                 android:layout_marginTop="?android:attr/actionBarSize"
-                android:layout_height="match_parent">
+                android:layout_height="300dp">
 
                 <include layout="@layout/sliding_map_layout" />
 
@@ -115,14 +116,35 @@
 
         </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
+        <FrameLayout
+            android:id="@+id/fabContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:backgroundTint="@color/map_blue"
-            app:elevation="3dp"
             android:layout_gravity="end|bottom"
             android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_map_add" />
+            android:clickable="false"
+            android:src="@drawable/ic_map_add" >
+
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabAddLocation1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:backgroundTint="@color/map_blue"
+                app:elevation="3dp"
+                android:layout_margin="5dp"
+                android:src="@drawable/ic_map_add" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabAddLocation2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:backgroundTint="@color/white"
+                android:layout_margin="5dp"
+                android:tint="@color/map_blue"
+                app:elevation="3dp"
+                android:src="@drawable/ic_map_add" />
+
+            </FrameLayout>
     </com.sothree.slidinguppanel.FloatingActionButtonLayout>
 </FrameLayout>

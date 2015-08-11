@@ -6,11 +6,16 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
@@ -587,4 +592,20 @@ public class Utils {
         return i * scaledDensity;
     }
 
+    public static Bitmap changeColor(Resources resources, int drawable, int color) {
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inTargetDensity = DisplayMetrics.DENSITY_DEFAULT;
+        Bitmap bmp = BitmapFactory.decodeResource(resources,
+                drawable, o);
+        int w = bmp.getWidth();
+        int h = bmp.getHeight();
+        ColorFilter tintColor = new LightingColorFilter(color, 0);
+        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bitmap);
+        Paint mPaint = new Paint();
+        mPaint.setAntiAlias(true);
+        mPaint.setColorFilter(tintColor);
+        c.drawBitmap(bmp, 0, 0, mPaint);
+        return bitmap;
+    }
 }
