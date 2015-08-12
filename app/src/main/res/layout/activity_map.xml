@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:sothree="http://schemas.android.com/apk/res-auto"
@@ -19,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/main_button_blue_normal"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -59,8 +58,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
+                    android:layout_centerHorizontal="true"
                     android:layout_margin="20dp"
                     android:clickable="false"
                     card_view:cardBackgroundColor="@color/transparent_white"
@@ -75,21 +73,40 @@
                             android:layout_width="50dp"
                             android:layout_height="40dp"
                             android:background="@drawable/item_background"
-                            android:padding="15dp"
+                            android:padding="18dp"
+                            android:id="@+id/mapLeft"
                             android:src="@drawable/ic_arrow_left"
                             android:tint="@color/transparent_black" />
 
                         <View
-                            android:layout_width="0.5dp"
-                            android:layout_height="30dp"
+                            android:layout_width="0.3dp"
+                            android:layout_height="20dp"
                             android:layout_gravity="center_vertical"
                             android:background="@color/colorTernaryText" />
 
+
                         <ImageButton
+                            android:id="@+id/mapLocationList"
                             android:layout_width="50dp"
                             android:layout_height="40dp"
                             android:background="@drawable/item_background"
                             android:padding="15dp"
+                            android:src="@drawable/ic_list_location"
+                            android:tint="@color/transparent_black" />
+
+
+                        <View
+                            android:layout_width="0.3dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@color/colorTernaryText" />
+
+                        <ImageButton
+                            android:id="@+id/mapRight"
+                            android:layout_width="50dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/item_background"
+                            android:padding="18dp"
                             android:src="@drawable/ic_arrow_right"
                             android:tint="@color/transparent_black" />
 
@@ -147,4 +164,7 @@
 
             </FrameLayout>
     </com.sothree.slidinguppanel.FloatingActionButtonLayout>
+
+    <include layout="@layout/layout_add_location_point"/>
+
 </FrameLayout>

@@ -511,12 +511,8 @@ public class Utils {
         builder.setView(view);
         AlertDialog ad = builder.create();
         ad.setCanceledOnTouchOutside(false);
-        try {
-            ad.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
         ad.show();
+        ad.getWindow().setLayout(dpToPx(200, activity), dpToPx(125, activity));
         return ad;
     }
 

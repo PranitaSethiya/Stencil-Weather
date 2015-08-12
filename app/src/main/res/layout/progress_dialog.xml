@@ -50,7 +50,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:padding="10dp"
-        android:textColor="@color/colorPrimaryText"/>
+        android:textColor="@color/colorTernaryText"/>
 
 
 </LinearLayout>

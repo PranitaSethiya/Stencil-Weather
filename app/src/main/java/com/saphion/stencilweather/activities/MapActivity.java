@@ -21,12 +21,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -76,9 +73,9 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
     View slidingBackground;
     FloatingActionButton fabAddLocation1, fabAddLocation2;
     View fabContainer;
-    boolean isAnchored = false;
     TextView tvTitle, tvCoordinates;
     View closeMap;
+    ArrayList<Marker> allMarkers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,9 +91,11 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
         setSupportActionBar(toolbar);
 
-        final ActionBar ab = getSupportActionBar();
-        ab.setHomeAsUpIndicator(R.drawable.ic_close);
-        ab.setDisplayHomeAsUpEnabled(true);
+        ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            ab.setHomeAsUpIndicator(R.drawable.ic_close);
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
 
         tvTitle = (TextView) findViewById(R.id.tvMapLocationName);
         tvCoordinates = (TextView) findViewById(R.id.tvMapLocationXY);
@@ -119,6 +118,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
             @Override
             public void onClick(View view) {
                 slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                removeAllMarkers();
             }
         });
 
@@ -132,18 +132,27 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                     tvTitle.setTextColor(Color.WHITE);
                     tvCoordinates.setTextColor(Color.WHITE);
                 }
-                isAnchored = false;
             }
 
             @Override
             public void onPanelCollapsed(View view) {
                 slidingLayout.setFloatingActionButtonVisibility(View.GONE);
-                isAnchored = false;
             }
 
             @Override
             public void onPanelExpanded(View view) {
-                isAnchored = false;
+
+                Marker tempMarker = getLatestMarker();
+
+                if (tempMarker != null) {
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(new LatLng(tempMarker.getPosition().latitude - 0.05, tempMarker.getPosition().longitude))
+                            .zoom(12).build();
+
+                    googleMap.animateCamera(CameraUpdateFactory
+                            .newCameraPosition(cameraPosition));
+                }
+
             }
 
             @Override
@@ -153,9 +162,21 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                     slidingLayout.setFloatingActionButtonVisibility(View.VISIBLE);
                     setSlidingBackgroundColor(false);
                     setFabColor(false);
-                    isAnchored = true;
                     tvTitle.setTextColor(getResources().getColor(R.color.colorTernaryText));
                     tvCoordinates.setTextColor(getResources().getColor(R.color.colorTernaryText));
+
+
+                    Marker tempMarker = getLatestMarker();
+
+                    if (tempMarker != null) {
+                        CameraPosition cameraPosition = new CameraPosition.Builder()
+                                .target(new LatLng(tempMarker.getPosition().latitude, tempMarker.getPosition().longitude))
+                                .zoom(12).build();
+
+                        googleMap.animateCamera(CameraUpdateFactory
+                                .newCameraPosition(cameraPosition));
+                    }
+
                 }
             }
 
@@ -163,7 +184,12 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
             public void onPanelHidden(View view) {
                 slidingLayout.setFloatingActionButtonVisibility(View.GONE);
                 showWeather.setVisibility(View.VISIBLE);
-                isAnchored = false;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        removeAllMarkers();
+                    }
+                }, 10);
             }
 
             @Override
@@ -217,6 +243,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
             }
         }, 50);
 
+
         try {
             // Loading map
             setUpMapIfNeeded();
@@ -234,131 +261,13 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
         googleMap.setMyLocationEnabled(true);
 
-        //FIXME
-//		findViewById(R.id.map_switch)
-//				.setOnClickListener(new View.OnClickListener() {
-//
-//					@Override
-//					public void onClick(View v) {
-//
-//						showPopupMenu(v);
-//
-//					}
-//				});
-//
-//		findViewById(R.id.map_left).setOnClickListener(this);
-//		findViewById(R.id.map_right).setOnClickListener(this);
-//		findViewById(R.id.map_goto).setOnClickListener(this);
+        setUpListeners();
+    }
 
-        googleMap.setOnMapLongClickListener(new OnMapLongClickListener() {
-
-            @Override
-            public void onMapLongClick(LatLng latlng) {
-                try {
-                    mode.finish();
-                } catch (Exception ex) {
-                }
-
-                mLoc = 0;
-
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(new LatLng(latlng.latitude, latlng.longitude))
-                        .zoom(zoom).build();
-
-                googleMap.animateCamera(CameraUpdateFactory
-                        .newCameraPosition(cameraPosition));
-
-                new AddMarker(latlng).execute();
-                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
-            }
-        });
-
-        googleMap.setOnMapClickListener(new OnMapClickListener() {
-
-            @Override
-            public void onMapClick(LatLng arg0) {
-                try {
-                    if (mMarker != null)
-                        mMarker.remove();
-                } catch (Exception ignored) {
-                }
-
-                slidingLayout.setFloatingActionButtonVisibility(View.GONE);
-                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-
-
-            }
-        });
-
-        googleMap
-                .setOnMyLocationButtonClickListener(new OnMyLocationButtonClickListener() {
-
-                    @Override
-                    public boolean onMyLocationButtonClick() {
-                        try {
-                            try {
-                                mode.finish();
-                            } catch (Exception ex) {
-                            }
-
-                            mLoc = 1;
-
-                            new AddMarker(new LatLng(googleMap
-                                    .getMyLocation().getLatitude(), googleMap
-                                    .getMyLocation().getLongitude())).execute();
-                            CameraPosition cameraPosition = new CameraPosition.Builder()
-                                    .target(new LatLng(googleMap
-                                            .getMyLocation().getLatitude(),
-                                            googleMap.getMyLocation()
-                                                    .getLongitude())).zoom(12)
-                                    .build();
-
-                            googleMap.animateCamera(CameraUpdateFactory
-                                    .newCameraPosition(cameraPosition));
-
-                        } catch (Exception ex) {
-                        }
-                        return true;
-                    }
-                });
-
-        googleMap.setOnMarkerClickListener(new OnMarkerClickListener() {
-
-            @Override
-            public boolean onMarkerClick(Marker mrkr) {
-                if (markersUnExp.contains(mrkr)) {
-                    currPos = markersUnExp.indexOf(mrkr);
-                    moveToAndExpand(mrkr.getPosition(), currPos);
-                    try {
-                        mode.finish();
-                    } catch (Exception ex) {
-                    }
-
-                } else if (markersExp.contains(mrkr)) {
-                    currPos = markersExp.indexOf(mrkr);
-                    moveToAndExpand(mrkr.getPosition(), currPos);
-                    try {
-                        mode.finish();
-                    } catch (Exception ex) {
-                    }
-                } else {
-
-                    return false;
-                }
-
-                return true;
-            }
-        });
-
-        googleMap.setOnCameraChangeListener(new OnCameraChangeListener() {
-
-            @Override
-            public void onCameraChange(CameraPosition arg0) {
-                zoom = arg0.zoom;
-            }
-        });
-
-
+    private Marker getLatestMarker() {
+        if (!allMarkers.isEmpty())
+            return allMarkers.get(allMarkers.size() - 1);
+        return null;
     }
 
     public void setSlidingBackgroundColor(boolean expanded) {
@@ -402,7 +311,6 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                 @Override
                 public void onAnimationUpdate(ValueAnimator animator) {
                     findViewById(R.id.appbar).setBackgroundColor((Integer) animator.getAnimatedValue());
-//                    findViewById(R.id.appbarBottom).setBackgroundColor((Integer) animator.getAnimatedValue());
                 }
 
             });
@@ -422,59 +330,99 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         }
     }
 
-    private void showPopupMenu(View view) {
+    public void setUpListeners() {
+        findViewById(R.id.mapRight).setOnClickListener(this);
+        findViewById(R.id.mapLeft).setOnClickListener(this);
+        fabAddLocation1.setOnClickListener(this);
+        fabAddLocation2.setOnClickListener(this);
 
+        googleMap.setOnMapLongClickListener(new OnMapLongClickListener() {
 
-        // Create a PopupMenu, giving it the clicked view for an anchor
-        PopupMenu popup = new PopupMenu(MapActivity.this, view, Gravity.END);
-
-        // Inflate our menu resource into the PopupMenu's Menu
-        popup.getMenuInflater().inflate(R.menu.map_actions, popup.getMenu());
-
-        switch (googleMap.getMapType()) {
-            case GoogleMap.MAP_TYPE_NORMAL:
-                popup.getMenu().getItem(0).setChecked(true);
-                break;
-            case GoogleMap.MAP_TYPE_HYBRID:
-                popup.getMenu().getItem(1).setChecked(true);
-                break;
-            case GoogleMap.MAP_TYPE_SATELLITE:
-                popup.getMenu().getItem(2).setChecked(true);
-                break;
-            case GoogleMap.MAP_TYPE_TERRAIN:
-                popup.getMenu().getItem(3).setChecked(true);
-                break;
-        }
-
-
-        // Set a listener so we are notified if a menu item is clicked
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
+            public void onMapLongClick(LatLng latlng) {
 
+                mLoc = 0;
 
-                item.setChecked(true);
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(new LatLng(latlng.latitude, latlng.longitude))
+                        .zoom(12).build();
 
-                switch (item.getItemId()) {
-                    case R.id.submenu_hybrid:
-                        googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                        return true;
-                    case R.id.submenu_normal:
-                        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                        return true;
-                    case R.id.submenu_satellite:
-                        googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-                        return true;
-                    case R.id.submenu_terrain:
-                        googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-                        return true;
-                }
-                return false;
+                googleMap.animateCamera(CameraUpdateFactory
+                        .newCameraPosition(cameraPosition));
+
+                new AddMarker(latlng).execute();
+                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
             }
         });
 
-        // Finally show the PopupMenu
-        popup.show();
+        googleMap.setOnMapClickListener(new OnMapClickListener() {
+
+            @Override
+            public void onMapClick(LatLng arg0) {
+                removeAllMarkers();
+
+                slidingLayout.setFloatingActionButtonVisibility(View.GONE);
+                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+
+
+            }
+        });
+
+        googleMap
+                .setOnMyLocationButtonClickListener(new OnMyLocationButtonClickListener() {
+
+                    @Override
+                    public boolean onMyLocationButtonClick() {
+                        try {
+
+                            mLoc = 1;
+
+                            new AddMarker(new LatLng(googleMap
+                                    .getMyLocation().getLatitude(), googleMap
+                                    .getMyLocation().getLongitude())).execute();
+                            CameraPosition cameraPosition = new CameraPosition.Builder()
+                                    .target(new LatLng(googleMap
+                                            .getMyLocation().getLatitude(),
+                                            googleMap.getMyLocation()
+                                                    .getLongitude())).zoom(12)
+                                    .build();
+
+                            googleMap.animateCamera(CameraUpdateFactory
+                                    .newCameraPosition(cameraPosition));
+
+                        } catch (Exception ex) {
+                        }
+                        return true;
+                    }
+                });
+
+        googleMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+
+            @Override
+            public boolean onMarkerClick(Marker mrkr) {
+                if (markersUnExp.contains(mrkr)) {
+                    currPos = markersUnExp.indexOf(mrkr);
+                    moveToAndExpand(mrkr.getPosition(), currPos);
+
+                } else if (markersExp.contains(mrkr)) {
+                    currPos = markersExp.indexOf(mrkr);
+                    moveToAndExpand(mrkr.getPosition(), currPos);
+                } else {
+
+                    return false;
+                }
+
+                return true;
+            }
+        });
+
+        googleMap.setOnCameraChangeListener(new OnCameraChangeListener() {
+
+            @Override
+            public void onCameraChange(CameraPosition arg0) {
+                zoom = arg0.zoom;
+            }
+        });
     }
 
     float zoom = 12;
@@ -491,10 +439,6 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
     int temp[] = {35, 25, 28, 30, 39};
 
     private void loadData() {
-
-        //FIXME
-//		findViewById(R.id.tvAddLocation).setOnClickListener(this);
-//		findViewById(R.id.tvShowWeather).setOnClickListener(this);
 
         mLocation = WLocation.listAll(WLocation.class);
 
@@ -721,8 +665,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         protected void onPreExecute() {
 
             try {
-                if (mMarker != null)
-                    mMarker.remove();
+                removeAllMarkers();
 
                 marker.position(latLng).title(display);
                 marker.draggable(false);
@@ -733,11 +676,13 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                 // marker.snippet("Testing snippet");
 
                 // adding marker
-                mMarker = googleMap.addMarker(marker);
+                allMarkers.add(googleMap.addMarker(marker));
 
                 slidingBackground.setVisibility(View.INVISIBLE);
 
                 pbActionMode.setVisibility(View.VISIBLE);
+
+                slidingLayout.setFloatingActionButtonVisibility(View.GONE);
             } catch (Exception ex) {
             }
 
@@ -775,71 +720,17 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
             }
 
             slidingLayout.setFloatingActionButtonVisibility(View.VISIBLE);
+            slidingLayout.setFloatingActionButtonVisibility(View.VISIBLE);
             slidingBackground.setVisibility(View.VISIBLE);
 
 
 //			mode = startSupportActionMode(new ActionModes(display, latLng.latitude
 //					+ "", latLng.longitude + ""));
+            Marker tempMarker = getLatestMarker();
+            if(tempMarker != null)
+                tempMarker.setTitle(display);
 
             super.onPostExecute(mVoid);
-        }
-    }
-
-    ActionMode mode;
-
-    private final class ActionModes implements ActionMode.Callback {
-
-        String title;
-        String subtitle;
-
-        public ActionModes(String title, String Lat, String Lon) {
-
-            this.title = title;
-            if (Lat.length() > 5)
-                Lat = Lat.substring(0, 5);
-            if (Lon.length() > 5)
-                Lon = Lon.substring(0, 5);
-            this.subtitle = "LAT: " + Lat + ", LNG: " + Lon;
-
-        }
-
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-
-            if (getSupportActionBar() != null)
-                getSupportActionBar().hide();
-
-            mode.setTitle(title);
-            mode.setSubtitle(subtitle);
-
-            //FIXME
-//			findViewById(R.id.ll)
-//					.setVisibility(View.INVISIBLE);
-//			findViewById(R.id.llaction)
-//					.setVisibility(View.VISIBLE);
-
-            return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-            return true;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-            mode.finish();
-            return true;
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode actionMode) {
-            //FIXME
-//			findViewById(R.id.ll).setVisibility(View.VISIBLE);
-//			findViewById(R.id.llaction)
-//					.setVisibility(View.INVISIBLE);
-            mMarker.remove();
-            if (getSupportActionBar() != null)
-                getSupportActionBar().show();
         }
     }
 
@@ -864,28 +755,6 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         return bitmap;
     }
 
-    Marker mMarker;
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                startActivity(new Intent(MapActivity.this, MainActivity.class));
-                finish();
-                overridePendingTransition(R.anim.slide_in_right,
-                        R.anim.slide_out_left);
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        startActivity(new Intent(MapActivity.this, MainActivity.class));
-        finish();
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-    }
 
     /**
      * function to load map. If map is not created it will create it for you
@@ -915,30 +784,29 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        //FIXME
-//		switch (v.getId()) {
-//		case R.id.map_left:
-//			currPos = (currPos - 1) % markersExp.size();
-//			if (currPos == -1) {
-//				currPos = markersExp.size() - 1;
-//			}
-//			moveToAndExpand(markersExp.get(currPos).getPosition(), currPos);
-//			break;
-//		case R.id.map_right:
-//			currPos = (currPos + 1) % markersExp.size();
-//			moveToAndExpand(markersExp.get(currPos).getPosition(), currPos);
-//			break;
-//		case R.id.tvAddLocation:
-//			new AddLoc(mMarker.getPosition(), mMarker.getTitle()).execute();
-//			mode.finish();
-//			break;
+
+        switch (v.getId()) {
+            case R.id.mapLeft:
+                currPos = (currPos - 1) % markersExp.size();
+                if (currPos == -1) {
+                    currPos = markersExp.size() - 1;
+                }
+                moveToAndExpand(markersExp.get(currPos).getPosition(), currPos);
+                break;
+            case R.id.mapRight:
+                currPos = (currPos + 1) % markersExp.size();
+                moveToAndExpand(markersExp.get(currPos).getPosition(), currPos);
+                break;
+            case R.id.fabAddLocation1:
+            case R.id.fabAddLocation2:
+                Marker tempMarker = getLatestMarker();
+                if (tempMarker != null)
+                    new AddLoc(tempMarker.getPosition(), tempMarker.getTitle()).execute();
+                break;
 //		case R.id.tvShowWeather:
 //			mode.finish();
 //			break;
-//		case R.id.map_goto:
-//			startAndBuildDialog();
-//			break;
-//		}
+        }
 
     }
 
@@ -946,6 +814,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
         LatLng position;
         String title;
+        AlertDialog mAddDialog;
 
         public AddLoc(LatLng position, String title) {
             this.position = position;
@@ -956,6 +825,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         protected void onPreExecute() {
 
             //FIXME setSupportProgressBarIndeterminateVisibility(true);
+            mAddDialog = Utils.getProgressDialog(MapActivity.this, "Adding...");
             super.onPreExecute();
         }
 
@@ -978,7 +848,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
             WLocation newLocation = new WLocation();
             newLocation.setIsMyLocation(mLoc == 1);
             newLocation.setLatitude(position.latitude);
-            newLocation.setLatitude(position.longitude);
+            newLocation.setLongitude(position.longitude);
             newLocation.setName(title);
             newLocation.setTimezone(tz);
             newLocation.setUniqueID("9999"); //FIXME add the unique part
@@ -1010,6 +880,10 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
             moveToAndExpand(new LatLng(mLocation.get(mLocation.size() - 1).getLatitude(), mLocation.get(mLocation.size() - 1).getLongitude()),
                     mLocation.size() - 1);
+
+            removeAllMarkers();
+
+            mAddDialog.dismiss();
 
             super.onPostExecute(tz);
         }
@@ -1045,11 +919,6 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                     return;
 
                 LatLng latlng = new LatLng(lat, lon);
-
-                try {
-                    mode.finish();
-                } catch (Exception ex) {
-                }
 
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(new LatLng(latlng.latitude,
@@ -1101,6 +970,76 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                 mPaint);
         return bitmap;
 
+    }
+
+    public void removeAllMarkers() {
+        for (Marker mark : allMarkers)
+            if (mark != null)
+                mark.remove();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.map_actions, menu);
+
+        if (googleMap != null)
+            switch (googleMap.getMapType()) {
+                case GoogleMap.MAP_TYPE_NORMAL:
+                    menu.findItem(R.id.submenu_normal).setChecked(true);
+                    break;
+                case GoogleMap.MAP_TYPE_HYBRID:
+                    menu.findItem(R.id.submenu_hybrid).setChecked(true);
+                    break;
+                case GoogleMap.MAP_TYPE_SATELLITE:
+                    menu.findItem(R.id.submenu_satellite).setChecked(true);
+                    break;
+                case GoogleMap.MAP_TYPE_TERRAIN:
+                    menu.findItem(R.id.submenu_terrain).setChecked(true);
+                    break;
+            }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                startActivity(new Intent(MapActivity.this, MainActivity.class));
+                finish();
+                overridePendingTransition(R.anim.slide_in_right,
+                        R.anim.slide_out_left);
+                break;
+            case R.id.action_goto:
+                startAndBuildDialog();
+                return true;
+            case R.id.submenu_hybrid:
+                item.setChecked(true);
+                googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                return true;
+            case R.id.submenu_normal:
+                item.setChecked(true);
+                googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                return true;
+            case R.id.submenu_satellite:
+                item.setChecked(true);
+                googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                return true;
+            case R.id.submenu_terrain:
+                item.setChecked(true);
+                googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(MapActivity.this, MainActivity.class));
+        finish();
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
 }
