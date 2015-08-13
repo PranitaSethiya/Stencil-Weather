@@ -14,20 +14,22 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ListView;
 
+import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.saphion.stencilweather.R;
-import com.saphion.stencilweather.activities.MainActivity;
+import com.saphion.stencilweather.activities.MapActivity;
 
 import io.codetail.animation.SupportAnimator;
 
 
 public class InitiateLatLon {
 
-    public static void handleToolBar(final Activity activity, final CardView search, final Toolbar toolbarMain, /*final View view,*/ final ListView listView, final EditText editText) {
+    public static void handleToolBar(final Activity activity, final View search, final Toolbar toolbarMain, final EditText etLat, final EditText etLon, final View background, MaterialMenuDrawable materialMenu) {
         final Animation fade_in = AnimationUtils.loadAnimation(activity.getApplicationContext(), android.R.anim.fade_in);
         if (search.getVisibility() == View.VISIBLE) {
-            editText.setText("");
+            etLat.setText("");
+            etLon.setText("");
+            materialMenu.animateIconState(MaterialMenuDrawable.IconState.ARROW);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 final Animator animatorHide = ViewAnimationUtils.createCircularReveal(search,
                     search.getWidth() - (int) convertDpToPixel(56, activity),
@@ -44,11 +46,11 @@ public class InitiateLatLon {
                     public void onAnimationEnd(Animator animation) {
                         search.setVisibility(View.GONE);
                         ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search.getWindowToken(), 0);
-                        listView.setVisibility(View.GONE);
-                        toolbarMain.setNavigationIcon(R.drawable.ic_menu);
-                        ((MainActivity)activity).actionBarContent(true);
+                        background.setVisibility(View.GONE);
+                        toolbarMain.setTitle("Weather Map");
                         toolbarMain.getMenu().clear();
-                        toolbarMain.inflateMenu(R.menu.menu_add);
+                        toolbarMain.inflateMenu(R.menu.map_actions);
+                        ((MapActivity)activity).setMenuSelection();
                     }
 
                     @Override
@@ -64,7 +66,6 @@ public class InitiateLatLon {
                 animatorHide.setDuration(300);
                 animatorHide.start();
             } else {
-//                ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search.getWindowToken(), 0);
 
                 final SupportAnimator animatorHide = io.codetail.animation.ViewAnimationUtils.createCircularReveal(search,
                         search.getWidth() - (int) convertDpToPixel(56, activity),
@@ -81,11 +82,11 @@ public class InitiateLatLon {
                     public void onAnimationEnd() {
                         search.setVisibility(View.GONE);
                         ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search.getWindowToken(), 0);
-                        listView.setVisibility(View.GONE);
-                        toolbarMain.setNavigationIcon(R.drawable.ic_menu);
-                        ((MainActivity)activity).actionBarContent(true);
+                        background.setVisibility(View.GONE);
+                        toolbarMain.setTitle("Weather Map");
                         toolbarMain.getMenu().clear();
-                        toolbarMain.inflateMenu(R.menu.menu_add);
+                        toolbarMain.inflateMenu(R.menu.map_actions);
+                        ((MapActivity)activity).setMenuSelection();
                     }
 
                     @Override
@@ -105,9 +106,9 @@ public class InitiateLatLon {
 
 
         } else {
-            ((MainActivity)activity).actionBarContent(false);
             toolbarMain.getMenu().clear();
-            toolbarMain.setNavigationIcon(null);
+            materialMenu.animateIconState(MaterialMenuDrawable.IconState.X);
+            toolbarMain.setTitle("Search");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 final Animator animator = ViewAnimationUtils.createCircularReveal(search,
                     search.getWidth() - (int) convertDpToPixel(56, activity),
@@ -122,6 +123,7 @@ public class InitiateLatLon {
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                        fade_in.start();
                     }
 
                     @Override
@@ -148,7 +150,7 @@ public class InitiateLatLon {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        listView.setVisibility(View.VISIBLE);
+                        background.setVisibility(View.VISIBLE);
                     }
 
                     @Override
@@ -157,13 +159,6 @@ public class InitiateLatLon {
                     }
                 });
             } else {
-//                search.setVisibility(View.VISIBLE);
-//                YoYo.with(Techniques.SlideInRight)
-//                        .duration(500).interpolate(new BounceInterpolator())
-//                        .playOn(search);
-//                search.setEnabled(true);
-//                listView.setVisibility(View.VISIBLE);
-//                ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
                 final SupportAnimator animator = io.codetail.animation.ViewAnimationUtils.createCircularReveal(search,
                         search.getWidth() - (int) convertDpToPixel(56, activity),
                         (int) convertDpToPixel(23, activity),
@@ -204,7 +199,7 @@ public class InitiateLatLon {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        listView.setVisibility(View.VISIBLE);
+                        background.setVisibility(View.VISIBLE);
                     }
 
                     @Override
@@ -214,7 +209,7 @@ public class InitiateLatLon {
                 });
             }
 
-            editText.requestFocus();
+            etLat.requestFocus();
         }
     }
 

@@ -18,12 +18,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,10 +34,12 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Interpolator;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
@@ -43,6 +47,7 @@ import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -55,6 +60,7 @@ import com.saphion.stencilweather.R;
 import com.saphion.stencilweather.modules.WLocation;
 import com.saphion.stencilweather.modules.WeatherItem;
 import com.saphion.stencilweather.tasks.GetLocationInfo;
+import com.saphion.stencilweather.utilities.InitiateLatLon;
 import com.saphion.stencilweather.utilities.Utils;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -77,6 +83,15 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
     View closeMap;
     ArrayList<Marker> allMarkers = new ArrayList<>();
 
+
+    //for lat lon search
+    View search;
+    EditText etLat, etLon;
+//    TextInputLayout tilLat, tilLon;
+    View latLonBackground;
+    private MaterialMenuDrawable materialMenu;
+    private boolean loading = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -91,11 +106,15 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
         setSupportActionBar(toolbar);
 
-        ActionBar ab = getSupportActionBar();
-        if (ab != null) {
-            ab.setHomeAsUpIndicator(R.drawable.ic_close);
-            ab.setDisplayHomeAsUpEnabled(true);
-        }
+//        ActionBar ab = getSupportActionBar();
+//        if (ab != null) {
+//            ab.setHomeAsUpIndicator(R.drawable.ic_close);
+//            ab.setDisplayHomeAsUpEnabled(true);
+//        }
+
+        materialMenu = new MaterialMenuDrawable(this, Color.WHITE, MaterialMenuDrawable.Stroke.THIN);
+        materialMenu.setIconState(MaterialMenuDrawable.IconState.ARROW);
+        toolbar.setNavigationIcon(materialMenu);
 
         tvTitle = (TextView) findViewById(R.id.tvMapLocationName);
         tvCoordinates = (TextView) findViewById(R.id.tvMapLocationXY);
@@ -114,122 +133,17 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
         closeMap = findViewById(R.id.llMapClose);
 
-        closeMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-                removeAllMarkers();
-            }
-        });
 
-        slidingLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
-            @Override
-            public void onPanelSlide(View view, float v) {
-                if (showWeather.getVisibility() == View.VISIBLE) {
-                    showWeather.setVisibility(View.GONE);
-                    setSlidingBackgroundColor(true);
-                    setFabColor(true);
-                    tvTitle.setTextColor(Color.WHITE);
-                    tvCoordinates.setTextColor(Color.WHITE);
-                }
-            }
+        //Lat Lon
+        search = findViewById(R.id.card_search);
+        etLat = (EditText) findViewById(R.id.etLatitude);
+        etLon = (EditText) findViewById(R.id.etLongitude);
 
-            @Override
-            public void onPanelCollapsed(View view) {
-                slidingLayout.setFloatingActionButtonVisibility(View.GONE);
-            }
+//        tilLat = (TextInputLayout) findViewById(R.id.tilLat);
+//        tilLon = (TextInputLayout) findViewById(R.id.tilLon);
 
-            @Override
-            public void onPanelExpanded(View view) {
+        latLonBackground = findViewById(R.id.flDarkenBackground);
 
-                Marker tempMarker = getLatestMarker();
-
-                if (tempMarker != null) {
-                    CameraPosition cameraPosition = new CameraPosition.Builder()
-                            .target(new LatLng(tempMarker.getPosition().latitude - 0.05, tempMarker.getPosition().longitude))
-                            .zoom(12).build();
-
-                    googleMap.animateCamera(CameraUpdateFactory
-                            .newCameraPosition(cameraPosition));
-                }
-
-            }
-
-            @Override
-            public void onPanelAnchored(View view) {
-                if (showWeather.getVisibility() != View.VISIBLE) {
-                    showWeather.setVisibility(View.VISIBLE);
-                    slidingLayout.setFloatingActionButtonVisibility(View.VISIBLE);
-                    setSlidingBackgroundColor(false);
-                    setFabColor(false);
-                    tvTitle.setTextColor(getResources().getColor(R.color.colorTernaryText));
-                    tvCoordinates.setTextColor(getResources().getColor(R.color.colorTernaryText));
-
-
-                    Marker tempMarker = getLatestMarker();
-
-                    if (tempMarker != null) {
-                        CameraPosition cameraPosition = new CameraPosition.Builder()
-                                .target(new LatLng(tempMarker.getPosition().latitude, tempMarker.getPosition().longitude))
-                                .zoom(12).build();
-
-                        googleMap.animateCamera(CameraUpdateFactory
-                                .newCameraPosition(cameraPosition));
-                    }
-
-                }
-            }
-
-            @Override
-            public void onPanelHidden(View view) {
-                slidingLayout.setFloatingActionButtonVisibility(View.GONE);
-                showWeather.setVisibility(View.VISIBLE);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        removeAllMarkers();
-                    }
-                }, 10);
-            }
-
-            @Override
-            public void onPanelHiddenExecuted(View view, Interpolator interpolator, int i) {
-
-            }
-
-            @Override
-            public void onPanelShownExecuted(View view, Interpolator interpolator, int i) {
-
-            }
-
-            @Override
-            public void onPanelExpandedStateY(View view, boolean b) {
-
-            }
-
-            @Override
-            public void onPanelCollapsedStateY(View view, boolean b) {
-
-            }
-
-            @Override
-            public void onPanelLayout(View view, SlidingUpPanelLayout.PanelState panelState) {
-
-            }
-        });
-
-        showWeather.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-            }
-        });
-        findViewById(R.id.rlSlidingViewContainer).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-            }
-        });
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -254,14 +168,9 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
             finish();
             overridePendingTransition(R.anim.slide_in_right,
                     R.anim.slide_out_left);
-            return;
         }
 
-        loadData();
 
-        googleMap.setMyLocationEnabled(true);
-
-        setUpListeners();
     }
 
     private Marker getLatestMarker() {
@@ -351,7 +260,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                         .newCameraPosition(cameraPosition));
 
                 new AddMarker(latlng).execute();
-                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+
             }
         });
 
@@ -423,6 +332,179 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                 zoom = arg0.zoom;
             }
         });
+
+        closeMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                removeAllMarkers();
+            }
+        });
+
+        slidingLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View view, float v) {
+                if (showWeather.getVisibility() == View.VISIBLE) {
+                    showWeather.setVisibility(View.GONE);
+                    setSlidingBackgroundColor(true);
+                    setFabColor(true);
+                    tvTitle.setTextColor(Color.WHITE);
+                    tvCoordinates.setTextColor(Color.WHITE);
+                }
+            }
+
+            @Override
+            public void onPanelCollapsed(View view) {
+                slidingLayout.setFloatingActionButtonVisibility(View.GONE);
+            }
+
+            @Override
+            public void onPanelExpanded(View view) {
+
+                Marker tempMarker = getLatestMarker();
+
+                if (tempMarker != null) {
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(new LatLng(tempMarker.getPosition().latitude - 0.045, tempMarker.getPosition().longitude))
+                            .zoom(12).build();
+
+                    googleMap.animateCamera(CameraUpdateFactory
+                            .newCameraPosition(cameraPosition));
+                }
+
+            }
+
+            @Override
+            public void onPanelAnchored(View view) {
+                if (showWeather.getVisibility() != View.VISIBLE) {
+                    showWeather.setVisibility(View.VISIBLE);
+                    slidingLayout.setFloatingActionButtonVisibility(View.VISIBLE);
+                    setSlidingBackgroundColor(false);
+                    setFabColor(false);
+                    tvTitle.setTextColor(getResources().getColor(R.color.colorTernaryText));
+                    tvCoordinates.setTextColor(getResources().getColor(R.color.colorTernaryText));
+
+
+                    Marker tempMarker = getLatestMarker();
+
+                    if (tempMarker != null) {
+                        CameraPosition cameraPosition = new CameraPosition.Builder()
+                                .target(new LatLng(tempMarker.getPosition().latitude, tempMarker.getPosition().longitude))
+                                .zoom(12).build();
+
+                        googleMap.animateCamera(CameraUpdateFactory
+                                .newCameraPosition(cameraPosition));
+                    }
+
+                }
+            }
+
+            @Override
+            public void onPanelHidden(View view) {
+                slidingLayout.setFloatingActionButtonVisibility(View.GONE);
+                showWeather.setVisibility(View.VISIBLE);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        removeAllMarkers();
+                    }
+                }, 10);
+            }
+
+            @Override
+            public void onPanelHiddenExecuted(View view, Interpolator interpolator, int i) {
+
+            }
+
+            @Override
+            public void onPanelShownExecuted(View view, Interpolator interpolator, int i) {
+
+            }
+
+            @Override
+            public void onPanelExpandedStateY(View view, boolean b) {
+
+            }
+
+            @Override
+            public void onPanelCollapsedStateY(View view, boolean b) {
+
+            }
+
+            @Override
+            public void onPanelLayout(View view, SlidingUpPanelLayout.PanelState panelState) {
+
+            }
+        });
+
+        showWeather.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+            }
+        });
+        findViewById(R.id.rlSlidingViewContainer).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+            }
+        });
+
+        latLonBackground.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InitiateLatLon.handleToolBar(MapActivity.this, search, toolbar, etLat, etLon, latLonBackground, materialMenu);
+            }
+        });
+
+        etLon.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    searchLocation();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        findViewById(R.id.ivSearchLocation).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchLocation();
+            }
+        });
+
+    }
+
+    private void searchLocation() {
+
+        if (etLat == null
+                || etLon == null) {
+            Toast.makeText(getBaseContext(),
+                    "Invalid coordinates, Please try again!!",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        double lat = Double.parseDouble(etLat.getText().toString());
+        double lon = Double.parseDouble(etLon.getText().toString());
+
+        if ((lat + "").isEmpty() || (lon + "").isEmpty())
+            return;
+
+        LatLng latlng = new LatLng(lat, lon);
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(latlng.latitude,
+                        latlng.longitude)).zoom(zoom).build();
+
+        googleMap.animateCamera(CameraUpdateFactory
+                .newCameraPosition(cameraPosition));
+
+        InitiateLatLon.handleToolBar(MapActivity.this, search, toolbar, etLat, etLon, latLonBackground, materialMenu);
+
+        new AddMarker(latlng).execute();
     }
 
     float zoom = 12;
@@ -682,6 +764,8 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
                 pbActionMode.setVisibility(View.VISIBLE);
 
+                slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+
                 slidingLayout.setFloatingActionButtonVisibility(View.GONE);
             } catch (Exception ex) {
             }
@@ -689,7 +773,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
             super.onPreExecute();
         }
 
-        String display = "empty";
+        String display = "Loading...";
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -698,7 +782,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
             try {
                 display = gll.getAddress(latLng);
             } catch (Exception e) {
-                display = "empty";
+                display = "Loading...";
                 e.printStackTrace();
             }
 
@@ -710,7 +794,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
             pbActionMode.setVisibility(View.GONE);
 
-            if (display.equalsIgnoreCase("empty")) {
+            if (display.equalsIgnoreCase("Loading...")) {
                 Toast.makeText(getBaseContext(),
                         "Not a valid location, try again", Toast.LENGTH_LONG)
                         .show();
@@ -727,7 +811,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 //			mode = startSupportActionMode(new ActionModes(display, latLng.latitude
 //					+ "", latLng.longitude + ""));
             Marker tempMarker = getLatestMarker();
-            if(tempMarker != null)
+            if (tempMarker != null)
                 tempMarker.setTitle(display);
 
             super.onPostExecute(mVoid);
@@ -760,17 +844,43 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
      * function to load map. If map is not created it will create it for you
      */
     private void setUpMapIfNeeded() {
-        if (googleMap == null) {
-            googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                    .getMap();
+        if(loading)
+            return;
+        loading = true;
+//        if (googleMap == null) {
+//            googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
+//
+//            // check if map is created successfully or not
+//            if (googleMap == null) {
+//                Toast.makeText(getApplicationContext(),
+//                        "Sorry! unable to create maps", Toast.LENGTH_SHORT)
+//                        .show();
+//                throw new NullPointerException();
+//            }
+//        }
 
-            // check if map is created successfully or not
-            if (googleMap == null) {
-                Toast.makeText(getApplicationContext(),
-                        "Sorry! unable to create maps", Toast.LENGTH_SHORT)
-                        .show();
-                throw new NullPointerException();
+        // Do a null check to confirm that we have not already instantiated the map.
+        if (googleMap == null) {
+            SupportMapFragment mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
+            // Check if we were successful in obtaining the map.
+            if (mapFragment != null) {
+                mapFragment.getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap map) {
+                        loadMap(map);
+                    }
+                });
             }
+        }
+    }
+
+    public void loadMap(GoogleMap map) {
+        if (map != null) {
+            googleMap = map;
+            loadData();
+            googleMap.setMyLocationEnabled(true);
+            setUpListeners();
+            loading = false;
         }
     }
 
@@ -1006,13 +1116,18 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                startActivity(new Intent(MapActivity.this, MainActivity.class));
-                finish();
-                overridePendingTransition(R.anim.slide_in_right,
-                        R.anim.slide_out_left);
+                if (latLonBackground != null && latLonBackground.getVisibility() == View.VISIBLE) {
+                    InitiateLatLon.handleToolBar(MapActivity.this, search, toolbar, etLat, etLon, latLonBackground, materialMenu);
+                } else {
+                    startActivity(new Intent(MapActivity.this, MainActivity.class));
+                    finish();
+                    overridePendingTransition(R.anim.slide_in_right,
+                            R.anim.slide_out_left);
+                }
                 break;
             case R.id.action_goto:
-                startAndBuildDialog();
+                latLonBackground.setVisibility(View.VISIBLE);
+                InitiateLatLon.handleToolBar(MapActivity.this, search, toolbar, etLat, etLon, latLonBackground, materialMenu);
                 return true;
             case R.id.submenu_hybrid:
                 item.setChecked(true);
@@ -1037,9 +1152,32 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(MapActivity.this, MainActivity.class));
-        finish();
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        if (latLonBackground != null && latLonBackground.getVisibility() == View.VISIBLE) {
+            InitiateLatLon.handleToolBar(MapActivity.this, search, toolbar, etLat, etLon, latLonBackground, materialMenu);
+        } else {
+            startActivity(new Intent(MapActivity.this, MainActivity.class));
+            finish();
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        }
+    }
+
+    public void setMenuSelection(){
+        Menu menu = toolbar.getMenu();
+        if (googleMap != null)
+            switch (googleMap.getMapType()) {
+                case GoogleMap.MAP_TYPE_NORMAL:
+                    menu.findItem(R.id.submenu_normal).setChecked(true);
+                    break;
+                case GoogleMap.MAP_TYPE_HYBRID:
+                    menu.findItem(R.id.submenu_hybrid).setChecked(true);
+                    break;
+                case GoogleMap.MAP_TYPE_SATELLITE:
+                    menu.findItem(R.id.submenu_satellite).setChecked(true);
+                    break;
+                case GoogleMap.MAP_TYPE_TERRAIN:
+                    menu.findItem(R.id.submenu_terrain).setChecked(true);
+                    break;
+            }
     }
 
 }

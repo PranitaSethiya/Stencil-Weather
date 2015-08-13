@@ -26,4 +26,19 @@
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
 
+    <style name="TextStyle" parent="TextAppearance.AppCompat">
+        <item name="colorAccent">@color/white</item>
+    </style>
+
+    <!-- Theme without ActionBar shadow (inherits main theme) -->
+    <style name="MyNoActionBarShadowTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="colorPrimary">@color/map_blue</item>
+        <item name="colorPrimaryDark">@color/map_blue</item>
+        <item name="colorAccent">@color/map_blue</item>
+        <item name="colorControlNormal">#cbcbcb</item>
+        <item name="android:windowBackground">@color/map_blue</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
 </resources>
