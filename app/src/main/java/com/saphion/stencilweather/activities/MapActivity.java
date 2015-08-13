@@ -22,6 +22,8 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -57,6 +59,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.nineoldandroids.animation.ArgbEvaluator;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.saphion.stencilweather.R;
+import com.saphion.stencilweather.adapters.MapListAdapter;
 import com.saphion.stencilweather.modules.WLocation;
 import com.saphion.stencilweather.modules.WeatherItem;
 import com.saphion.stencilweather.tasks.GetLocationInfo;
@@ -242,6 +245,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
     public void setUpListeners() {
         findViewById(R.id.mapRight).setOnClickListener(this);
         findViewById(R.id.mapLeft).setOnClickListener(this);
+        findViewById(R.id.mapLocationList).setOnClickListener(this);
         fabAddLocation1.setOnClickListener(this);
         fabAddLocation2.setOnClickListener(this);
 
@@ -594,6 +598,8 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
     }
 
+
+
     public class DoWorkExpand extends
             AsyncTask<Object, Void, ArrayList<Bitmap>> {
 
@@ -767,7 +773,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                 slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
 
                 slidingLayout.setFloatingActionButtonVisibility(View.GONE);
-            } catch (Exception ex) {
+            } catch (Exception ignored) {
             }
 
             super.onPreExecute();
@@ -847,17 +853,6 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         if(loading)
             return;
         loading = true;
-//        if (googleMap == null) {
-//            googleMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
-//
-//            // check if map is created successfully or not
-//            if (googleMap == null) {
-//                Toast.makeText(getApplicationContext(),
-//                        "Sorry! unable to create maps", Toast.LENGTH_SHORT)
-//                        .show();
-//                throw new NullPointerException();
-//            }
-//        }
 
         // Do a null check to confirm that we have not already instantiated the map.
         if (googleMap == null) {
@@ -913,9 +908,9 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                 if (tempMarker != null)
                     new AddLoc(tempMarker.getPosition(), tempMarker.getTitle()).execute();
                 break;
-//		case R.id.tvShowWeather:
-//			mode.finish();
-//			break;
+            case R.id.mapLocationList:
+                showLocationDialog();
+                break;
         }
 
     }
@@ -1178,6 +1173,26 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                     menu.findItem(R.id.submenu_terrain).setChecked(true);
                     break;
             }
+    }
+
+    AlertDialog mLocationDialog;
+
+    public void showLocationDialog(){
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(MapActivity.this);
+        mBuilder.setTitle("Locations");
+        View mView = LayoutInflater.from(MapActivity.this).inflate(R.layout.recycler, null);
+        mBuilder.setView(mView);
+        RecyclerView locationList = (RecyclerView) mView.findViewById(R.id.recyclerView);
+        locationList.setLayoutManager(new LinearLayoutManager(MapActivity.this));
+        locationList.setAdapter(new MapListAdapter(mLocation, MapActivity.this));
+        mLocationDialog = mBuilder.show();
+    }
+
+
+    public void performDialogItemClick(int position) {
+        currPos = position;
+        moveToAndExpand(markersExp.get(currPos).getPosition(), currPos);
+        mLocationDialog.dismiss();
     }
 
 }
