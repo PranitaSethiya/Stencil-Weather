@@ -1175,24 +1175,22 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
             }
     }
 
-    AlertDialog mLocationDialog;
 
     public void showLocationDialog(){
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(MapActivity.this);
         mBuilder.setTitle("Locations");
-        View mView = LayoutInflater.from(MapActivity.this).inflate(R.layout.recycler, null);
-        mBuilder.setView(mView);
-        RecyclerView locationList = (RecyclerView) mView.findViewById(R.id.recyclerView);
-        locationList.setLayoutManager(new LinearLayoutManager(MapActivity.this));
-        locationList.setAdapter(new MapListAdapter(mLocation, MapActivity.this));
-        mLocationDialog = mBuilder.show();
+        mBuilder.setAdapter(new MapListAdapter(mLocation, MapActivity.this), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                performDialogItemClick(i);
+            }
+        });
     }
 
 
     public void performDialogItemClick(int position) {
         currPos = position;
         moveToAndExpand(markersExp.get(currPos).getPosition(), currPos);
-        mLocationDialog.dismiss();
     }
 
 }
