@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/scroller"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="0.5dp"
+        android:layout_marginRight="0.5dp"
+        card_view:cardElevation="5dp"
+        android:fadingEdgeLength="5dip"
+        card_view:cardBackgroundColor="@color/white"
+        card_view:cardCornerRadius="2dp">
+
+        <RelativeLayout
+            android:id="@+id/tracks"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/balloonWeatherIcon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/cofrain_light_d"
+                android:tint="@color/black_matt" />
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/balloonTemp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/balloonWeatherIcon"
+                android:text="25º"
+                android:textColor="#c8000000"
+                android:textSize="30sp"
+                app:fontFamily="roboto"
+                app:textWeight="medium"
+                app:typeface="roboto_condensed_regular" />
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/balloonCondition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/balloonWeatherIcon"
+                android:layout_below="@+id/balloonTemp"
+                android:text="Chances of Thunderstorm"
+                android:textColor="#c8000000"
+                android:textSize="15sp"
+                app:fontFamily="roboto"
+                app:textWeight="medium"
+                app:typeface="roboto_condensed_regular" />
+
+             <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/balloonCityName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/balloonWeatherIcon"
+                android:layout_below="@+id/balloonCondition"
+                android:text="Pune, India"
+                android:textColor="@color/map_blue"
+                android:textSize="15sp"
+                app:fontFamily="roboto"
+                app:textWeight="medium"
+                app:typeface="roboto_condensed_regular" />
+
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <ImageView
+        android:id="@+id/arrow_down"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/scroller"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-4dip"
+        android:src="@drawable/arrow_down"
+        android:tint="@color/white" />
+
+</RelativeLayout>
