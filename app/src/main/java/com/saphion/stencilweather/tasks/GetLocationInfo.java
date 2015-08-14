@@ -61,11 +61,11 @@ public class GetLocationInfo {
         Log.d("Length", jObject.length() + "");
         JSONArray jArray = jObject.getJSONArray("results");
         if (jArray.length() <= 0)
-            return "empty";
+            return null;
         JSONObject jo = jArray.getJSONObject(0);
         jArray = jo.getJSONArray("address_components");
         if (jArray.length() <= 0)
-            return "empty";
+            return null;
         String toRet = "";
         String subl = "", local = "", country = "", admin1 = "", admin2 = "";
         for (int i = 0; i < jArray.length(); i++) {

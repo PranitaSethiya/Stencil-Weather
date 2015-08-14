@@ -1,43 +1,32 @@
 package com.saphion.stencilweather.activities;
 
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.NinePatchDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Interpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,7 +79,6 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
     //for lat lon search
     View search;
     EditText etLat, etLon;
-//    TextInputLayout tilLat, tilLon;
     View latLonBackground;
     private MaterialMenuDrawable materialMenu;
     private boolean loading = false;
@@ -108,12 +96,6 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         setToolBarColor(getResources().getColor(R.color.map_blue));
 
         setSupportActionBar(toolbar);
-
-//        ActionBar ab = getSupportActionBar();
-//        if (ab != null) {
-//            ab.setHomeAsUpIndicator(R.drawable.ic_close);
-//            ab.setDisplayHomeAsUpEnabled(true);
-//        }
 
         materialMenu = new MaterialMenuDrawable(this, Color.WHITE, MaterialMenuDrawable.Stroke.THIN);
         materialMenu.setIconState(MaterialMenuDrawable.IconState.ARROW);
@@ -141,9 +123,6 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         search = findViewById(R.id.card_search);
         etLat = (EditText) findViewById(R.id.etLatitude);
         etLon = (EditText) findViewById(R.id.etLongitude);
-
-//        tilLat = (TextInputLayout) findViewById(R.id.tilLat);
-//        tilLon = (TextInputLayout) findViewById(R.id.tilLon);
 
         latLonBackground = findViewById(R.id.flDarkenBackground);
 
@@ -288,20 +267,24 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                     public boolean onMyLocationButtonClick() {
                         try {
 
-                            mLoc = 1;
-
-                            new AddMarker(new LatLng(googleMap
-                                    .getMyLocation().getLatitude(), googleMap
-                                    .getMyLocation().getLongitude())).execute();
-                            CameraPosition cameraPosition = new CameraPosition.Builder()
-                                    .target(new LatLng(googleMap
+//                            mLoc = 1;
+//
+//                            new AddMarker(new LatLng(googleMap
+//                                    .getMyLocation().getLatitude(), googleMap
+//                                    .getMyLocation().getLongitude())).execute();
+//                            CameraPosition cameraPosition = new CameraPosition.Builder()
+//                                    .target(new LatLng(googleMap
+//                                            .getMyLocation().getLatitude(),
+//                                            googleMap.getMyLocation()
+//                                                    .getLongitude())).zoom(12)
+//                                    .build();
+//
+//                            googleMap.animateCamera(CameraUpdateFactory
+//                                    .newCameraPosition(cameraPosition));
+                            moveToAndExpand(new LatLng(googleMap
                                             .getMyLocation().getLatitude(),
                                             googleMap.getMyLocation()
-                                                    .getLongitude())).zoom(12)
-                                    .build();
-
-                            googleMap.animateCamera(CameraUpdateFactory
-                                    .newCameraPosition(cameraPosition));
+                                                    .getLongitude()), 0);
 
                         } catch (Exception ex) {
                         }
@@ -483,8 +466,8 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
     private void searchLocation() {
 
-        if (etLat == null
-                || etLon == null) {
+        if (etLat == null || etLat.getText().toString().isEmpty()
+                || etLon == null || etLon.getText().toString().isEmpty()) {
             Toast.makeText(getBaseContext(),
                     "Invalid coordinates, Please try again!!",
                     Toast.LENGTH_LONG).show();
@@ -542,7 +525,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         addMarkers();
         if (markersExp.size() > 0) {
 
-            Work();
+            loadMarkers();
             moveToAndExpand(new LatLng(mLocation.get(0).getLatitude(), mLocation.get(0).getLongitude()), 0);
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .zoom(zoom).target(new LatLng(mLocation.get(0).getLatitude(), mLocation.get(0).getLongitude())).build();
@@ -591,7 +574,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
     }
 
-    public void Work() {
+    public void loadMarkers() {
 
         new DoWorkExpand().execute();
         new DoWorkUnExpand().execute();
@@ -619,9 +602,8 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
             for (int i = 0; i < markersExp.size(); i++) {
 
-                mbmps.add(createMyDrawableFromBitmap(MapActivity.this, wi
-                        .get(i).getName(), wi.get(i).getTemp() + "°", wi.get(i)
-                        .getUnit(), wi.get(i).getCondition(), wi.get(i)
+                mbmps.add(createMyDrawableFromBitmap(wi
+                        .get(i).getName(), wi.get(i).getTemp() + "°", wi.get(i).getCondition(), wi.get(i)
                         .getCondID()));
 
             }
@@ -661,84 +643,19 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
     ArrayList<Marker> markersUnExp = new ArrayList<>();
     int mLoc = 0;
 
-    private Bitmap createMyDrawableFromBitmap(Context context, String cName,
-                                              String temp, String unit, String condition, int mCond) {
+    private Bitmap createMyDrawableFromBitmap(String cName,
+                                              String temp, String condition, int mCond) {
 
-        Bitmap bitmap = Bitmap.createBitmap(
-                Utils.dpToPx(180, context),
-                Utils.dpToPx(100, context),
-                Bitmap.Config.ARGB_8888);
+        View view = LayoutInflater.from(MapActivity.this).inflate(R.layout.balloon, null);
 
-        Canvas c = new Canvas(bitmap);
-        Paint mPaint = new Paint(Paint.FILTER_BITMAP_FLAG
-                | Paint.ANTI_ALIAS_FLAG);
+        ((TextView)view.findViewById(R.id.balloonCityName)).setText(cName);
+        ((TextView)view.findViewById(R.id.balloonTemp)).setText(temp);
+        ((TextView)view.findViewById(R.id.balloonCondition)).setText(condition);
+        ((ImageView)view.findViewById(R.id.balloonWeatherIcon)).setImageResource(mCond);
 
-        NinePatchDrawable bg = (NinePatchDrawable) getResources().getDrawable(
-                R.drawable.balloon_overlay_black);
-        if (bg != null) {
-            bg.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
-            bg.setAlpha(150);
-            bg.draw(c);
-        }
+        return Utils.addBorder(Utils.createDrawableFromView(MapActivity.this, view), Utils.dpToPx(2, MapActivity.this), getResources().getColor(R.color.map_blue));
 
-        Bitmap cond = Bitmap.createScaledBitmap(
-                BitmapFactory.decodeResource(getResources(), mCond),
-                (int) (bitmap.getHeight() * 0.8),
-                (int) (bitmap.getHeight() * 0.8), true);
 
-        float w = (float) (bitmap.getWidth() * 0.07);
-        c.drawBitmap(cond, w, (float) (((bitmap.getHeight() - Utils.dpToPx(15, context)) * 0.5) - (cond.getHeight() * 0.5)),
-                mPaint);
-
-        mPaint.setTextSize(Utils.spToPx(context, 31f));
-        mPaint.setColor(0xffffffff);
-
-        float h = (float) ((bitmap.getHeight() * 0.3) + (float) (mPaint
-                .getFontSpacing() * 0.2));
-        w = w + cond.getWidth();
-        c.drawText(temp, w, h, mPaint);
-        float w2 = (float) (w + mPaint.measureText(temp));
-
-        mPaint.setTextSize(Utils.spToPx(context, 12.5f));
-
-        c.drawText(unit, w2, h, mPaint);
-
-        mPaint.setTextSize(Utils.spToPx(context, 16f));
-        h = h + mPaint.getFontSpacing();
-        // mPaint.setColor(0xff529bcc);
-
-        Paint fillPaint = new Paint(Paint.FILTER_BITMAP_FLAG
-                | Paint.ANTI_ALIAS_FLAG);
-        fillPaint.setColor(0xff529bcc);
-        fillPaint.setTextSize(mPaint.getTextSize());
-        c.drawText(condition, w, h, fillPaint);
-
-        Paint stkPaint = new Paint(Paint.FILTER_BITMAP_FLAG
-                | Paint.ANTI_ALIAS_FLAG);
-        stkPaint.setTextSize(mPaint.getTextSize());
-        stkPaint.setStyle(Paint.Style.STROKE);
-        stkPaint.setStrokeWidth(Utils.spToPx(context, .1f));
-        stkPaint.setColor(Color.WHITE);
-        c.drawText(condition, w, h, stkPaint);
-
-        // c.drawText(condition, w, h, mPaint);
-
-        mPaint.setTextSize(Utils.spToPx(context, 12.5f));
-        mPaint.setColor(0xffffffff);
-        h = h + mPaint.getFontSpacing();
-        if (cName.length() > 15) {
-            if (cName.contains(",")) {
-                cName = cName.substring(0, cName.indexOf(","));
-            }
-
-            if (cName.length() > 15) {
-                cName = cName.substring(0, 12) + "..";
-            }
-
-        }
-        c.drawText(cName, w, h, mPaint);
-
-        return bitmap;
     }
 
     public class AddMarker extends AsyncTask<Void, Void, Void> {
@@ -754,6 +671,8 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
             try {
                 removeAllMarkers();
+
+                isMarkerReady = false;
 
                 marker.position(latLng).title(display);
                 marker.draggable(false);
@@ -772,7 +691,16 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
                 slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
 
-                slidingLayout.setFloatingActionButtonVisibility(View.GONE);
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+                        slidingLayout.setFloatingActionButtonVisibility(View.GONE);
+//                    }
+//                }, 20);
+
+                fabContainer.setVisibility(View.GONE);
+
+
             } catch (Exception ignored) {
             }
 
@@ -788,7 +716,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
             try {
                 display = gll.getAddress(latLng);
             } catch (Exception e) {
-                display = "Loading...";
+                display = null;
                 e.printStackTrace();
             }
 
@@ -800,7 +728,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
             pbActionMode.setVisibility(View.GONE);
 
-            if (display.equalsIgnoreCase("Loading...")) {
+            if (display == null) {
                 Toast.makeText(getBaseContext(),
                         "Not a valid location, try again", Toast.LENGTH_LONG)
                         .show();
@@ -809,41 +737,28 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
             }
 
+
+
             slidingLayout.setFloatingActionButtonVisibility(View.VISIBLE);
-            slidingLayout.setFloatingActionButtonVisibility(View.VISIBLE);
+            fabContainer.setVisibility(View.VISIBLE);
             slidingBackground.setVisibility(View.VISIBLE);
 
+            isMarkerReady = true;
 
-//			mode = startSupportActionMode(new ActionModes(display, latLng.latitude
-//					+ "", latLng.longitude + ""));
             Marker tempMarker = getLatestMarker();
-            if (tempMarker != null)
+            if (tempMarker != null) {
                 tempMarker.setTitle(display);
+                tvTitle.setText(display);
+                tvCoordinates.setText(String.format(getString(R.string.coordinates),
+                        tempMarker.getPosition().latitude,
+                        tempMarker.getPosition().longitude));
+            }
 
             super.onPostExecute(mVoid);
         }
     }
 
-    // Convert a view to bitmap
-    public static Bitmap createDrawableFromView(Context context, View view) {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((Activity) context).getWindowManager().getDefaultDisplay()
-                .getMetrics(displayMetrics);
-        view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-        view.measure(Utils.dpToPx(180, context),
-                Utils.dpToPx(100, context));
-        view.layout(0, 0, Utils.dpToPx(180, context),
-                Utils.dpToPx(100, context));
-        view.buildDrawingCache();
-        Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(),
-                view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
 
-        Canvas canvas = new Canvas(bitmap);
-        view.draw(canvas);
-
-        return bitmap;
-    }
 
 
     /**
@@ -883,6 +798,8 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+        if(slidingLayout != null)
+            slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
     }
 
     int currPos = 0;
@@ -904,9 +821,11 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.fabAddLocation1:
             case R.id.fabAddLocation2:
-                Marker tempMarker = getLatestMarker();
-                if (tempMarker != null)
-                    new AddLoc(tempMarker.getPosition(), tempMarker.getTitle()).execute();
+                if(isMarkerReady) {
+                    Marker tempMarker = getLatestMarker();
+                    if (tempMarker != null)
+                        new AddLoc(tempMarker.getPosition(), tempMarker.getTitle()).execute();
+                }
                 break;
             case R.id.mapLocationList:
                 showLocationDialog();
@@ -929,7 +848,6 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         @Override
         protected void onPreExecute() {
 
-            //FIXME setSupportProgressBarIndeterminateVisibility(true);
             mAddDialog = Utils.getProgressDialog(MapActivity.this, "Adding...");
             super.onPreExecute();
         }
@@ -949,7 +867,6 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
         @Override
         protected void onPostExecute(String tz) {
-            //FIXME setSupportProgressBarIndeterminateVisibility(false);
             WLocation newLocation = new WLocation();
             newLocation.setIsMyLocation(mLoc == 1);
             newLocation.setLatitude(position.latitude);
@@ -971,8 +888,8 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
             mMarkerOptions.position(position);// .title(display);
             mMarkerOptions.draggable(false);
             mMarkerOptions.icon(BitmapDescriptorFactory
-                    .fromBitmap(createMyDrawableFromBitmap(MapActivity.this,
-                            mwi.getName(), mwi.getTemp() + "°", mwi.getUnit(),
+                    .fromBitmap(createMyDrawableFromBitmap(
+                            mwi.getName(), mwi.getTemp() + "°",
                             mwi.getCondition(), mwi.getCondID())));
 
             markersExp.add(googleMap.addMarker(mMarkerOptions));
@@ -995,86 +912,15 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
     }
 
-    ;
-
-    private void startAndBuildDialog() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(MapActivity.this);
-        final View view = LayoutInflater.from(getBaseContext()).inflate(
-                R.layout.layout_add_location_point, null);
-        builder.setView(view);
-
-        builder.setPositiveButton("LOCATE", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if (view.findViewById(R.id.etLatitude) == null
-                        || view.findViewById(R.id.etLongitude) == null) {
-                    Toast.makeText(getBaseContext(),
-                            "Invalid coordinates, Please try again!!",
-                            Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-                double lat = Double.parseDouble(((EditText) view
-                        .findViewById(R.id.etLatitude)).getText().toString());
-                double lon = Double.parseDouble(((EditText) view
-                        .findViewById(R.id.etLongitude)).getText().toString());
-
-                if ((lat + "").isEmpty() || (lon + "").isEmpty())
-                    return;
-
-                LatLng latlng = new LatLng(lat, lon);
-
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(new LatLng(latlng.latitude,
-                                latlng.longitude)).zoom(zoom).build();
-
-                googleMap.animateCamera(CameraUpdateFactory
-                        .newCameraPosition(cameraPosition));
-
-                new AddMarker(latlng).execute();
-            }
-        });
-
-        builder.setNegativeButton("CANCEL", null);
-
-        final AlertDialog ad = builder.create();
-        ad.getWindow().setWindowAnimations(R.style.DialogAnimation);
-        ad.show();
-
-    }
-
     public Bitmap smallBalloon(int mCond) {
+        View view = LayoutInflater.from(MapActivity.this).inflate(R.layout.balloon, null);
 
-        Bitmap bitmap = Bitmap.createBitmap(
-                Utils.dpToPx(70, getBaseContext()),
-                Utils.dpToPx(70, getBaseContext()),
-                Bitmap.Config.ARGB_8888);
+        view.findViewById(R.id.balloonCityName).setVisibility(View.GONE);
+        view.findViewById(R.id.balloonTemp).setVisibility(View.GONE);
+        view.findViewById(R.id.balloonCondition).setVisibility(View.GONE);
+        ((ImageView)view.findViewById(R.id.balloonWeatherIcon)).setImageResource(mCond);
 
-        Canvas c = new Canvas(bitmap);
-        Paint mPaint = new Paint(Paint.FILTER_BITMAP_FLAG
-                | Paint.ANTI_ALIAS_FLAG);
-
-        NinePatchDrawable bg = (NinePatchDrawable) getResources().getDrawable(
-                R.drawable.balloon_overlay_black);
-        if (bg != null) {
-            bg.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
-            bg.setAlpha(150);
-            bg.draw(c);
-        }
-
-        Bitmap cond = Bitmap.createScaledBitmap(
-                BitmapFactory.decodeResource(getResources(), mCond),
-                (int) (bitmap.getHeight() * 0.8),
-                (int) (bitmap.getHeight() * 0.8), true);
-
-        c.drawBitmap(cond,
-                (float) (((bitmap.getWidth() - cond.getWidth()) * 0.5)),
-                (float) (((bitmap.getHeight() - Utils.dpToPx(15,
-                        getBaseContext())) * 0.5) - (cond.getHeight() * 0.5)),
-                mPaint);
-        return bitmap;
-
+        return Utils.addBorder(Utils.createDrawableFromView(MapActivity.this, view), Utils.dpToPx(2, MapActivity.this), getResources().getColor(R.color.map_blue));
     }
 
     public void removeAllMarkers() {
@@ -1185,6 +1031,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                 performDialogItemClick(i);
             }
         });
+        mBuilder.show();
     }
 
 
@@ -1192,5 +1039,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         currPos = position;
         moveToAndExpand(markersExp.get(currPos).getPosition(), currPos);
     }
+
+    private boolean isMarkerReady = false;
 
 }

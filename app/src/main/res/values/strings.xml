@@ -58,7 +58,7 @@
     <string name="more_actions">More Actions</string>
     <string name="title_activity_maps">Weather Map</string>
 
-    <string name="coordinates" formatted="false">Coordinates: %d°, %d°</string>
+    <string name="coordinates" formatted="false">Coordinates: %.2f°, %.2f°</string>
 
 
 </resources>

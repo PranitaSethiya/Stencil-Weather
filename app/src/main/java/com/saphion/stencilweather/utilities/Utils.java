@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -24,8 +25,11 @@ import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -461,13 +465,7 @@ public class Utils {
     }
 
 
-    public static void incAppCount(Context mContext) {
-        PreferenceManager.getDefaultSharedPreferences(mContext).edit().putInt("AppCount", getAppCount(mContext) + 1).commit();
-    }
 
-    public static int getAppCount(Context mContext) {
-        return PreferenceManager.getDefaultSharedPreferences(mContext).getInt("AppCount", 0);
-    }
 
     public static void launchMarket(Context context, String packageName) {
         Uri uri = Uri.parse("market://details?id=" + packageName);
@@ -603,5 +601,55 @@ public class Utils {
         mPaint.setColorFilter(tintColor);
         c.drawBitmap(bmp, 0, 0, mPaint);
         return bitmap;
+    }
+
+    // Convert a view to bitmap
+    public static Bitmap createDrawableFromView(Context context, View view) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay()
+                .getMetrics(displayMetrics);
+        view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE))
+                .getDefaultDisplay();
+
+        Point size = new Point();
+        display.getSize(size);
+        view.measure(size.x, size.y);
+        view.layout(0, 0, size.x, size.y);
+
+        view.buildDrawingCache();
+
+        Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(),
+                view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+        return bitmap;
+    }
+
+    public static Bitmap addBorder(Bitmap bmp, int borderSize, int borderColor) {
+        Bitmap bmpWithBorder = Bitmap.createBitmap(bmp.getWidth() + borderSize * 2, bmp.getHeight() + borderSize * 2, bmp.getConfig());
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bmp, bmp.getWidth() + borderSize * 2, bmp.getHeight() + borderSize * 2, true);
+        Canvas canvas = new Canvas(bmpWithBorder);
+        Paint mPaint = new Paint();
+        mPaint.setAntiAlias(true);
+        mPaint.setColorFilter(new LightingColorFilter(borderColor, 0));
+        canvas.drawBitmap(scaledBitmap, 0, 0, mPaint);
+        canvas.drawBitmap(bmp, borderSize, borderSize, null);
+        return bmpWithBorder;
+    }
+
+    public static boolean isFirstStart(Context mContext){
+        return getAppCount(mContext) == 0;
+    }
+
+    public static void incAppCount(Context mContext) {
+        PreferenceManager.getDefaultSharedPreferences(mContext).edit().putInt("AppCount", getAppCount(mContext) + 1).commit();
+    }
+
+    public static int getAppCount(Context mContext) {
+        return PreferenceManager.getDefaultSharedPreferences(mContext).getInt("AppCount", 0);
     }
 }

@@ -65,7 +65,7 @@ public class SplashActivity extends Activity{
         findViewById(R.id.tvWelcome).setVisibility(View.INVISIBLE);
         findViewById(R.id.tvTo).setVisibility(View.INVISIBLE);
         findViewById(R.id.rlAppNameContainer).setVisibility(View.INVISIBLE);
-        findViewById(R.id.rlGetStartedContainer).setVisibility(View.INVISIBLE);
+    findViewById(R.id.rlGetStartedContainer).setVisibility(View.INVISIBLE);
 
         findViewById(R.id.fabGetStarted).setOnClickListener(new View.OnClickListener() {
             @Override

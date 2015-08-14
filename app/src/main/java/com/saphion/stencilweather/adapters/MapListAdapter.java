@@ -61,6 +61,12 @@ public class MapListAdapter extends BaseAdapter {
 
         viewHolder.name.setText(item.getName());
 
+        if(position == getCount() - 1){
+            viewHolder.divider.setVisibility(View.GONE);
+        } else {
+            viewHolder.divider.setVisibility(View.VISIBLE);
+        }
+
 //        final int pos = position;
 
 //        viewHolder.container.setOnClickListener(new View.OnClickListener() {
@@ -78,6 +84,7 @@ public class MapListAdapter extends BaseAdapter {
         ImageView myLocation;
         View container;
         View progressBar;
+        View divider;
 
         public SimpleViewHolder(View itemView) {
             name = (TextView) itemView.findViewById(R.id.tvLocationName);
@@ -89,6 +96,10 @@ public class MapListAdapter extends BaseAdapter {
             listIndicator.setColorFilter(itemView.getResources().getColor(R.color.black_matt));
             int padding = Utils.dpToPx(12, itemView.getContext());
             listIndicator.setPadding(padding, padding, padding, padding);
+            myLocation.setBackgroundResource(R.color.transparent);
+            container.setClickable(false);
+            divider = itemView.findViewById(R.id.bottomDivider);
+
         }
 
     }

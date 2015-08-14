@@ -68,6 +68,7 @@
         android:layout_height="0.5dp"
         android:layout_below="@+id/llItem"
         android:layout_marginTop="-1dp"
+        android:id="@+id/bottomDivider"
         android:layout_marginLeft="58dp"
         android:layout_marginStart="58dp"
         android:background="@color/colorDivider" />

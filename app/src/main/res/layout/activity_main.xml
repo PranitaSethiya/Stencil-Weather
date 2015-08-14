@@ -34,9 +34,9 @@
                         android:layout_height="40dp"
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
-                        android:padding="5dp"
+                        android:padding="7dp"
                         android:tint="#aa000000"
-                        android:src="@drawable/ic_map_marker"
+                        android:src="@drawable/ic_map_marker_radius"
                         />
 
                     <com.devspark.robototextview.widget.RobotoTextView
@@ -69,10 +69,12 @@
                 android:layout_above="@+id/llSettings"
                 android:layout_below="@+id/llLocation" />
 
+
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.8dp"
-                android:layout_above="@+id/llSettings"
+                android:layout_above="@+id/llCustomize"
                 android:background="@color/colorDivider" />
 
             <LinearLayout
@@ -108,7 +110,6 @@
 
 
             </LinearLayout>
-
 
             <LinearLayout
                 android:id="@+id/llSettings"

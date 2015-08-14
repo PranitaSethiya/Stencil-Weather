@@ -26,6 +26,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -71,6 +72,9 @@ import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ArgbEvaluator;
 import com.nineoldandroids.animation.ValueAnimator;
@@ -104,7 +108,7 @@ import java.util.concurrent.RejectedExecutionException;
 import io.codetail.animation.SupportAnimator;
 import io.codetail.animation.ViewAnimationUtils;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private DrawerLayout mDrawerLayout;
     //    ViewPager viewPager;
@@ -112,10 +116,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     List<WLocation> drawerItems;
     private RecyclerViewAdapter recyclerAdapter;
     SwipeRefreshLayout swipeRefreshLayout;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(Utils.isFirstStart(MainActivity.this)){
+//          TODO uncomment this  Utils.incAppCount(MainActivity.this);
+            startActivity(new Intent(MainActivity.this, SplashActivity.class));
+            finish();
+            return;
+        }
+
+        Utils.incAppCount(MainActivity.this);
+
         setContentView(R.layout.activity_main);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -157,11 +172,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setupDrawerContent();
 
-
-//        viewPager = (ViewPager) findViewById(R.id.viewpager);
-//        if (viewPager != null) {
         setupNavigationMode();
-//        }
 
         findViewById(R.id.ivMenu).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,6 +187,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Clear Cache
         new DeleteCache().execute();
 
+        buildGoogleApiClient();
+
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        if(mGoogleApiClient!= null){
+            mGoogleApiClient.connect();
+        }
     }
 
     View line_divider;
@@ -649,6 +673,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.d("Stencil", "OnConnected");
+        Toast.makeText(MainActivity.this, "OnConnected", Toast.LENGTH_LONG).show();
+        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if (mLastLocation != null) {
+            Log.d("Stencil", "Lat: " + String.valueOf(mLastLocation.getLatitude()) + " Lng: " + String.valueOf(mLastLocation.getLongitude()));
+            Toast.makeText(MainActivity.this, "Lat: " + String.valueOf(mLastLocation.getLatitude())
+                    + " Lng: " + String.valueOf(mLastLocation.getLongitude()), Toast.LENGTH_LONG).show();
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Alert");
+            builder.setMessage("Location Services are not enabled, Enable them now?");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivity(new Intent(
+                            android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
+                    mBuilder.setTitle("Alert");
+                    mBuilder.setMessage("Without location services, current location will not get updated.");
+                    mBuilder.setPositiveButton("GOT IT", null);
+                }
+            });
+
+            builder.show();
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.d("Stencil", "OnConnectionSuspended");
+        Toast.makeText(MainActivity.this, "OnConnectionSuspended", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.d("Stencil", "OnConnectionFailed");
+        Toast.makeText(MainActivity.this, "OnConnectionFailed", Toast.LENGTH_LONG).show();
+    }
+
 
     public class DeleteCache extends AsyncTask<Void, Void, Void>{
 
@@ -825,8 +897,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (edit_text_search.getText().toString().length() == 0) {
-                    clearSearch.setVisibility(View.VISIBLE);
-                    clearSearch.setImageResource(R.drawable.goto_icon);
+                    clearSearch.setVisibility(View.GONE);
                     suggestionAdapter.clear();
                     IsAdapterEmpty();
                     listView.setVisibility(View.GONE);
@@ -855,21 +926,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         clearSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (edit_text_search.getText().toString().length() == 0) {
-
-//                    Utils.hideKeyboard(edit_text_search, MainActivity.this);
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search);
-                            hideDark();
-                            showDialog();
-                        }
-                    }, 200);
-
-
-                } else {
+                if (edit_text_search.getText().toString().length() > 0) {
 //                    mAsyncTask.cancel(true);
                     edit_text_search.setText("");
                     listView.setVisibility(View.GONE);
@@ -995,38 +1052,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
-
-    private void showDialog() {
-        final View dialogView = View.inflate(MainActivity.this, R.layout.layout_add_location_point, null);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("Location");
-        builder.setView(dialogView);
-
-        builder.setNegativeButton("CANCEL", null);
-        builder.setPositiveButton("LOCATE", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-
-        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Utils.hideKeyboard(edit_text_search, MainActivity.this);
-                    }
-                }, 200);
-            }
-        });
-
-        builder.show();
-
-    }
-
 
     /**
      * Initialize multi-threading. There are two threads: 1) The main graphical

@@ -59,11 +59,12 @@
                     <ImageView
                         android:id="@+id/clearSearch"
                         android:layout_width="48dp"
+                        android:visibility="gone"
                         android:layout_height="48dp"
                         android:background="@drawable/item_background"
                         android:clickable="true"
                         android:padding="8dp"
-                        android:src="@drawable/goto_icon"
+                        android:src="@drawable/ic_close"
                         android:tint="@color/colorTernaryText" />
 
                     <ProgressBar
