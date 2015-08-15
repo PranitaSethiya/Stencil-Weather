@@ -187,7 +187,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Clear Cache
         new DeleteCache().execute();
 
+        if(Utils.isLocationEnabled(MainActivity.this))
         buildGoogleApiClient();
+        else{
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Alert");
+            builder.setMessage("Location Services are not enabled.\n<i>Location Services help us to determine your current location.</i>\n\nEnable them now?");
+            builder.setPositiveButton("SURE", new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivity(new Intent(
+                            android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+
+                }
+            });
+            builder.setNegativeButton("CANCEL", null);
+
+            builder.show();
+        }
 
     }
 
@@ -676,49 +693,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onConnected(Bundle bundle) {
         Log.d("Stencil", "OnConnected");
-        Toast.makeText(MainActivity.this, "OnConnected", Toast.LENGTH_LONG).show();
         Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
         if (mLastLocation != null) {
             Log.d("Stencil", "Lat: " + String.valueOf(mLastLocation.getLatitude()) + " Lng: " + String.valueOf(mLastLocation.getLongitude()));
-            Toast.makeText(MainActivity.this, "Lat: " + String.valueOf(mLastLocation.getLatitude())
-                    + " Lng: " + String.valueOf(mLastLocation.getLongitude()), Toast.LENGTH_LONG).show();
-        } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Alert");
-            builder.setMessage("Location Services are not enabled, Enable them now?");
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-
-                public void onClick(DialogInterface dialog, int which) {
-                    startActivity(new Intent(
-                            android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-
-                }
-            });
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
-                    mBuilder.setTitle("Alert");
-                    mBuilder.setMessage("Without location services, current location will not get updated.");
-                    mBuilder.setPositiveButton("GOT IT", null);
-                }
-            });
-
-            builder.show();
         }
+
+
     }
 
     @Override
     public void onConnectionSuspended(int i) {
         Log.d("Stencil", "OnConnectionSuspended");
-        Toast.makeText(MainActivity.this, "OnConnectionSuspended", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.d("Stencil", "OnConnectionFailed");
-        Toast.makeText(MainActivity.this, "OnConnectionFailed", Toast.LENGTH_LONG).show();
     }
 
 

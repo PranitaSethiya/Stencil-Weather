@@ -17,6 +17,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
@@ -651,5 +652,24 @@ public class Utils {
 
     public static int getAppCount(Context mContext) {
         return PreferenceManager.getDefaultSharedPreferences(mContext).getInt("AppCount", 0);
+    }
+
+    public static boolean isLocationEnabled(Context mContext){
+        LocationManager lm = null;
+        boolean gps_enabled = false, network_enabled = false;
+
+        lm = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+        try {
+            gps_enabled = lm
+                    .isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception ignore) {
+        }
+        try {
+            network_enabled = lm
+                    .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception ignore) {
+        }
+
+        return (gps_enabled || network_enabled);
     }
 }

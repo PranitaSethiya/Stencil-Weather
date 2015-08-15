@@ -1,11 +1,15 @@
 package com.saphion.stencilweather.activities;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -16,6 +20,9 @@ import android.widget.FrameLayout;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.saphion.stencilweather.R;
 import com.saphion.stencilweather.utilities.SplashView;
 import com.saphion.stencilweather.utilities.Utils;
@@ -24,9 +31,10 @@ import android.view.ViewGroup.LayoutParams;
 /**
  * Created by sachin on 5/8/15.
  */
-public class SplashActivity extends Activity{
+public class SplashActivity extends Activity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     boolean animationInComplete = true;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +49,32 @@ public class SplashActivity extends Activity{
             window.setStatusBarColor(color);
         }
 
-        setContentView(R.layout.activity_splash);
+        setContentView(R.layout.splash_units);
 
+//        setUpFragment1();
+
+        if(Utils.isLocationEnabled(SplashActivity.this))
+            buildGoogleApiClient();
+        else{
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Alert");
+            builder.setMessage("Location Services are not enabled.\n<i>Location Services help us to determine your current location.</i>\n\nEnable them now?");
+            builder.setPositiveButton("SURE", new DialogInterface.OnClickListener() {
+
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivity(new Intent(
+                            android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+
+                }
+            });
+            builder.setNegativeButton("CANCEL", null);
+
+            builder.show();
+        }
+
+    }
+
+    private void setUpFragment1() {
         float height = (float) (getResources().getDisplayMetrics().heightPixels * 0.75);
         float width = getResources().getDisplayMetrics().widthPixels;
 
@@ -57,7 +89,6 @@ public class SplashActivity extends Activity{
         flContainer.addView(splashView);
 
         setupViews();
-
     }
 
     private void setupViews() {
@@ -128,5 +159,39 @@ public class SplashActivity extends Activity{
             animationInComplete = false;
         }
 
+    }
+
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        if(mGoogleApiClient!= null){
+            mGoogleApiClient.connect();
+        }
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.d("Stencil", "OnConnected");
+        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if (mLastLocation != null) {
+            Log.d("Stencil", "Lat: " + String.valueOf(mLastLocation.getLatitude()) + " Lng: " + String.valueOf(mLastLocation.getLongitude()));
+        }
+
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.d("Stencil", "OnConnectionSuspended");
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.d("Stencil", "OnConnectionFailed");
     }
 }
