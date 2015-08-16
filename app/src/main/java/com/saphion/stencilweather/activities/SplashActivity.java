@@ -10,9 +10,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -25,6 +23,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -32,6 +31,10 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -41,18 +44,12 @@ import com.google.android.gms.location.LocationServices;
 import com.nineoldandroids.animation.ArgbEvaluator;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.saphion.stencilweather.R;
-import com.saphion.stencilweather.adapters.MapListAdapter;
 import com.saphion.stencilweather.modules.WLocation;
 import com.saphion.stencilweather.utilities.Constant;
 import com.saphion.stencilweather.utilities.LocationUtils;
 import com.saphion.stencilweather.utilities.PreferenceUtil;
 import com.saphion.stencilweather.utilities.SplashView;
 import com.saphion.stencilweather.utilities.Utils;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +64,8 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     View mBackground;
     RadioButton rb1, rb2, rb3, rb4;
     private ViewPager viewPager;
-    TextView tvGetStarted;
+    TextView tvGetStartedDone, tvGetStartedSkip;
+    View ivGetStartedNext;
     boolean isAnimComplete = false;
 
     @Override
@@ -92,7 +90,9 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
         rb3 = (RadioButton) findViewById(R.id.rb3);
         rb4 = (RadioButton) findViewById(R.id.rb4);
 
-        tvGetStarted = (TextView) findViewById(R.id.tvGetStarted);
+        tvGetStartedDone = (TextView) findViewById(R.id.tvGetStartedDone);
+        tvGetStartedSkip = (TextView) findViewById(R.id.tvGetStartedSkip);
+        ivGetStartedNext = findViewById(R.id.bGetStartedNext);
 
         rb1.setChecked(true);
         mBackground = findViewById(R.id.mainSplashContainer);
@@ -109,7 +109,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     Runnable dialogRunnable = new Runnable() {
         @Override
         public void run() {
-            if(isAnimComplete) {
+            if (isAnimComplete) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this);
                 builder.setTitle("Alert");
                 builder.setMessage(Html.fromHtml("Location Services are not enabled.<br/><br/><i>Location Services help us determine your current location.</i><br/><br/>Enable them now?"));
@@ -134,19 +134,20 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     @Override
     protected void onResume() {
         super.onResume();
-        if(fromDialog)
+        if (fromDialog)
             startLocationWork();
     }
 
     private void startLocationWork() {
-        if(Utils.isLocationEnabled(SplashActivity.this))
+        if (Utils.isLocationEnabled(SplashActivity.this))
             buildGoogleApiClient();
-        else{
+        else {
             dialogHandler.post(dialogRunnable);
         }
     }
 
     Adapter viewPagerAdapter;
+
     private void setupViewPager(ViewPager viewPager) {
 
         viewPagerAdapter = new Adapter(getSupportFragmentManager());
@@ -167,30 +168,38 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                         rb1.setChecked(true);
                         mBackground.setBackgroundColor(getResources().getColor(R.color.sunny_yellow));
                         ((Fragment1) viewPagerAdapter.getItem(0)).onFragmentSelected();
-                        tvGetStarted.setText("Let's get you started");
+
+                        ivGetStartedNext.setVisibility(View.GONE);
+                        tvGetStartedDone.setVisibility(View.GONE);
+                        tvGetStartedSkip.setVisibility(View.VISIBLE);
                         break;
                     case 1:
                         rb2.setChecked(true);
                         setBackgroundColor(mBackground, getResources().getColor(R.color.option2));
                         ((Fragment1) viewPagerAdapter.getItem(0)).onFragmentUnselected();
                         ((Fragment2) viewPagerAdapter.getItem(1)).onFragmentSelected();
-                        tvGetStarted.setText("Next");
+
+                        ivGetStartedNext.setVisibility(View.VISIBLE);
+                        tvGetStartedDone.setVisibility(View.GONE);
+                        tvGetStartedSkip.setVisibility(View.VISIBLE);
                         break;
                     case 2:
                         rb3.setChecked(true);
                         setBackgroundColor(mBackground, getResources().getColor(R.color.option8));
                         ((Fragment1) viewPagerAdapter.getItem(0)).onFragmentUnselected();
                         ((Fragment3) viewPagerAdapter.getItem(2)).onFragmentSelected();
-                        tvGetStarted.setText("Next");
-                        ((FloatingActionButton)findViewById(R.id.fabGetStarted)).setImageResource(R.drawable.ic_arrow_right);
+                        ivGetStartedNext.setVisibility(View.VISIBLE);
+                        tvGetStartedDone.setVisibility(View.GONE);
+                        tvGetStartedSkip.setVisibility(View.VISIBLE);
                         break;
                     case 3:
                         rb4.setChecked(true);
                         setBackgroundColor(mBackground, getResources().getColor(R.color.option10));
                         ((Fragment1) viewPagerAdapter.getItem(0)).onFragmentUnselected();
-                        tvGetStarted.setText("Start using Stencil Weather");
                         ((Fragment4) viewPagerAdapter.getItem(3)).onFragmentSelected();
-                        ((FloatingActionButton)findViewById(R.id.fabGetStarted)).setImageResource(R.drawable.mr_ic_play_dark);
+                        ivGetStartedNext.setVisibility(View.GONE);
+                        tvGetStartedDone.setVisibility(View.VISIBLE);
+                        tvGetStartedSkip.setVisibility(View.GONE);
                         break;
                 }
 
@@ -239,15 +248,13 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     }
 
 
-
-
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-        if(mGoogleApiClient!= null){
+        if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
     }
@@ -259,12 +266,12 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                 mGoogleApiClient);
         if (mLastLocation != null) {
             Log.d("Stencil", "Lat: " + String.valueOf(mLastLocation.getLatitude()) + " Lng: " + String.valueOf(mLastLocation.getLongitude()));
-            new AsyncTask<Location, Void, WLocation>(){
+            new AsyncTask<Location, Void, WLocation>() {
 
                 @Override
                 protected WLocation doInBackground(Location... locations) {
                     WLocation location = LocationUtils.getLocationFromLatLng(locations[0].getLatitude(), locations[0].getLongitude());
-                    if(location != null) {
+                    if (location != null) {
                         location.setIsMyLocation(true);
                         location.checkAndSave();
                     }
@@ -291,7 +298,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     }
 
 
-    public void setBackgroundColor(final View v, int color){
+    public void setBackgroundColor(final View v, int color) {
         Integer colorFrom = Color.TRANSPARENT;
         Drawable background = v.getBackground();
         if (background instanceof ColorDrawable)
@@ -315,32 +322,44 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                (findViewById(R.id.rlGetStartedContainer)).setAlpha(0);
-                (findViewById(R.id.rlGetStartedContainer)).setVisibility(View.VISIBLE);
+                (findViewById(R.id.rgContainer)).setAlpha(0);
+                (findViewById(R.id.rgContainer)).setVisibility(View.VISIBLE);
             }
         }, 10);
-        YoYo.with(Techniques.BounceInUp).interpolate(new OvershootInterpolator()).duration(1000).playOn(findViewById(R.id.rlGetStartedContainer));
+        YoYo.with(Techniques.FadeIn).interpolate(new OvershootInterpolator()).duration(1000).playOn(findViewById(R.id.rgContainer));
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                (findViewById(R.id.rgContainer)).setAlpha(0);
-                (findViewById(R.id.rgContainer)).setVisibility(View.VISIBLE);
+                tvGetStartedSkip.setAlpha(0);
+                tvGetStartedSkip.setVisibility(View.VISIBLE);
             }
-        }, 810);
-        YoYo.with(Techniques.FadeIn).interpolate(new OvershootInterpolator()).duration(1000).delay(800).playOn(findViewById(R.id.rgContainer));
+        }, 10);
+        YoYo.with(Techniques.FadeIn).interpolate(new OvershootInterpolator()).duration(1000).playOn(tvGetStartedSkip);
 
-        findViewById(R.id.fabGetStarted).setOnClickListener(new View.OnClickListener() {
+        ivGetStartedNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int currPos = viewPager.getCurrentItem();
                 if (currPos < viewPagerAdapter.getCount() - 1)
                     setViewPagerPosition(currPos + 1);
-                else {
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                    finish();
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                }
+            }
+        });
+
+        tvGetStartedSkip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setViewPagerPosition(viewPagerAdapter.getCount() - 1);
+            }
+        });
+
+        tvGetStartedDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.incAppCount(SplashActivity.this);
+                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                finish();
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
 
@@ -350,6 +369,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
         viewPagerAdapter.addFragment(Fragment3.newInstance());
         viewPagerAdapter.addFragment(Fragment4.newInstance());
 
+        findViewById(R.id.viewSplash).setVisibility(View.VISIBLE);
     }
 
 
@@ -383,7 +403,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                     height, width,
                     getResources().getColor(R.color.brown), getResources().getColor(R.color.sunny_yellow));
 
-            LayoutParams lp = new LayoutParams((int)width, (int) height);
+            LayoutParams lp = new LayoutParams((int) width, (int) height);
             splashView.setLayoutParams(lp);
 
             FrameLayout flContainer = (FrameLayout) v.findViewById(R.id.sunContainer);
@@ -407,12 +427,19 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
             v.findViewById(R.id.tvWelcome).setVisibility(View.INVISIBLE);
             v.findViewById(R.id.tvTo).setVisibility(View.INVISIBLE);
             v.findViewById(R.id.rlAppNameContainer).setVisibility(View.INVISIBLE);
+            v.findViewById(R.id.rlGetStartedContainer).setVisibility(View.INVISIBLE);
 
+            v.findViewById(R.id.fabGetStarted).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((SplashActivity) getActivity()).setViewPagerPosition(1);
+                }
+            });
         }
 
 
         public void onAnimationComplete() {
-            if(animationInComplete) {
+            if (animationInComplete) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -449,29 +476,37 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                 }, 360);
                 YoYo.with(Techniques.SlideInRight).interpolate(new OvershootInterpolator()).duration(950).delay(350).playOn(v.findViewById(R.id.rlAppNameContainer));
 
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        (v.findViewById(R.id.rlGetStartedContainer)).setAlpha(0);
+                        (v.findViewById(R.id.rlGetStartedContainer)).setVisibility(View.VISIBLE);
+                    }
+                }, 410);
+                YoYo.with(Techniques.BounceInUp).interpolate(new OvershootInterpolator()).duration(1000).delay(1000).playOn(v.findViewById(R.id.rlGetStartedContainer));
 
 
                 animationInComplete = false;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        ((SplashActivity)getActivity()).onFirstFragmentAnimationComplete();
+                        ((SplashActivity) getActivity()).onFirstFragmentAnimationComplete();
                     }
-                }, 1300);
+                }, 2200);
             }
 
         }
 
         public void onFragmentSelected() {
-            if(splashView != null)
-                if(splashView.getVisibility() != View.VISIBLE)
+            if (splashView != null)
+                if (splashView.getVisibility() != View.VISIBLE)
                     splashView.setVisibility(View.VISIBLE);
 
         }
 
         public void onFragmentUnselected() {
-            if(splashView != null)
-                if(splashView.getVisibility() == View.VISIBLE)
+            if (splashView != null)
+                if (splashView.getVisibility() == View.VISIBLE)
                     splashView.setVisibility(View.INVISIBLE);
         }
     }
@@ -530,7 +565,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
         public void onFragmentSelected() {
 
-            if(title.getVisibility() == View.INVISIBLE) {
+            if (title.getVisibility() == View.INVISIBLE) {
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -549,7 +584,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
         }
 
-        public void bounceScaleAnimation(View mView, int delay){
+        public void bounceScaleAnimation(View mView, int delay) {
             Animation pulse = AnimationUtils.loadAnimation(getActivity(), R.anim.pulse);
             pulse.setStartOffset(delay);
             mView.startAnimation(pulse);
@@ -561,7 +596,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
             int duration = 200;
             anim.setDuration(duration);
             anim.setFillAfter(true);
-            switch (view.getId()){
+            switch (view.getId()) {
                 case R.id.prefTempContainer:
                     tvPrefTemp.startAnimation(anim);
                     new Handler().postDelayed(new Runnable() {
@@ -572,7 +607,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                                     Constant.TEMPERATURE_UNITS[nextVal]);
                             PreferenceUtil.setTemperatureUnit(getActivity(), nextVal);
                         }
-                    }, duration/2);
+                    }, duration / 2);
                     break;
                 case R.id.prefPrecipitationContainer:
                     tvPrefPrecipitation.startAnimation(anim);
@@ -691,7 +726,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
             automatic.setChecked(backgroundType == 0);
             manual.setChecked(backgroundType == 1);
 
-            if(backgroundType == 1)
+            if (backgroundType == 1)
                 recyclerView.setVisibility(View.VISIBLE);
             else
                 recyclerView.setVisibility(View.INVISIBLE);
@@ -700,7 +735,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
         public void onFragmentSelected() {
 
-            if(title.getVisibility() == View.INVISIBLE) {
+            if (title.getVisibility() == View.INVISIBLE) {
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -752,7 +787,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
             @Override
             public void onBindViewHolder(final SimpleViewHolder viewHolder, final int position) {
-                if(position == selection){
+                if (position == selection) {
                     selectedHolder = viewHolder;
                     viewHolder.colorIV.setImageResource(R.drawable.ic_check);
                 } else {
@@ -816,7 +851,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
         public void onFragmentSelected() {
 
-            if(title.getVisibility() == View.INVISIBLE) {
+            if (title.getVisibility() == View.INVISIBLE) {
 
                 new Handler().postDelayed(new Runnable() {
                     @Override

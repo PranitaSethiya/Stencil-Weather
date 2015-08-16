@@ -83,5 +83,36 @@
             app:typeface="roboto_condensed_light" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/rlGetStartedContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="70dp"
+        android:layout_centerHorizontal="true">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabGetStarted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_arrow_right"
+            app:backgroundTint="@color/main_button_blue_normal" />
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/tvGetStarted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fabGetStarted"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:text="Let's get you started"
+            android:textColor="#fff"
+            android:textSize="20sp"
+            app:fontFamily="roboto"
+            app:textWeight="medium"
+            app:typeface="roboto_condensed_light" />
+    </RelativeLayout>
+
 
 </RelativeLayout>

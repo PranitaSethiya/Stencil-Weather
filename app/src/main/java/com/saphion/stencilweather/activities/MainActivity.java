@@ -123,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
 
         if(Utils.isFirstStart(MainActivity.this)){
-            Utils.incAppCount(MainActivity.this);
             startActivity(new Intent(MainActivity.this, SplashActivity.class));
             finish();
             return;

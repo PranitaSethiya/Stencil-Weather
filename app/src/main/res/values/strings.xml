@@ -64,6 +64,8 @@
     <string name="manual"><b>Manual</b>\n<br/><i>Choose the color you like.</i></string>
 
     <string name="stencil_thanks">I am glad you\'ve decided to try Stencil Weather. I hope you will love all the features the application provides. For any queries or assistance feel free to contact me through the about screen.</string>
+    <string name="skip">SKIP</string>
+    <string name="done">DONE</string>
 
 
 </resources>
