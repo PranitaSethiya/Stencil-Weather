@@ -19,7 +19,6 @@ import java.util.Random;
  */
 public class SplashView extends View {
 
-    private float sunState1;
     private float sunState2;
     private float sunState3;
     private float sunFinalState;
@@ -28,7 +27,7 @@ public class SplashView extends View {
     private Paint mPaint;
     private Bitmap sunFlames;
     int angle = 0;
-    SplashActivity mActivity;
+    SplashActivity.Fragment1 fragment1;
 
 
     private RectF smileRect;
@@ -49,11 +48,11 @@ public class SplashView extends View {
         super(context);
     }
 
-    public SplashView(SplashActivity mActivity, float height, float width, int tint, int background) {
-        super(mActivity);
+    public SplashView(SplashActivity.Fragment1 fragment1, float height, float width, int tint, int background) {
+        super(fragment1.getActivity());
         this.height = height;
         this.width = width;
-        this.mActivity = mActivity;
+        this.fragment1 = fragment1;
 
         int alpha = 160;
 
@@ -81,7 +80,7 @@ public class SplashView extends View {
 
 
         //sun states
-        sunState1 = groundEndY + sunDimensions / 10;
+        float sunState1 = groundEndY + sunDimensions / 10;
         sunState2 = groundEndY - sunDimensions / 8;
         sunState3 = groundEndY - sunDimensions / 6;
         sunFinalState = height / 3;
@@ -181,7 +180,7 @@ public class SplashView extends View {
 
         if (sunYCenter <= sunFinalState + 10 && sunYCenter >= sunFinalState - 10) {
             incYBy = 0;
-            mActivity.onAnimationComplete();
+            fragment1.onAnimationComplete();
         }
 
         blink = blink == blinkAt ? 0 : blink + 1;

@@ -76,36 +76,85 @@ public class WLocation extends SugarRecord<WLocation> {
 
     @Override
     public String toString() {
-        return "[WLocation] " + "Name: "  + name +
-        ", timezone: " +  timezone +
-        ", latitude: " + latitude +
-        ", longitude: " + longitude +
-        ",isMyLocation: " + isMyLocation;
+        return "[WLocation] " + "Name: " + name +
+                ", timezone: " + timezone +
+                ", latitude: " + latitude +
+                ", longitude: " + longitude +
+                ", isMyLocation: " + isMyLocation + ", UniqueID: " + uniqueID +
+                (id != null ? ", id: " + id : "");
     }
 
 
     public long checkAndSave() {
-        //FIXME Add check for my location
+
+        Log.e("Stencil", "Trying to save: " + this.toString());
+
         List<WLocation> duplicates = Select.from(WLocation.class)
                 .where(Condition.prop("UNIQUE_ID").eq(this.uniqueID)).list();
-        Log.d("Stencil", "duplicates: " + duplicates.size() + "");
-        if(duplicates.size() == 0) {
-            this.save();
+        if (duplicates.size() == 0) {
 
+            Log.e("Stencil", "Pass1");
+
+            if (this.isMyLocation) {
+                Log.e("Stencil", "Pass2");
+                List<WLocation> myLocationDuplicate = Select.from(WLocation.class)
+                        .where(Condition.prop("IS_MY_LOCATION").eq(1)).list();
+                if (myLocationDuplicate.size() > 0) {
+                    Log.e("Stencil", "Pass3");
+                    WLocation newLocation = myLocationDuplicate.get(0);
+                    newLocation.setLongitude(this.getLongitude());
+                    newLocation.setLatitude(this.getLatitude());
+                    newLocation.setUniqueID(this.getUniqueID());
+                    newLocation.setTimezone(this.getTimezone());
+                    newLocation.setName(this.getName());
+                    newLocation.save();
+                    return newLocation.getId();
+                } else {
+                    Log.e("Stencil", "Pass4");
+                    this.save();
+                }
+            } else {
+                Log.e("Stencil", "Pass5");
+                this.save();
+            }
+            Log.e("Stencil", "Pass6");
             //Check if saved and return the saved ID
             List<WLocation> duplicates2 = Select.from(WLocation.class)
                     .where(Condition.prop("UNIQUE_ID").eq(this.uniqueID)).list();
-            Log.d("Stencil", "duplicates: " + duplicates.size() + "");
-            if(duplicates2.size() > 0)  return duplicates2.get(0).getId();
+            if (duplicates2.size() > 0) return duplicates2.get(0).getId();
+            Log.e("Stencil", "Pass7");
             return -1;
         }
 
+        Log.e("Stencil", "Pass8");
+
         WLocation duplicate = duplicates.get(0);
-        if(!duplicate.isMyLocation() && this.isMyLocation()){
-            duplicate.setIsMyLocation(true);
-            duplicate.save();
-            return duplicate.getId();
+        if (!duplicate.isMyLocation() && this.isMyLocation()) {
+            Log.e("Stencil", "Pass9");
+            duplicate.delete();
+            List<WLocation> myLocationDuplicate = Select.from(WLocation.class)
+                    .where(Condition.prop("IS_MY_LOCATION").eq(1)).list();
+
+            if (myLocationDuplicate.size() > 0) {
+                Log.e("Stencil", "Pass10");
+                WLocation newLocation = myLocationDuplicate.get(0);
+                newLocation.setLongitude(this.getLongitude());
+                newLocation.setLatitude(this.getLatitude());
+                newLocation.setUniqueID(this.getUniqueID());
+                newLocation.setTimezone(this.getTimezone());
+                newLocation.setName(this.getName());
+                newLocation.save();
+                return newLocation.getId();
+            }
+            Log.e("Stencil", "Pass11");
+            this.save();
+            List<WLocation> duplicates2 = Select.from(WLocation.class)
+                    .where(Condition.prop("UNIQUE_ID").eq(this.uniqueID)).list();
+            if (duplicates2.size() > 0) return duplicates2.get(0).getId();
+            Log.e("Stencil", "Pass12");
+            return -1;
         }
+        Log.e("Stencil", "Pass13");
         return -1;
     }
 

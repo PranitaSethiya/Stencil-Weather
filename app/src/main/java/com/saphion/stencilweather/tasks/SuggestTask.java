@@ -49,9 +49,10 @@ public class SuggestTask implements Runnable {
 	 * 
 	 * @param original
 	 */
-	private List<WLocation> doSuggest(String original) {
+	public static List<WLocation> doSuggest(String original) {
 		List<WLocation> locations = new LinkedList<WLocation>();
 
+		original = original.trim();
 		original = original.replace(" ", "+");
 		Log.d(TAG, "doSuggest(" + original + ")");
 		String URL = ("http://autocomplete.wunderground.com/aq?query="

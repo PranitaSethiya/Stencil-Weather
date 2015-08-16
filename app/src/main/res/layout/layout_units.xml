@@ -2,9 +2,9 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/unitsPrefContainer"
     android:layout_width="match_parent"
-    android:background="@color/option2"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <LinearLayout
@@ -23,9 +23,9 @@
                 android:layout_width="130dp"
                 android:layout_height="130dp"
                 android:layout_centerInParent="true"
-                android:gravity="center"
                 android:background="@drawable/item_background_circle"
                 android:clickable="true"
+                android:gravity="center"
                 android:orientation="vertical"
                 android:padding="10dp">
 
@@ -34,11 +34,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
                     android:lines="1"
                     android:padding="10dp"
                     android:text="ºC"
-                    android:gravity="center_horizontal"
-                    android:textColor="@color/option4"
+                    android:textColor="@color/sunny_yellow"
                     android:textSize="28sp"
                     app:fontFamily="roboto"
                     app:textWeight="medium"
@@ -50,13 +50,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="Temperature"
                     android:gravity="center_horizontal"
+                    android:text="Temperature"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     app:fontFamily="roboto"
                     app:textWeight="medium"
-                    app:typeface="roboto_condensed_light" />
+                    app:typeface="roboto_condensed_regular" />
 
 
             </LinearLayout>
@@ -71,10 +71,10 @@
                 android:id="@+id/prefPrecipitationContainer"
                 android:layout_width="130dp"
                 android:layout_height="130dp"
-                android:gravity="center"
                 android:layout_centerInParent="true"
                 android:background="@drawable/item_background_circle"
                 android:clickable="true"
+                android:gravity="center"
                 android:orientation="vertical"
                 android:padding="10dp">
 
@@ -83,11 +83,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
                     android:lines="1"
                     android:padding="10dp"
                     android:text="in"
-                    android:gravity="center_horizontal"
-                    android:textColor="@color/option4"
+                    android:textColor="@color/sunny_yellow"
                     android:textSize="28sp"
                     app:fontFamily="roboto"
                     app:textWeight="medium"
@@ -97,15 +97,15 @@
                 <com.devspark.robototextview.widget.RobotoTextView
                     android:id="@+id/tvPrefPrecipitationTitle"
                     android:layout_width="wrap_content"
-                    android:gravity="center_horizontal"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
                     android:text="Precipitation"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     app:fontFamily="roboto"
                     app:textWeight="medium"
-                    app:typeface="roboto_condensed_light" />
+                    app:typeface="roboto_condensed_regular" />
 
 
             </LinearLayout>
@@ -117,7 +117,7 @@
         android:layout_height="0.5dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:background="@color/white"/>
+        android:background="@color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -133,10 +133,10 @@
                 android:id="@+id/prefWindContainer"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:gravity="center"
                 android:layout_centerInParent="true"
                 android:background="@drawable/item_background_circle"
                 android:clickable="true"
+                android:gravity="center"
                 android:orientation="vertical"
                 android:padding="10dp">
 
@@ -145,13 +145,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
                     android:lines="1"
                     android:padding="10dp"
                     android:text="km/h"
-                    android:textColor="@color/option4"
+                    android:textColor="@color/sunny_yellow"
                     android:textSize="25sp"
                     app:fontFamily="roboto"
-                    android:gravity="center_horizontal"
                     app:textWeight="medium"
                     app:typeface="roboto_regular" />
 
@@ -166,7 +166,7 @@
                     android:textSize="18sp"
                     app:fontFamily="roboto"
                     app:textWeight="medium"
-                    app:typeface="roboto_condensed_light" />
+                    app:typeface="roboto_condensed_regular" />
 
 
             </LinearLayout>
@@ -181,42 +181,43 @@
                 android:id="@+id/prefPressureContainer"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:gravity="center"
                 android:layout_centerInParent="true"
                 android:background="@drawable/item_background_circle"
                 android:clickable="true"
+                android:gravity="center"
                 android:orientation="vertical"
                 android:padding="10dp">
 
                 <me.grantland.widget.AutofitTextView
                     android:id="@+id/tvPrefPressureVal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:lines="1"
                     android:padding="10dp"
                     android:text="mmHg"
-                    android:textColor="@color/option4"
+                    android:textColor="@color/sunny_yellow"
                     android:textSize="25sp"
-                    android:gravity="center_horizontal"
-                    app:minTextSize="15sp"
-                    />
+                    app:minTextSize="15sp" />
 
                 <com.devspark.robototextview.widget.RobotoTextView
                     android:id="@+id/tvPrefPressureTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:text="Pressure"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     app:fontFamily="roboto"
                     app:textWeight="medium"
-                    app:typeface="roboto_condensed_light" />
+                    app:typeface="roboto_condensed_regular" />
 
 
             </LinearLayout>
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -226,10 +227,10 @@
                 android:id="@+id/prefTimeContainer"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:gravity="center"
                 android:layout_centerInParent="true"
                 android:background="@drawable/item_background_circle"
                 android:clickable="true"
+                android:gravity="center"
                 android:orientation="vertical"
                 android:padding="10dp">
 
@@ -238,11 +239,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
                     android:lines="1"
                     android:padding="10dp"
                     android:text="12h"
-                    android:gravity="center_horizontal"
-                    android:textColor="@color/option4"
+                    android:textColor="@color/sunny_yellow"
                     android:textSize="25sp"
                     app:fontFamily="roboto"
                     app:textWeight="medium"
@@ -259,7 +260,7 @@
                     android:textSize="18sp"
                     app:fontFamily="roboto"
                     app:textWeight="medium"
-                    app:typeface="roboto_condensed_light" />
+                    app:typeface="roboto_condensed_regular" />
 
 
             </LinearLayout>

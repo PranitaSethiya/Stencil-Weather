@@ -1,93 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainSplashContainer"
     android:background="@color/sunny_yellow">
 
-    <FrameLayout
-        android:id="@+id/sunContainer"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpagerSplash"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <com.devspark.robototextview.widget.RobotoTextView
-        android:id="@+id/tvHello"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="150dp"
-        android:text="Hello,"
-        android:textColor="#fff"
-        android:textSize="35sp"
-        app:fontFamily="roboto"
-        app:textWeight="medium"
-        app:typeface="roboto_condensed_light" />
-
-    <com.devspark.robototextview.widget.RobotoTextView
-        android:id="@+id/tvWelcome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvHello"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:text="Welcome"
-        android:textColor="#fff"
-        android:textSize="35sp"
-        app:fontFamily="roboto"
-        app:textWeight="medium"
-        app:typeface="roboto_condensed_light" />
-
-    <com.devspark.robototextview.widget.RobotoTextView
-        android:id="@+id/tvTo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvWelcome"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:text="to"
-        android:textColor="#fff"
-        android:textSize="35sp"
-        app:fontFamily="roboto"
-        app:textWeight="medium"
-        app:typeface="roboto_condensed_light" />
-
-    <RelativeLayout
-        android:id="@+id/rlAppNameContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvTo"
-        android:layout_marginLeft="20dp">
-
-        <com.devspark.robototextview.widget.RobotoTextView
-            android:id="@+id/tvAppName1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:text="Stencil"
-            android:textColor="@color/main_button_blue_selected"
-            android:textSize="35sp"
-            app:fontFamily="roboto"
-            app:textWeight="medium"
-            app:typeface="roboto_condensed_light" />
-
-        <com.devspark.robototextview.widget.RobotoTextView
-            android:id="@+id/tvAppName2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/tvAppName1"
-            android:text="Weather"
-            android:textColor="#fff"
-            android:textSize="35sp"
-            app:fontFamily="roboto"
-            app:textWeight="medium"
-            app:typeface="roboto_condensed_light" />
-    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rlGetStartedContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="70dp"
         android:layout_centerHorizontal="true">
@@ -97,7 +25,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:padding="5dp"
             android:src="@drawable/ic_arrow_right"
+            app:elevation="4dp"
             app:backgroundTint="@color/main_button_blue_normal" />
 
         <com.devspark.robototextview.widget.RobotoTextView
@@ -115,5 +45,53 @@
             app:typeface="roboto_condensed_light" />
     </RelativeLayout>
 
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rgContainer"
+        android:visibility="invisible"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <RadioButton
+            android:layout_width="12dp"
+            android:id="@+id/rb1"
+            android:layout_height="12dp"
+            android:background="@drawable/radio_button"
+            android:button="@android:color/transparent"
+            android:layout_margin="1dp"
+            android:clickable="false"
+            android:checked="true" />
+
+        <RadioButton
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:id="@+id/rb2"
+            android:layout_margin="1dp"
+            android:clickable="false"
+            android:background="@drawable/radio_button"
+            android:button="@android:color/transparent" />
+
+        <RadioButton
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_margin="1dp"
+            android:id="@+id/rb3"
+            android:clickable="false"
+            android:background="@drawable/radio_button"
+            android:button="@android:color/transparent" />
+
+        <RadioButton
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_margin="1dp"
+            android:clickable="false"
+            android:id="@+id/rb4"
+            android:background="@drawable/radio_button"
+            android:button="@android:color/transparent" />
+
+    </RadioGroup>
 
 </RelativeLayout>

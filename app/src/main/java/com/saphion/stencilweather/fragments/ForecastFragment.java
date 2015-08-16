@@ -103,7 +103,6 @@ public class ForecastFragment extends Fragment {
         }
     }
 
-    //TODO animate param
     private void setExpand(boolean expand, final boolean animate) {
         if (v != null) {
             if (expand) {

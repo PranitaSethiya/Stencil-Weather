@@ -53,6 +53,7 @@ import com.saphion.stencilweather.modules.WLocation;
 import com.saphion.stencilweather.modules.WeatherItem;
 import com.saphion.stencilweather.tasks.GetLocationInfo;
 import com.saphion.stencilweather.utilities.InitiateLatLon;
+import com.saphion.stencilweather.utilities.LocationUtils;
 import com.saphion.stencilweather.utilities.Utils;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -82,6 +83,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
     View latLonBackground;
     private MaterialMenuDrawable materialMenu;
     private boolean loading = false;
+    private int targetPos = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +141,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
             }
         }, 50);
 
+        targetPos = getIntent().getIntExtra("position", 0);
 
         try {
             // Loading map
@@ -267,24 +270,30 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                     public boolean onMyLocationButtonClick() {
                         try {
 
-//                            mLoc = 1;
-//
-//                            new AddMarker(new LatLng(googleMap
-//                                    .getMyLocation().getLatitude(), googleMap
-//                                    .getMyLocation().getLongitude())).execute();
-//                            CameraPosition cameraPosition = new CameraPosition.Builder()
-//                                    .target(new LatLng(googleMap
-//                                            .getMyLocation().getLatitude(),
-//                                            googleMap.getMyLocation()
-//                                                    .getLongitude())).zoom(12)
-//                                    .build();
-//
-//                            googleMap.animateCamera(CameraUpdateFactory
-//                                    .newCameraPosition(cameraPosition));
+                            mLoc = 1;
+                            //TODO find a better solution
+                            if((int)markersUnExp.get(0).getPosition().longitude != (int)googleMap
+                                    .getMyLocation().getLongitude() || (int)markersUnExp.get(0).getPosition().latitude != (int)googleMap
+                                    .getMyLocation().getLatitude())
+                                new AddLoc(new LatLng(googleMap
+                                        .getMyLocation().getLatitude(), googleMap
+                                        .getMyLocation().getLongitude())).execute();
+
+                            markersExp.get(0).setPosition(new LatLng(googleMap
+                                    .getMyLocation().getLatitude(),
+                                    googleMap.getMyLocation()
+                                            .getLongitude()));
+
+                            markersUnExp.get(0).setPosition(new LatLng(googleMap
+                                    .getMyLocation().getLatitude(),
+                                    googleMap.getMyLocation()
+                                            .getLongitude()));
+
                             moveToAndExpand(new LatLng(googleMap
-                                            .getMyLocation().getLatitude(),
-                                            googleMap.getMyLocation()
-                                                    .getLongitude()), 0);
+                                    .getMyLocation().getLatitude(),
+                                    googleMap.getMyLocation()
+                                            .getLongitude()), 0);
+
 
                         } catch (Exception ex) {
                         }
@@ -303,9 +312,6 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                 } else if (markersExp.contains(mrkr)) {
                     currPos = markersExp.indexOf(mrkr);
                     moveToAndExpand(mrkr.getPosition(), currPos);
-                } else {
-
-                    return false;
                 }
 
                 return true;
@@ -523,12 +529,12 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         }
 
         addMarkers();
-        if (markersExp.size() > 0) {
+        if (markersExp.size() > targetPos) {
 
             loadMarkers();
-            moveToAndExpand(new LatLng(mLocation.get(0).getLatitude(), mLocation.get(0).getLongitude()), 0);
+            moveToAndExpand(new LatLng(mLocation.get(targetPos).getLatitude(), mLocation.get(targetPos).getLongitude()), targetPos);
             CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .zoom(zoom).target(new LatLng(mLocation.get(0).getLatitude(), mLocation.get(0).getLongitude())).build();
+                    .zoom(zoom).target(new LatLng(mLocation.get(targetPos).getLatitude(), mLocation.get(targetPos).getLongitude())).build();
 
             googleMap.animateCamera(CameraUpdateFactory
                     .newCameraPosition(cameraPosition));
@@ -824,7 +830,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
                 if(isMarkerReady) {
                     Marker tempMarker = getLatestMarker();
                     if (tempMarker != null)
-                        new AddLoc(tempMarker.getPosition(), tempMarker.getTitle()).execute();
+                        new AddLoc(tempMarker.getPosition()).execute();
                 }
                 break;
             case R.id.mapLocationList:
@@ -834,15 +840,15 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
     }
 
-    public class AddLoc extends AsyncTask<Object, Void, String> {
+    public class AddLoc extends AsyncTask<Object, Void, WLocation> {
 
         LatLng position;
-        String title;
+//        String title;
         AlertDialog mAddDialog;
 
-        public AddLoc(LatLng position, String title) {
+        public AddLoc(LatLng position) {
             this.position = position;
-            this.title = title;
+//            this.title = title;
         }
 
         @Override
@@ -853,61 +859,92 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         }
 
         @Override
-        protected String doInBackground(Object... params) {
-            String tz = "";
-            GetLocationInfo gi = new GetLocationInfo();
-            try {
-                tz = gi.getTimezone(position.latitude, position.longitude)
-                        .getDisplayName();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return tz;
+        protected WLocation doInBackground(Object... params) {
+            return LocationUtils.getLocationFromLatLng(position.latitude, position.longitude);
         }
 
         @Override
-        protected void onPostExecute(String tz) {
-            WLocation newLocation = new WLocation();
-            newLocation.setIsMyLocation(mLoc == 1);
-            newLocation.setLatitude(position.latitude);
-            newLocation.setLongitude(position.longitude);
-            newLocation.setName(title);
-            newLocation.setTimezone(tz);
-            newLocation.setUniqueID("9999"); //FIXME add the unique part
-            newLocation.checkAndSave();
+        protected void onPostExecute(WLocation location) {
+            if(location != null) {
+                location.setIsMyLocation(mLoc == 1);
 
-            mLocation.add(newLocation);
+                WeatherItem mwi = new WeatherItem(location.getUniqueID(), location.getName(), temp[temp.length - 1],
+                        conditions[conditions.length - 1], wi.size(),
+                        conds[conds.length - 1], "C");
+                long result = location.checkAndSave();
 
-            //FIXME add the unique part
-            WeatherItem mwi = new WeatherItem("9999", mLocation.get(
-                    mLocation.size() - 1).getName(), temp[temp.length - 1],
-                    conditions[conditions.length - 1], wi.size(),
-                    conds[conds.length - 1], "C");
-            wi.add(mwi);
-            MarkerOptions mMarkerOptions = new MarkerOptions();
-            mMarkerOptions.position(position);// .title(display);
-            mMarkerOptions.draggable(false);
-            mMarkerOptions.icon(BitmapDescriptorFactory
-                    .fromBitmap(createMyDrawableFromBitmap(
-                            mwi.getName(), mwi.getTemp() + "°",
-                            mwi.getCondition(), mwi.getCondID())));
+                if(result != -1) {
 
-            markersExp.add(googleMap.addMarker(mMarkerOptions));
-            markersExp.get(markersExp.size() - 1).setVisible(false);
+                    MarkerOptions mMarkerOptions = new MarkerOptions();
+                    mMarkerOptions.position(position);// .title(display);
+                    mMarkerOptions.draggable(false);
+                    mMarkerOptions.icon(BitmapDescriptorFactory
+                            .fromBitmap(createMyDrawableFromBitmap(
+                                    mwi.getName(), mwi.getTemp() + "°",
+                                    mwi.getCondition(), mwi.getCondID())));
 
-            mMarkerOptions.icon(BitmapDescriptorFactory
-                    .fromBitmap(smallBalloon(mwi.getCondID())));
-            markersUnExp.add(googleMap.addMarker(mMarkerOptions));
-            markersUnExp.get(markersUnExp.size() - 1).setVisible(true);
+                    MarkerOptions mMarkerOptions2 = new MarkerOptions();
+                    mMarkerOptions2.position(position);// .title(display);
+                    mMarkerOptions2.draggable(false);
+                    mMarkerOptions2.icon(BitmapDescriptorFactory
+                            .fromBitmap(smallBalloon(mwi.getCondID())));
 
-            moveToAndExpand(new LatLng(mLocation.get(mLocation.size() - 1).getLatitude(), mLocation.get(mLocation.size() - 1).getLongitude()),
-                    mLocation.size() - 1);
+                    if (mLoc == 1) {
+                        try {
+
+                            markersExp.get(0).remove();
+                            markersUnExp.get(0).remove();
+
+                            mLocation.set(0, location);
+                            wi.set(0, mwi);
+                            markersExp.set(0, googleMap.addMarker(mMarkerOptions));
+                            markersExp.get(0).setVisible(false);
+
+                            markersUnExp.set(0, googleMap.addMarker(mMarkerOptions2));
+                            markersUnExp.get(0).setVisible(true);
+
+                            moveToAndExpand(new LatLng(location.getLatitude(), location.getLongitude()),
+                                    0);
+
+                        } catch (Exception ignore) {
+                        }
+                    } else {
+                        mLocation.add(location);
+                        wi.add(mwi);
+                        markersExp.add(googleMap.addMarker(mMarkerOptions));
+                        markersExp.get(markersExp.size() - 1).setVisible(false);
+
+                        markersUnExp.add(googleMap.addMarker(mMarkerOptions2));
+                        markersUnExp.get(markersUnExp.size() - 1).setVisible(true);
+
+                        moveToAndExpand(new LatLng(location.getLatitude(), location.getLongitude()),
+                                mLocation.size() - 1);
+                    }
+                    mLoc = 0;
+                    try {
+                        for (int i = 1; i < mLocation.size(); i++) {
+                            if (mLocation.get(0).getUniqueID().equalsIgnoreCase(mLocation.get(i).getUniqueID())) {
+                                mLocation.remove(i);
+                                markersUnExp.remove(i).remove();
+                                markersExp.remove(i).remove();
+                                wi.remove(i);
+                            }
+                        }
+                    } catch (Exception ignored) {
+                    }
+                } else {
+                    Toast.makeText(MapActivity.this, "Location already exists.", Toast.LENGTH_SHORT).show();
+                }
+
+            } else {
+                Toast.makeText(MapActivity.this, "Failed to Add Location", Toast.LENGTH_SHORT).show();
+            }
 
             removeAllMarkers();
 
             mAddDialog.dismiss();
 
-            super.onPostExecute(tz);
+            super.onPostExecute(location);
         }
 
     }

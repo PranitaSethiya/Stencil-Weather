@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
 
         if(Utils.isFirstStart(MainActivity.this)){
-//          TODO uncomment this  Utils.incAppCount(MainActivity.this);
+            Utils.incAppCount(MainActivity.this);
             startActivity(new Intent(MainActivity.this, SplashActivity.class));
             finish();
             return;
@@ -566,8 +566,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         break;
                     case R.id.fab_map:
-
-                        startActivity(new Intent(MainActivity.this, MapActivity.class));
+                        Intent mapIntent = new Intent(MainActivity.this, MapActivity.class);
+                        mapIntent.putExtra("position", navSpinner.getSelectedItemPosition());
+                        startActivity(mapIntent);
                         finish();
 
                         break;

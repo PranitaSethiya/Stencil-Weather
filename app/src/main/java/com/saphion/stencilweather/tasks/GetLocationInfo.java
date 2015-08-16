@@ -16,10 +16,10 @@ import java.util.TimeZone;
 
 public class GetLocationInfo {
 
-    final String URL1 = "http://maps.google.com/maps/api/geocode/json?address=";
-    final String URL2 = "&sensor=false";
+    final static String URL1 = "http://maps.google.com/maps/api/geocode/json?address=";
+    final static String URL2 = "&sensor=false";
 
-    public LatLng getll(String city) throws
+    public static LatLng getll(String city) throws
             IOException, JSONException {
 
         city = city.trim().replaceAll(" ", "+");
@@ -46,7 +46,7 @@ public class GetLocationInfo {
 
     }
 
-    public String getAddress(LatLng latlon)
+    public static String getAddress(LatLng latlon)
             throws IOException, JSONException {
 
         String city = latlon.latitude + "," + latlon.longitude;
@@ -143,7 +143,7 @@ public class GetLocationInfo {
     static String URL3 = "http://api.worldweatheronline.com/free/v1/tz.ashx?key=45kcy9gjhkcxdayzgta7nwvx&q=";
     static String URL4 = "&format=json";
 
-    public TimeZone getTimezone(double latitude, double longitude)
+    public static TimeZone getTimezone(double latitude, double longitude)
             throws IOException, JSONException {
 
         String latitudeStr = latitude + "";
