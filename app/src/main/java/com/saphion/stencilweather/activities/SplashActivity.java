@@ -28,6 +28,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.BounceInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
@@ -42,6 +43,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.nineoldandroids.animation.ArgbEvaluator;
+import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.saphion.stencilweather.R;
 import com.saphion.stencilweather.modules.WLocation;
@@ -123,7 +125,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                     }
                 });
                 builder.setNegativeButton("CANCEL", null);
-
+                builder.setCancelable(false);
                 builder.show();
             } else {
                 dialogHandler.postDelayed(this, 1000);
@@ -134,8 +136,10 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     @Override
     protected void onResume() {
         super.onResume();
-        if (fromDialog)
+        if (fromDialog) {
             startLocationWork();
+            fromDialog = false;
+        }
     }
 
     private void startLocationWork() {
@@ -326,7 +330,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                 (findViewById(R.id.rgContainer)).setVisibility(View.VISIBLE);
             }
         }, 10);
-        YoYo.with(Techniques.FadeIn).interpolate(new OvershootInterpolator()).duration(1000).playOn(findViewById(R.id.rgContainer));
+        YoYo.with(Techniques.FadeIn).interpolate(new OvershootInterpolator()).duration(500).playOn(findViewById(R.id.rgContainer));
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -335,7 +339,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                 tvGetStartedSkip.setVisibility(View.VISIBLE);
             }
         }, 10);
-        YoYo.with(Techniques.FadeIn).interpolate(new OvershootInterpolator()).duration(1000).playOn(tvGetStartedSkip);
+        YoYo.with(Techniques.FadeIn).interpolate(new OvershootInterpolator()).duration(500).playOn(tvGetStartedSkip);
 
         ivGetStartedNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -676,6 +680,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
         View v;
         View title, subtitle;
+        View rgContainer;
         RadioButton automatic, manual;
         RecyclerView recyclerView;
         RadioGroup rg;
@@ -696,6 +701,9 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
             llm.setOrientation(LinearLayoutManager.HORIZONTAL);
             recyclerView.setLayoutManager(llm);
             recyclerView.setAdapter(new ColorAdapter());
+            recyclerView.scrollToPosition(PreferenceUtil.getBackgroundColor(getActivity()));
+
+            rgContainer = v.findViewById(R.id.frag3Container);
 
             rg = (RadioGroup) v.findViewById(R.id.rgColorContainer);
 
@@ -712,24 +720,57 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                 public void onCheckedChanged(RadioGroup radioGroup, int i) {
                     switch (radioGroup.getCheckedRadioButtonId()) {
                         case R.id.rbAutomatic:
-                            recyclerView.setVisibility(View.INVISIBLE);
                             PreferenceUtil.setBackgroundType(getActivity(), 0);
+                            showRecycler(false, true);
                             break;
                         case R.id.rbManual:
-                            recyclerView.setVisibility(View.VISIBLE);
                             PreferenceUtil.setBackgroundType(getActivity(), 1);
+                            showRecycler(true, true);
                             break;
                     }
                 }
             });
-            int backgroundType = PreferenceUtil.getBackgroundType(getActivity());
-            automatic.setChecked(backgroundType == 0);
-            manual.setChecked(backgroundType == 1);
 
-            if (backgroundType == 1)
-                recyclerView.setVisibility(View.VISIBLE);
-            else
-                recyclerView.setVisibility(View.INVISIBLE);
+        }
+
+
+        public void showRecycler(boolean expand, final boolean animate){
+            if(v != null){
+                if(expand) {
+                    ObjectAnimator objectAnimator= ObjectAnimator.ofFloat(rgContainer, "translationY", Utils.dpToPx(30, getActivity()), 0);
+                    objectAnimator.setDuration(animate?500:1);
+                    objectAnimator.start();
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            recyclerView.setAlpha(animate ? 0 : 255);
+                            recyclerView.setVisibility(View.VISIBLE);
+                        }
+                    }, 110);
+                    YoYo.with(Techniques.SlideInRight)
+                            .duration(animate ? 500 : 1).interpolate(new BounceInterpolator()).delay(100)
+                            .playOn(recyclerView);
+
+                } else {
+                    ObjectAnimator objectAnimator= ObjectAnimator.ofFloat(rgContainer, "translationY", 0, Utils.dpToPx(30, getActivity()));
+                    objectAnimator.setDuration(animate?500:1);
+                    objectAnimator.setStartDelay(200);
+                    objectAnimator.start();
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            recyclerView.setAlpha(0);
+                            recyclerView.setVisibility(View.INVISIBLE);
+                        }
+                    }, 510);
+                    YoYo.with(Techniques.SlideOutRight)
+                            .duration(animate?500:1).interpolate(new BounceInterpolator())
+                            .playOn(recyclerView);
+                }
+            }
+
         }
 
 
@@ -753,6 +794,22 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                     }
                 }, 60);
                 YoYo.with(Techniques.SlideInLeft).interpolate(new OvershootInterpolator()).duration(800).delay(200).playOn(subtitle);
+
+                int backgroundType = PreferenceUtil.getBackgroundType(getActivity());
+                if(backgroundType == 0) {
+                    automatic.setChecked(true);
+                    recyclerView.setVisibility(View.INVISIBLE);
+                } else {
+                    manual.setChecked(true);
+                }
+
+                if (backgroundType == 1) {
+                    showRecycler(true, true);
+                }
+                else {
+                    showRecycler(false, true);
+                }
+
             }
 
         }

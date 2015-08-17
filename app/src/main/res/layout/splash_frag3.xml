@@ -1,46 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/option8"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="225dp"
-        android:alpha="220"
         android:layout_marginTop="5dp"
-        android:src="@drawable/color_illustration"/>
+        android:alpha="220"
+        android:src="@drawable/color_illustration" />
 
-    <com.devspark.robototextview.widget.RobotoTextView
-        android:id="@+id/tvColorTitle"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/frag3Container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:text="Everybody loves colors"
-        android:textColor="#fff"
-        android:textSize="25sp"
-        app:fontFamily="roboto"
-        app:textWeight="medium"
-        app:typeface="roboto_condensed_light" />
+        android:orientation="vertical">
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/tvColorTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="Everybody loves colors"
+            android:textColor="#fff"
+            android:textSize="25sp"
+            app:fontFamily="roboto"
+            app:textWeight="medium"
+            app:typeface="roboto_condensed_light" />
 
 
-    <com.devspark.robototextview.widget.RobotoTextView
-        android:id="@+id/tvColorSubtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:text="Choose background type"
-        android:textColor="#fff"
-        android:textSize="18sp"
-        app:fontFamily="roboto"
-        app:textWeight="medium"
-        app:typeface="roboto_condensed_light" />
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/tvColorSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="Choose background type"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            app:fontFamily="roboto"
+            app:textWeight="medium"
+            app:typeface="roboto_condensed_light" />
 
-    <include layout="@layout/color_selection"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent" />
+        <include
+            layout="@layout/color_selection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 </LinearLayout>
