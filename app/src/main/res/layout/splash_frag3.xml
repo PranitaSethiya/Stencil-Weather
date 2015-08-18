@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/option8"
     android:orientation="vertical">
 
     <ImageView
@@ -25,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:text="Everybody loves colors"
+            android:text="@string/everybody_loves_colors"
             android:textColor="#fff"
             android:textSize="25sp"
             app:fontFamily="roboto"
@@ -39,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:text="Choose background type"
+            android:text="@string/choose_background_type"
             android:textColor="#fff"
             android:textSize="18sp"
             app:fontFamily="roboto"

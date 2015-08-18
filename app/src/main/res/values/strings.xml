@@ -66,6 +66,8 @@
     <string name="stencil_thanks">I am glad you\'ve decided to try Stencil Weather. I hope you will love all the features the application provides. For any queries or assistance feel free to contact me through the about screen.</string>
     <string name="skip">SKIP</string>
     <string name="done">DONE</string>
+    <string name="everybody_loves_colors">Everybody loves colors</string>
+    <string name="choose_background_type">Choose background type</string>
 
 
 </resources>

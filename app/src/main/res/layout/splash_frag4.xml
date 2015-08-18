@@ -1,44 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/option10"
+    android:orientation="vertical">
 
-    <com.devspark.robototextview.widget.RobotoTextView
-        android:id="@+id/tvFrag4Title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="20dp"
-        android:text="Thank you!"
-        android:textColor="#fff"
-        android:textSize="35sp"
-        app:fontFamily="roboto"
-        app:textWeight="medium"
-        app:typeface="roboto_condensed_light" />
-
-
-    <com.devspark.robototextview.widget.RobotoTextView
-        android:id="@+id/tvFrag4Subtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/stencil_thanks"
-        android:textColor="#fff"
-        android:textSize="18sp"
-        app:fontFamily="roboto"
-        app:textWeight="medium"
-        app:typeface="roboto_condensed_light" />
-
-    <View
+    <LinearLayout
+        android:id="@+id/frag4Container1"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/colorDivider"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/tvFrag4LastBit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="25dp"
+            android:text="Just one last thing"
+            android:textColor="#fff"
+            android:textSize="30sp"
+            app:fontFamily="roboto"
+            app:textWeight="medium"
+            app:typeface="roboto_condensed_light" />
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/tvFrag4LastBitSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:text="Let's add a location"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            app:fontFamily="roboto"
+            app:textWeight="medium"
+            app:typeface="roboto_condensed_light" />
+
+        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/card_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            card_view:cardBackgroundColor="@color/white"
+            card_view:cardCornerRadius="2dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/linearLayout_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp">
+
+                    <EditText
+                        android:id="@+id/edit_text_search"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="#fff"
+                        android:gravity="center_vertical"
+                        android:hint="@string/edit_text_search"
+                        android:imeOptions="actionDone"
+                        android:inputType="textCapWords"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="8dp"
+                        android:singleLine="true"
+                        android:textColor="@color/colorTernaryText"
+                        android:textColorHint="@color/colorSecondaryText2" />
+
+                    <RelativeLayout
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_gravity="end"
+                        android:gravity="end">
+
+                        <ImageView
+                            android:id="@+id/clearSearch"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/item_background"
+                            android:clickable="true"
+                            android:padding="8dp"
+                            android:src="@drawable/ic_close"
+                            android:tint="@color/colorTernaryText"
+                            android:visibility="gone" />
+
+                        <ProgressBar
+                            android:id="@+id/progressSearch"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:indeterminateOnly="true"
+                            android:padding="12dp"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/line_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_below="@+id/linearLayout_search"
+                    android:background="#cdcdcd" />
+
+                <ListView
+                    android:id="@+id/listView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/line_divider"
+                    android:divider="@color/white"
+                    android:visibility="gone" />
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/frag4Container2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/tvFrag4Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="Thank you!"
+            android:textColor="#fff"
+            android:textSize="35sp"
+            android:visibility="gone"
+            app:fontFamily="roboto"
+            app:textWeight="medium"
+            app:typeface="roboto_condensed_light" />
+
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/tvFrag4Subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="@string/stencil_thanks"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            android:visibility="gone"
+            app:fontFamily="roboto"
+            app:textWeight="medium"
+            app:typeface="roboto_condensed_light" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/colorDivider" />
+
+    </LinearLayout>
 
 </LinearLayout>

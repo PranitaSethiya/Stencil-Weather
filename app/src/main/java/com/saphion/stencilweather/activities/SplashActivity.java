@@ -31,6 +31,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.RotateAnimation;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -190,7 +191,6 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                     case 2:
                         rb3.setChecked(true);
                         setBackgroundColor(mBackground, getResources().getColor(R.color.option8));
-                        ((Fragment1) viewPagerAdapter.getItem(0)).onFragmentUnselected();
                         ((Fragment3) viewPagerAdapter.getItem(2)).onFragmentSelected();
                         ivGetStartedNext.setVisibility(View.VISIBLE);
                         tvGetStartedDone.setVisibility(View.GONE);
@@ -200,10 +200,19 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                         rb4.setChecked(true);
                         setBackgroundColor(mBackground, getResources().getColor(R.color.option10));
                         ((Fragment1) viewPagerAdapter.getItem(0)).onFragmentUnselected();
-                        ((Fragment4) viewPagerAdapter.getItem(3)).onFragmentSelected();
-                        ivGetStartedNext.setVisibility(View.GONE);
-                        tvGetStartedDone.setVisibility(View.VISIBLE);
-                        tvGetStartedSkip.setVisibility(View.GONE);
+
+                        if (WLocation.count(WLocation.class, null, null) > 0) {
+                            ivGetStartedNext.setVisibility(View.GONE);
+                            tvGetStartedDone.setVisibility(View.VISIBLE);
+                            tvGetStartedSkip.setVisibility(View.GONE);
+                            ((Fragment4) viewPagerAdapter.getItem(3)).onFragmentSelected();
+                        } else {
+                            ivGetStartedNext.setVisibility(View.GONE);
+                            tvGetStartedDone.setVisibility(View.GONE);
+                            tvGetStartedSkip.setVisibility(View.GONE);
+                            ((Fragment4) viewPagerAdapter.getItem(3)).onFragmentSelectedLocation();
+
+                        }
                         break;
                 }
 
@@ -214,7 +223,6 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
             }
         });
-
         viewPager.setOffscreenPageLimit(4);
 
     }
@@ -886,6 +894,9 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
         View v;
         View title, subtitle;
+        View locationTitle, locationSubtitle;
+        View container1, container2, card_search;
+        EditText edit_text_search;
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -893,7 +904,13 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
             v = inflater.inflate(R.layout.splash_frag4, null);
             title = v.findViewById(R.id.tvFrag4Title);
+            locationTitle = v.findViewById(R.id.tvFrag4LastBit);
             subtitle = v.findViewById(R.id.tvFrag4Subtitle);
+            locationSubtitle = v.findViewById(R.id.tvFrag4LastBitSubtitle);
+            container1 = v.findViewById(R.id.frag4Container1);
+            container2 = v.findViewById(R.id.frag4Container2);
+            card_search = v.findViewById(R.id.card_search);
+            edit_text_search = (EditText) v.findViewById(R.id.edit_text_search);
 
             setupViews();
             return v;
@@ -903,12 +920,60 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
         private void setupViews() {
             title.setVisibility(View.INVISIBLE);
             subtitle.setVisibility(View.INVISIBLE);
+            locationSubtitle.setVisibility(View.INVISIBLE);
+            locationTitle.setVisibility(View.INVISIBLE);
+            container1.setVisibility(View.INVISIBLE);
+            container2.setVisibility(View.INVISIBLE);
+            card_search.setVisibility(View.INVISIBLE);
+        }
+
+        public void onFragmentSelectedLocation() {
+
+            if (container1.getVisibility() == View.INVISIBLE) {
+
+                container2.setVisibility(View.INVISIBLE);
+                container1.setVisibility(View.VISIBLE);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        locationTitle.setAlpha(0);
+                        locationTitle.setVisibility(View.VISIBLE);
+                    }
+                }, 60);
+                YoYo.with(Techniques.SlideInLeft).interpolate(new OvershootInterpolator()).duration(800).delay(50).playOn(locationTitle);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        locationSubtitle.setAlpha(0);
+                        locationSubtitle.setVisibility(View.VISIBLE);
+                    }
+                }, 60);
+                YoYo.with(Techniques.SlideInLeft).interpolate(new OvershootInterpolator()).duration(800).delay(200).playOn(locationSubtitle);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        card_search.setAlpha(0);
+                        card_search.setVisibility(View.VISIBLE);
+                    }
+                }, 510);
+                YoYo.with(Techniques.FlipInX).interpolate(new OvershootInterpolator()).duration(800).delay(400).playOn(card_search);
+
+
+
+
+            }
+
         }
 
 
         public void onFragmentSelected() {
 
-            if (title.getVisibility() == View.INVISIBLE) {
+            if (container2.getVisibility() == View.INVISIBLE) {
+
+                container1.setVisibility(View.INVISIBLE);
+                container2.setVisibility(View.VISIBLE);
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
