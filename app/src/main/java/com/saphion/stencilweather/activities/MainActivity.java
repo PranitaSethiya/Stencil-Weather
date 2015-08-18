@@ -269,20 +269,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
-
-            }
-
-            @Override
-            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-                if(listView.getAdapter() != null)
-                    if(!listView.getAdapter().isEmpty())
-                        Utils.hideKeyboard(edit_text_search, MainActivity.this);
-            }
-        });
-
         InitiateSearch();
         HandleSearch();
         IsAdapterEmpty();
@@ -1138,6 +1124,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 clearSearch.setVisibility(View.VISIBLE);
                 IsAdapterEmpty();
                 listView.setVisibility(View.VISIBLE);
+                Utils.hideKeyboard(edit_text_search, MainActivity.this);
             }
 
         });
@@ -1209,14 +1196,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             if (location.getTimezone().equalsIgnoreCase("MISSING")) {
                 try {
-                    GetLocationInfo gl = new GetLocationInfo();
-                    location.setTimezone(gl.getTimezone(location.getLatitude(), location.getLongitude())
+                    location.setTimezone(GetLocationInfo.getTimezone(location.getLatitude(), location.getLongitude())
                             .getDisplayName());
-                } catch (ClientProtocolException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

@@ -1,5 +1,7 @@
 package com.saphion.stencilweather.activities;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -18,7 +20,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,12 +35,18 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.RotateAnimation;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -48,7 +58,10 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.saphion.stencilweather.R;
 import com.saphion.stencilweather.modules.WLocation;
+import com.saphion.stencilweather.tasks.GetLocationInfo;
+import com.saphion.stencilweather.tasks.SuggestTask;
 import com.saphion.stencilweather.utilities.Constant;
+import com.saphion.stencilweather.utilities.InitiateSearch;
 import com.saphion.stencilweather.utilities.LocationUtils;
 import com.saphion.stencilweather.utilities.PreferenceUtil;
 import com.saphion.stencilweather.utilities.SplashView;
@@ -56,6 +69,11 @@ import com.saphion.stencilweather.utilities.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.RejectedExecutionException;
 
 /**
  * Created by sachin on 5/8/15.
@@ -195,6 +213,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                         ivGetStartedNext.setVisibility(View.VISIBLE);
                         tvGetStartedDone.setVisibility(View.GONE);
                         tvGetStartedSkip.setVisibility(View.VISIBLE);
+                        ((Fragment4) viewPagerAdapter.getItem(3)).hideKeyboard();
                         break;
                     case 3:
                         rb4.setChecked(true);
@@ -211,7 +230,6 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                             tvGetStartedDone.setVisibility(View.GONE);
                             tvGetStartedSkip.setVisibility(View.GONE);
                             ((Fragment4) viewPagerAdapter.getItem(3)).onFragmentSelectedLocation();
-
                         }
                         break;
                 }
@@ -884,6 +902,10 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     public static class Fragment4 extends Fragment {
 
 
+        private MyAdapter suggestionAdapter;
+        private ListView listView;
+        private View pb;
+
         public static Fragment4 newInstance() {
             return new Fragment4();
         }
@@ -897,6 +919,12 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
         View locationTitle, locationSubtitle;
         View container1, container2, card_search;
         EditText edit_text_search;
+        ImageView clearSearch;
+        View line_divider;
+        private Handler guiThread;
+        private ExecutorService suggestionThread;
+        private Runnable updateTask;
+        private Future<?> suggestionPending;
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -911,9 +939,220 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
             container2 = v.findViewById(R.id.frag4Container2);
             card_search = v.findViewById(R.id.card_search);
             edit_text_search = (EditText) v.findViewById(R.id.edit_text_search);
+            listView = (ListView) v.findViewById(R.id.listViewFrag4);
+            clearSearch = (ImageView)v.findViewById(R.id.clearSearch);
+            pb = v.findViewById(R.id.progressSearch);
+            line_divider = v.findViewById(R.id.line_divider);
+
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    if (!(parent.getItemAtPosition(position).toString()
+                            .equalsIgnoreCase("Loading...")
+                            || parent.getItemAtPosition(position).toString()
+                            .equalsIgnoreCase("No suggestions") || parent
+                            .getItemAtPosition(position)
+                            .toString()
+                            .equalsIgnoreCase(
+                                    "Unable To Connect to Internet, Please Check Your Network Settings."))) {
+
+
+                        new AsyncTask<WLocation, Integer, Void>() {
+
+                            @Override
+                            protected Void doInBackground(WLocation... objects) {
+                                WLocation location = objects[0];
+                                if (location.getTimezone().equalsIgnoreCase("MISSING")) {
+                                    try {
+                                        location.setTimezone(GetLocationInfo.getTimezone(location.getLatitude(), location.getLongitude())
+                                                .getDisplayName());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                location.checkAndSave();
+                                return null;
+                            }
+
+                        }.execute((WLocation) parent.getItemAtPosition(position));
+
+//                        new GetLL(getActivity(), (WLocation) parent.getItemAtPosition(position)).execute();
+                        ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(edit_text_search.getWindowToken(), 0);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                onFragmentSelected();
+                            }
+                        }, 200);
+
+                    }
+                }
+            });
+
+            edit_text_search.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (edit_text_search.getText().toString().length() == 0) {
+                        clearSearch.setVisibility(View.GONE);
+                        suggestionAdapter.clear();
+                        IsAdapterEmpty();
+                        listView.setVisibility(View.GONE);
+                        pb.setVisibility(View.GONE);
+
+                        if (suggestionPending != null)
+                            suggestionPending.cancel(true);
+
+                    } else {
+                        clearSearch.setImageResource(R.drawable.ic_close);
+                        IsAdapterEmpty();
+
+                        pb.setVisibility(View.VISIBLE);
+                        clearSearch.setVisibility(View.GONE);
+                        suggestionAdapter.clear();
+                        queueUpdate(1000 /* milliseconds */);
+
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+            clearSearch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (edit_text_search.getText().toString().length() > 0) {
+                        edit_text_search.setText("");
+                        listView.setVisibility(View.GONE);
+                        suggestionAdapter.clear();
+                        ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                        IsAdapterEmpty();
+                    }
+                }
+            });
 
             setupViews();
+            initThreading();
+            setAdapters();
             return v;
+
+        }
+
+        /**
+         * Initialize multi-threading. There are two threads: 1) The main graphical
+         * user interface thread already started by Android, and 2) The suggest
+         * thread, which we start using an executor.
+         */
+        private void initThreading() {
+            guiThread = new Handler();
+            suggestionThread = Executors.newSingleThreadExecutor();
+
+            // This task gets suggestions and updates the screen
+            updateTask = new Runnable() {
+                public void run() {
+                    // Get text to suggest
+                    final String original = edit_text_search.getText().toString().trim();
+
+                    // Cancel previous suggestion if there was one
+                    if (suggestionPending != null)
+                        suggestionPending.cancel(true);
+
+                    // Check to make sure there is text to work onSuggest
+                    if (original.length() != 0) {
+                        // Let user know we're doing something
+                        // setText(R.string.working);
+
+                        // Begin suggestion now but don't wait for it
+                        try {
+                            Runnable suggestTask = new Runnable(){
+
+                                @Override
+                                public void run() {
+                                    setSuggestions(SuggestTask.doSuggest(original));
+                                }
+                            };
+                            suggestionPending = suggestionThread.submit(suggestTask);
+                        } catch (RejectedExecutionException e) {
+                            Log.d("Suggest", "5th Exception");
+                            // Unable to start new task
+//                        setText(R.string.error);
+                            Toast.makeText(getActivity(), "Unable to process request, please try again.", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        pb.setVisibility(View.GONE);
+                        clearSearch.setVisibility(View.VISIBLE);
+                    }
+                }
+            };
+        }
+
+        /**
+         * Request an update to start after a short delay
+         */
+        private void queueUpdate(long delayMillis) {
+            Log.d("Stencil", "inside queue");
+            // Cancel previous update if it hasn't started yet
+            guiThread.removeCallbacks(updateTask);
+            // Start an update if nothing happens after a few milliseconds
+            guiThread.postDelayed(updateTask, delayMillis);
+        }
+
+
+        /**
+         * Display a list
+         */
+        private void setList(List<WLocation> list) {
+            suggestionAdapter.clear();
+            listView.setVisibility(View.VISIBLE);
+//             suggestionAdapter.addAll(list); // Could use if API >= 11
+            for (WLocation item : list) {
+                suggestionAdapter.add(item);
+            }
+        }
+
+        /**
+         * Modify list on the screen (called from another thread)
+         */
+        public void setSuggestions(List<WLocation> suggestions) {
+
+            guiSetList(listView, suggestions);
+
+        }
+
+        /**
+         * All changes to the GUI must be done in the GUI thread
+         */
+        private void guiSetList(final ListView view, final List<WLocation> list) {
+
+            guiThread.post(new Runnable() {
+                public void run() {
+                    setList(list);
+                    pb.setVisibility(View.GONE);
+                    clearSearch.setVisibility(View.VISIBLE);
+                    IsAdapterEmpty();
+                    listView.setVisibility(View.VISIBLE);
+                    Utils.hideKeyboard(edit_text_search, getActivity());
+                }
+
+            });
+
+        }
+
+        private void IsAdapterEmpty() {
+            if (suggestionAdapter.getCount() == 0) {
+                line_divider.setVisibility(View.GONE);
+            } else {
+                line_divider.setVisibility(View.VISIBLE);
+            }
 
         }
 
@@ -960,10 +1199,107 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                 }, 510);
                 YoYo.with(Techniques.FlipInX).interpolate(new OvershootInterpolator()).duration(800).delay(400).playOn(card_search);
 
-
-
-
             }
+
+        }
+
+        public void hideKeyboard() {
+            Utils.hideKeyboard(edit_text_search, getActivity());
+        }
+
+        public class MyAdapter extends BaseAdapter {
+            private Context context;
+            private List<WLocation> objects;
+
+            public MyAdapter(Context context,
+                             List<WLocation> objects) {
+                this.context = context;
+                this.objects = objects;
+            }
+
+            @Override
+            public int getCount() {
+                return objects.size();
+            }
+
+            @Override
+            public Object getItem(int i) {
+                return objects.get(i);
+            }
+
+            @Override
+            public long getItemId(int i) {
+                return i;
+            }
+
+            public void add(WLocation item) {
+                objects.add(item);
+                notifyDataSetChanged();
+            }
+
+            public void clear() {
+                objects.clear();
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+
+                ViewHolder viewHolder;
+
+                if (convertView == null) {
+
+                    // inflate the layout
+                    LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+                    convertView = inflater.inflate(R.layout.location_action_item, parent, false);
+
+                    // well set up the ViewHolder
+                    viewHolder = new ViewHolder();
+                    viewHolder.textView = (TextView) convertView.findViewById(R.id.tvLocationName);
+
+                    // store the holder with the view.
+                    convertView.setTag(viewHolder);
+
+                } else {
+                    // we've just avoided calling findViewById() on resource everytime
+                    // just use the viewHolder
+                    viewHolder = (ViewHolder) convertView.getTag();
+                }
+
+                String name = objects.get(position).getName();
+                String splitWord = edit_text_search.getText().toString();
+
+                Log.d("Stencil Weather", "Split Word: " + splitWord);
+                Log.d("Stencil Weather", "Complete Word: " + name);
+
+                try {
+                    if(!splitWord.isEmpty())
+                        viewHolder.textView.setText(Html.fromHtml("<b>" + (splitWord.charAt(0) + "").toUpperCase(Locale.getDefault()) + splitWord.substring(1, splitWord.length()) + "</b>"
+                                + name.substring(name.indexOf(splitWord) + splitWord.length())));
+                    else
+                        viewHolder.textView.setText(name);
+                }catch(Exception ex){
+                    viewHolder.textView.setText(name);
+                    ex.printStackTrace();
+                    Log.e("Stencil Error", ex.getLocalizedMessage());
+                }
+
+                return convertView;
+            }
+
+            class ViewHolder {
+                public TextView textView;
+            }
+        }
+
+        /**
+         * Set up suggestionAdapter for list view.
+         */
+        private void setAdapters() {
+            List<WLocation> items = new ArrayList<WLocation>();
+            suggestionAdapter = new MyAdapter(getActivity(), items);
+
+            listView.setAdapter(suggestionAdapter);
 
         }
 
@@ -972,7 +1308,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
             if (container2.getVisibility() == View.INVISIBLE) {
 
-                container1.setVisibility(View.INVISIBLE);
+                container1.setVisibility(View.GONE);
                 container2.setVisibility(View.VISIBLE);
 
                 new Handler().postDelayed(new Runnable() {
@@ -992,6 +1328,8 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                 }, 60);
                 YoYo.with(Techniques.SlideInLeft).interpolate(new OvershootInterpolator()).duration(800).delay(200).playOn(subtitle);
             }
+
+            ((SplashActivity)getActivity()).tvGetStartedDone.setVisibility(View.VISIBLE);
 
         }
     }

@@ -59,7 +59,8 @@
                 android:value="com.saphion.stencilweather.activities.MainActivity" />
         </activity>
 
-        <activity android:name=".activities.SplashActivity"/>
+        <activity android:name=".activities.SplashActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
 
         <activity android:name=".activities.MapActivity"
             android:theme="@style/MyNoActionBarShadowTheme"/>
