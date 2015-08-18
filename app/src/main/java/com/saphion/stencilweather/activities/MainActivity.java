@@ -59,7 +59,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -87,10 +86,8 @@ import com.saphion.stencilweather.modules.WLocation;
 import com.saphion.stencilweather.tasks.GetLocationInfo;
 import com.saphion.stencilweather.tasks.SuggestTask;
 import com.saphion.stencilweather.utilities.InitiateSearch;
+import com.saphion.stencilweather.utilities.PreferenceUtil;
 import com.saphion.stencilweather.utilities.Utils;
-
-import org.apache.http.client.ClientProtocolException;
-import org.json.JSONException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -122,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(Utils.isFirstStart(MainActivity.this)){
+        if (Utils.isFirstStart(MainActivity.this)) {
             startActivity(new Intent(MainActivity.this, SplashActivity.class));
             finish();
             return;
@@ -186,25 +183,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Clear Cache
         new DeleteCache().execute();
 
-        if(Utils.isLocationEnabled(MainActivity.this))
-        buildGoogleApiClient();
-        else{
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Alert");
-            builder.setMessage("Location Services are not enabled.\n<i>Location Services help us to determine your current location.</i>\n\nEnable them now?");
-            builder.setPositiveButton("SURE", new DialogInterface.OnClickListener() {
+        if (Utils.isLocationEnabled(MainActivity.this))
+            buildGoogleApiClient();
+        else {
+            if (PreferenceUtil.getShowDialog(MainActivity.this)) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Alert");
+                builder.setMessage(Html.fromHtml("Location Services are not enabled.<br/><br/><i>Location Services help us determine your current location.</i><br/><br/>Enable them now?"));
+                builder.setPositiveButton("SURE", new DialogInterface.OnClickListener() {
 
-                public void onClick(DialogInterface dialog, int which) {
-                    startActivity(new Intent(
-                            android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(
+                                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        fromDialog = true;
+                    }
+                });
+                builder.setNegativeButton("CANCEL", null);
+                builder.setNeutralButton("NEVER", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        PreferenceUtil.setShowDialog(MainActivity.this, true);
+                    }
+                });
 
-                }
-            });
-            builder.setNegativeButton("CANCEL", null);
-
-            builder.show();
+                builder.show();
+            }
         }
 
+    }
+
+    boolean fromDialog = false;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        FIXME
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -213,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-        if(mGoogleApiClient!= null){
+        if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
     }
@@ -619,7 +632,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }.execute();
 
 
-
                         mShareDialog = mBuilder.create();
                         mShareDialog.getWindow().setWindowAnimations(R.style.DialogAnimation);
                         mShareDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -634,12 +646,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     View shareContainer;
     AlertDialog mShareDialog;
+
     public void share(String packageName, String className) {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
 
         String name = drawerItems.get(navSpinner.getSelectedItemPosition()).getName();
-        if(name.contains(",")){
+        if (name.contains(",")) {
             name = name.split(",")[0];
         }
 
@@ -650,7 +663,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Bitmap icon = shareContainer.getDrawingCache();
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             icon.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            File f = new File(getExternalCacheDir() + File.separator + "shared" + File.separator + name + "_weather_" + System.currentTimeMillis()  + ".jpg");
+            File f = new File(getExternalCacheDir() + File.separator + "shared" + File.separator + name + "_weather_" + System.currentTimeMillis() + ".jpg");
             try {
                 f.getParentFile().mkdirs();
                 f.createNewFile();
@@ -672,7 +685,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             shareContainer = null;
             mShareDialog.dismiss();
             mShareDialog = null;
-        } catch (Exception ignored){}
+        } catch (Exception ignored) {
+        }
 
     }
 
@@ -699,7 +713,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    public class DeleteCache extends AsyncTask<Void, Void, Void>{
+    public class DeleteCache extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... voids) {
@@ -779,12 +793,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.d("Stencil Weather", "Complete Word: " + name);
 
             try {
-                if(!splitWord.isEmpty())
-                viewHolder.textView.setText(Html.fromHtml("<b>" + (splitWord.charAt(0) + "").toUpperCase(Locale.getDefault()) + splitWord.substring(1, splitWord.length()) + "</b>"
-                        + name.substring(name.indexOf(splitWord) + splitWord.length())));
+                if (!splitWord.isEmpty())
+                    viewHolder.textView.setText(Html.fromHtml("<b>" + (splitWord.charAt(0) + "").toUpperCase(Locale.getDefault()) + splitWord.substring(1, splitWord.length()) + "</b>"
+                            + name.substring(name.indexOf(splitWord) + splitWord.length())));
                 else
                     viewHolder.textView.setText(name);
-            }catch(Exception ex){
+            } catch (Exception ex) {
                 viewHolder.textView.setText(name);
                 ex.printStackTrace();
                 Log.e("Stencil Error", ex.getLocalizedMessage());
@@ -920,7 +934,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     boolean hidden = true;
 
-    public void bounceScaleAnimation(View mView, int delay){
+    public void bounceScaleAnimation(View mView, int delay) {
 
 //        YoYo.with(Techniques.ZoomIn).interpolate(new BounceInterpolator()).duration(180).delay(delay).playOn(mView);
         Animation pulse = AnimationUtils.loadAnimation(this, R.anim.pulse);
@@ -942,11 +956,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             android.animation.Animator animator = android.view.ViewAnimationUtils.createCircularReveal(actionsContainer, cx, cy, 0, finalRadius);
             animator.setInterpolator(new AccelerateDecelerateInterpolator());
-            animator.setDuration(animate?300:1);
+            animator.setDuration(animate ? 300 : 1);
 
             android.animation.Animator animator_reverse = android.view.ViewAnimationUtils.createCircularReveal(actionsContainer, cx, cy, finalRadius, 0);
             animator_reverse.setInterpolator(new AccelerateDecelerateInterpolator());
-            animator_reverse.setDuration(animate?300:1);
+            animator_reverse.setDuration(animate ? 300 : 1);
 
             if (hidden) {
                 actionsContainer.setVisibility(View.VISIBLE);
@@ -986,7 +1000,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             SupportAnimator animator =
                     ViewAnimationUtils.createCircularReveal(actionsContainer, cx, cy, 0, finalRadius);
             animator.setInterpolator(new AccelerateDecelerateInterpolator());
-            animator.setDuration(animate?300:1);
+            animator.setDuration(animate ? 300 : 1);
 
             SupportAnimator animator_reverse = animator.reverse();
 //            animator.start();
@@ -1161,7 +1175,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (card_search.getVisibility() == View.VISIBLE) {
             InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search);
             hideDark();
-        } else if (!hidden){
+        } else if (!hidden) {
             initiateActions(true);
         } else
             super.onBackPressed();

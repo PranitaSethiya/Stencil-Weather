@@ -3,6 +3,8 @@ package com.saphion.stencilweather.utilities;
 import android.content.Context;
 import android.preference.PreferenceManager;
 
+import com.saphion.stencilweather.activities.MainActivity;
+
 /**
  * Created by sachin on 15/8/15.
  */
@@ -69,4 +71,11 @@ public class PreferenceUtil {
         return PreferenceManager.getDefaultSharedPreferences(mContext).getInt("background_color", 0);
     }
 
+    public static boolean getShowDialog(Context mContext) {
+        return PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("show_dialog", true);
+    }
+
+    public static void setShowDialog(Context mContext, boolean value) {
+        PreferenceManager.getDefaultSharedPreferences(mContext).edit().putBoolean("show_dialog", value).commit();
+    }
 }

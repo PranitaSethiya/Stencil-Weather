@@ -36,12 +36,12 @@ import android.view.animation.BounceInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -61,7 +61,6 @@ import com.saphion.stencilweather.modules.WLocation;
 import com.saphion.stencilweather.tasks.GetLocationInfo;
 import com.saphion.stencilweather.tasks.SuggestTask;
 import com.saphion.stencilweather.utilities.Constant;
-import com.saphion.stencilweather.utilities.InitiateSearch;
 import com.saphion.stencilweather.utilities.LocationUtils;
 import com.saphion.stencilweather.utilities.PreferenceUtil;
 import com.saphion.stencilweather.utilities.SplashView;
@@ -70,6 +69,7 @@ import com.saphion.stencilweather.utilities.Utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -147,7 +147,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                 builder.setCancelable(false);
                 builder.show();
             } else {
-                dialogHandler.postDelayed(this, 1000);
+                dialogHandler.postDelayed(this, 500);
             }
         }
     };
@@ -198,7 +198,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                         break;
                     case 1:
                         rb2.setChecked(true);
-                        setBackgroundColor(mBackground, getResources().getColor(R.color.option2));
+                        setBackgroundColor(mBackground, getResources().getColor(R.color.option2), 350);
                         ((Fragment1) viewPagerAdapter.getItem(0)).onFragmentUnselected();
                         ((Fragment2) viewPagerAdapter.getItem(1)).onFragmentSelected();
 
@@ -208,7 +208,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                         break;
                     case 2:
                         rb3.setChecked(true);
-                        setBackgroundColor(mBackground, getResources().getColor(R.color.option8));
+                        setBackgroundColor(mBackground, getResources().getColor(R.color.option8), 350);
                         ((Fragment3) viewPagerAdapter.getItem(2)).onFragmentSelected();
                         ivGetStartedNext.setVisibility(View.VISIBLE);
                         tvGetStartedDone.setVisibility(View.GONE);
@@ -217,20 +217,22 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                         break;
                     case 3:
                         rb4.setChecked(true);
-                        setBackgroundColor(mBackground, getResources().getColor(R.color.option10));
+                        setBackgroundColor(mBackground, getResources().getColor(R.color.option10), 350);
                         ((Fragment1) viewPagerAdapter.getItem(0)).onFragmentUnselected();
 
-                        if (WLocation.count(WLocation.class, null, null) > 0) {
+                        if (adding) {
                             ivGetStartedNext.setVisibility(View.GONE);
                             tvGetStartedDone.setVisibility(View.VISIBLE);
                             tvGetStartedSkip.setVisibility(View.GONE);
                             ((Fragment4) viewPagerAdapter.getItem(3)).onFragmentSelected();
-                        } else {
+                        } else{
                             ivGetStartedNext.setVisibility(View.GONE);
                             tvGetStartedDone.setVisibility(View.GONE);
                             tvGetStartedSkip.setVisibility(View.GONE);
                             ((Fragment4) viewPagerAdapter.getItem(3)).onFragmentSelectedLocation();
                         }
+
+
                         break;
                 }
 
@@ -289,6 +291,8 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
         }
     }
 
+    boolean adding = false;
+
     @Override
     public void onConnected(Bundle bundle) {
         Log.d("Stencil", "OnConnected");
@@ -300,6 +304,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
                 @Override
                 protected WLocation doInBackground(Location... locations) {
+                    adding = true;
                     WLocation location = LocationUtils.getLocationFromLatLng(locations[0].getLatitude(), locations[0].getLongitude());
                     if (location != null) {
                         location.setIsMyLocation(true);
@@ -311,6 +316,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                 @Override
                 protected void onPostExecute(WLocation wLocation) {
                     super.onPostExecute(wLocation);
+                    adding = false;
 
                 }
             }.execute(mLastLocation);
@@ -328,7 +334,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     }
 
 
-    public void setBackgroundColor(final View v, int color) {
+    public void setBackgroundColor(final View v, int color, int duration) {
         Integer colorFrom = Color.TRANSPARENT;
         Drawable background = v.getBackground();
         if (background instanceof ColorDrawable)
@@ -343,7 +349,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
             }
 
         });
-        colorAnimation.setDuration(350);
+        colorAnimation.setDuration(duration);
         colorAnimation.start();
     }
 
@@ -356,7 +362,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                 (findViewById(R.id.rgContainer)).setVisibility(View.VISIBLE);
             }
         }, 10);
-        YoYo.with(Techniques.FadeIn).interpolate(new OvershootInterpolator()).duration(500).playOn(findViewById(R.id.rgContainer));
+        YoYo.with(Techniques.FadeIn).interpolate(new OvershootInterpolator()).duration(250).playOn(findViewById(R.id.rgContainer));
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -365,7 +371,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                 tvGetStartedSkip.setVisibility(View.VISIBLE);
             }
         }, 10);
-        YoYo.with(Techniques.FadeIn).interpolate(new OvershootInterpolator()).duration(500).playOn(tvGetStartedSkip);
+        YoYo.with(Techniques.FadeIn).interpolate(new OvershootInterpolator()).duration(250).playOn(tvGetStartedSkip);
 
         ivGetStartedNext.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -386,10 +392,66 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
         tvGetStartedDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final Handler locationHandler = new Handler();
+                final Handler extraTimeHandler = new Handler();
+
+                new AsyncTask<Void, Void, Long>() {
+
+                    Runnable extraRunnable;
+
+                    @Override
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+                        setContentView(R.layout.progress_layout);
+                        final LinearLayout rl = (LinearLayout) findViewById(R.id.containerSplashLoading);
+
+                        ImageView iv = (ImageView) findViewById(R.id.imageViewSplashLoader);
+                        iv.setImageBitmap(Utils.loader(SplashActivity.this));
+                        iv.startAnimation(Utils.createRotateAnimation());
+
+                        extraRunnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                int color = getResources().getColor(Constant.BACKGROUND_COLORS[new Random().nextInt(Constant.BACKGROUND_COLORS.length)]);
+                                setBackgroundColor(rl, color, 1300);
+                                extraTimeHandler.postDelayed(this, 1300);
+                            }
+                        };
+
+                        extraTimeHandler.post(extraRunnable);
+                    }
+
+                    @Override
+                    protected Long doInBackground(Void... voids) {
+                        return (Long)WLocation.count(WLocation.class, null, null);
+                    }
+
+                    @Override
+                    protected void onPostExecute(Long integer) {
+                        super.onPostExecute(integer);
+                        if (integer > 0) {
+                            startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                            finish();
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        } else {
+                            locationHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (WLocation.count(WLocation.class, null, null) > 0) {
+                                        startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                                        finish();
+                                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                                        locationHandler.removeCallbacks(this);
+                                        extraTimeHandler.removeCallbacks(extraRunnable);
+                                    } else {
+                                        locationHandler.postDelayed(this, 500);
+                                    }
+                                }
+                            }, 500);
+                        }
+                    }
+                }.execute();
                 Utils.incAppCount(SplashActivity.this);
-                startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                finish();
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
         });
 
@@ -760,11 +822,11 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
         }
 
 
-        public void showRecycler(boolean expand, final boolean animate){
-            if(v != null){
-                if(expand) {
-                    ObjectAnimator objectAnimator= ObjectAnimator.ofFloat(rgContainer, "translationY", Utils.dpToPx(30, getActivity()), 0);
-                    objectAnimator.setDuration(animate?500:1);
+        public void showRecycler(boolean expand, final boolean animate) {
+            if (v != null) {
+                if (expand) {
+                    ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(rgContainer, "translationY", Utils.dpToPx(30, getActivity()), 0);
+                    objectAnimator.setDuration(animate ? 500 : 1);
                     objectAnimator.start();
 
                     new Handler().postDelayed(new Runnable() {
@@ -779,8 +841,8 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                             .playOn(recyclerView);
 
                 } else {
-                    ObjectAnimator objectAnimator= ObjectAnimator.ofFloat(rgContainer, "translationY", 0, Utils.dpToPx(30, getActivity()));
-                    objectAnimator.setDuration(animate?500:1);
+                    ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(rgContainer, "translationY", 0, Utils.dpToPx(30, getActivity()));
+                    objectAnimator.setDuration(animate ? 500 : 1);
                     objectAnimator.setStartDelay(200);
                     objectAnimator.start();
 
@@ -792,7 +854,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                         }
                     }, 510);
                     YoYo.with(Techniques.SlideOutRight)
-                            .duration(animate?500:1).interpolate(new BounceInterpolator())
+                            .duration(animate ? 500 : 1).interpolate(new BounceInterpolator())
                             .playOn(recyclerView);
                 }
             }
@@ -822,7 +884,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                 YoYo.with(Techniques.SlideInLeft).interpolate(new OvershootInterpolator()).duration(800).delay(200).playOn(subtitle);
 
                 int backgroundType = PreferenceUtil.getBackgroundType(getActivity());
-                if(backgroundType == 0) {
+                if (backgroundType == 0) {
                     automatic.setChecked(true);
                     recyclerView.setVisibility(View.INVISIBLE);
                 } else {
@@ -831,8 +893,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
                 if (backgroundType == 1) {
                     showRecycler(true, true);
-                }
-                else {
+                } else {
                     showRecycler(false, true);
                 }
 
@@ -940,7 +1001,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
             card_search = v.findViewById(R.id.card_search);
             edit_text_search = (EditText) v.findViewById(R.id.edit_text_search);
             listView = (ListView) v.findViewById(R.id.listViewFrag4);
-            clearSearch = (ImageView)v.findViewById(R.id.clearSearch);
+            clearSearch = (ImageView) v.findViewById(R.id.clearSearch);
             pb = v.findViewById(R.id.progressSearch);
             line_divider = v.findViewById(R.id.line_divider);
 
@@ -1073,7 +1134,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
 
                         // Begin suggestion now but don't wait for it
                         try {
-                            Runnable suggestTask = new Runnable(){
+                            Runnable suggestTask = new Runnable() {
 
                                 @Override
                                 public void run() {
@@ -1273,12 +1334,12 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                 Log.d("Stencil Weather", "Complete Word: " + name);
 
                 try {
-                    if(!splitWord.isEmpty())
+                    if (!splitWord.isEmpty())
                         viewHolder.textView.setText(Html.fromHtml("<b>" + (splitWord.charAt(0) + "").toUpperCase(Locale.getDefault()) + splitWord.substring(1, splitWord.length()) + "</b>"
                                 + name.substring(name.indexOf(splitWord) + splitWord.length())));
                     else
                         viewHolder.textView.setText(name);
-                }catch(Exception ex){
+                } catch (Exception ex) {
                     viewHolder.textView.setText(name);
                     ex.printStackTrace();
                     Log.e("Stencil Error", ex.getLocalizedMessage());
@@ -1329,7 +1390,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                 YoYo.with(Techniques.SlideInLeft).interpolate(new OvershootInterpolator()).duration(800).delay(200).playOn(subtitle);
             }
 
-            ((SplashActivity)getActivity()).tvGetStartedDone.setVisibility(View.VISIBLE);
+            ((SplashActivity) getActivity()).tvGetStartedDone.setVisibility(View.VISIBLE);
 
         }
     }

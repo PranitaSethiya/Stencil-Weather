@@ -31,6 +31,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.RotateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -262,7 +265,7 @@ public class Utils {
     }
 
 
-    public static View getProgressView(Activity activity, String msg) {
+    public static View getProgressView(Activity activity, String msg, int color) {
         final View view = LayoutInflater.from(activity).inflate(
                 R.layout.progress_dialog, null);
         View img1 = view.findViewById(R.id.pd_circle1);
@@ -277,7 +280,22 @@ public class Utils {
         setListeners(img3, anim3, anim1, ANIMATION_DURATION);
         anim1.start();
         ((TextView) view.findViewById(R.id.tvMessage)).setText(Html.fromHtml(msg));
+        ((TextView) view.findViewById(R.id.tvMessage)).setTextColor(color);
         return view;
+    }
+
+    public static Animation createRotateAnimation() {
+        Animation animation = new RotateAnimation(-5, 355,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                0.5f);
+        animation.setStartOffset(0);
+        animation.setDuration(1300);
+        animation.setRepeatCount(Animation.INFINITE);
+        animation.setRepeatMode(Animation.RESTART);
+        animation.setInterpolator(new DecelerateInterpolator());
+        animation.setFillAfter(true);
+
+        return animation;
     }
 
     public static int dpToPx(float i, Context mContext) {

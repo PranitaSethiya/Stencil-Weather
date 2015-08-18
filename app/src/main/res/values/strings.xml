@@ -68,6 +68,7 @@
     <string name="done">DONE</string>
     <string name="everybody_loves_colors">Everybody loves colors</string>
     <string name="choose_background_type">Choose background type</string>
+    <string name="progress_splash" formatter="false"><b>Hang on!!</b>\n<br/>We are getting ready for you.</string>
 
 
 </resources>
