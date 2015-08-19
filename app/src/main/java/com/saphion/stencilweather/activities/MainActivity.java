@@ -57,6 +57,7 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -69,6 +70,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.common.ConnectionResult;
@@ -88,6 +90,7 @@ import com.saphion.stencilweather.tasks.SuggestTask;
 import com.saphion.stencilweather.utilities.InitiateSearch;
 import com.saphion.stencilweather.utilities.PreferenceUtil;
 import com.saphion.stencilweather.utilities.Utils;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -114,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RecyclerViewAdapter recyclerAdapter;
     SwipeRefreshLayout swipeRefreshLayout;
     private GoogleApiClient mGoogleApiClient;
+    private MaterialMenuDrawable materialMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,11 +135,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        toolbar.setTitle("Stencil Weather");
-        toolbar.setNavigationIcon(R.drawable.ic_menu);
+//        toolbar.setNavigationIcon(R.drawable.ic_menu);
+
+        materialMenu = new MaterialMenuDrawable(this, Color.WHITE, MaterialMenuDrawable.Stroke.THIN);
+        materialMenu.setIconState(MaterialMenuDrawable.IconState.BURGER);
+        toolbar.setNavigationIcon(materialMenu);
+
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(materialMenu.getIconState() == MaterialMenuDrawable.IconState.BURGER)
                 mDrawerLayout.openDrawer(GravityCompat.START);
+                else {
+                    closeGraphDrawer();
+                }
             }
         });
 
@@ -212,6 +225,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    private void closeGraphDrawer() {
+        //TODO graph
+        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        materialMenu.animateIconState(MaterialMenuDrawable.IconState.BURGER);
+        toolbar.getMenu().clear();
+
+        toolbar.inflateMenu(R.menu.menu_add);
+        toolbar.setTitle("");
+        actionBarContent(true);
+    }
+
     boolean fromDialog = false;
 
     @Override
@@ -239,6 +263,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     CardView card_search;
     View pb;
     View actionsContainer;
+    SlidingUpPanelLayout slidingLayout;
 
     private void initialiseThings() {
 
@@ -281,6 +306,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }, 3000);
             }
         });
+
+        //sliding pane
+        slidingLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        slidingLayout.setCoveredFadeColor(Color.TRANSPARENT);
+        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        slidingLayout.setTouchEnabled(false);
 
         InitiateSearch();
         HandleSearch();
@@ -362,7 +393,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (card_search.getVisibility() == View.VISIBLE) {
-                    InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search);
+                    InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, materialMenu);
                     hideDark();
 
                 }
@@ -561,7 +592,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
                 switch (view.getId()) {
                     case R.id.fab_graph:
-
+                        slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                        materialMenu.animateIconState(MaterialMenuDrawable.IconState.X);
+                        toolbar.getMenu().clear();
+                        actionBarContent(false);
+                        toolbar.setTitle(navAdapter.getItem(navSpinner.getSelectedItemPosition()));
                         break;
                     case R.id.fab_map:
                         Intent mapIntent = new Intent(MainActivity.this, MapActivity.class);
@@ -838,7 +873,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch (menuItem) {
                     case R.id.action_search:
                         IsAdapterEmpty();
-                        InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search);
+                        InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, materialMenu);
                         showDark();
                         break;
                     case R.id.action_more:
@@ -867,7 +902,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     new GetLL(getBaseContext(), (WLocation) parent.getItemAtPosition(position)).execute();
 
                     if (card_search.getVisibility() == View.VISIBLE) {
-                        InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search);
+                        InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, materialMenu);
                         hideDark();
                     }
                     listView.setVisibility(View.GONE);
@@ -1150,7 +1185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         image_search_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search);
+                InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, materialMenu);
                 hideDark();
                 edit_text_search.setText("");
                 listView.setVisibility(View.GONE);
@@ -1173,11 +1208,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawers();
         } else if (card_search.getVisibility() == View.VISIBLE) {
-            InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search);
+            InitiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, /*view_search,*/ listView, edit_text_search, materialMenu);
             hideDark();
         } else if (!hidden) {
             initiateActions(true);
-        } else
+        } else if(materialMenu.getIconState() == MaterialMenuDrawable.IconState.X){
+            closeGraphDrawer();
+        }else
             super.onBackPressed();
     }
 

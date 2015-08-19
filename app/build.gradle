@@ -37,4 +37,5 @@ dependencies {
     compile 'com.github.ozodrukh:CircularReveal:1.1.0@aar'
     compile 'com.github.TR4Android:AndroidSlidingUpPanel:3.1.2'
     compile 'com.balysv.materialmenu:material-menu-toolbar:1.5.4'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.1.3'
 }

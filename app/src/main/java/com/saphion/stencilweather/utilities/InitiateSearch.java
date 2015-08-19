@@ -18,6 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.saphion.stencilweather.R;
@@ -28,7 +29,7 @@ import io.codetail.animation.SupportAnimator;
 
 public class InitiateSearch {
 
-    public static void handleToolBar(final Activity activity, final CardView search, final Toolbar toolbarMain, /*final View view,*/ final ListView listView, final EditText editText) {
+    public static void handleToolBar(final Activity activity, final CardView search, final Toolbar toolbarMain, /*final View view,*/ final ListView listView, final EditText editText, final MaterialMenuDrawable materialMenu) {
         final Animation fade_in = AnimationUtils.loadAnimation(activity.getApplicationContext(), android.R.anim.fade_in);
         if (search.getVisibility() == View.VISIBLE) {
             editText.setText("");
@@ -49,7 +50,8 @@ public class InitiateSearch {
                         search.setVisibility(View.GONE);
                         ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search.getWindowToken(), 0);
                         listView.setVisibility(View.GONE);
-                        toolbarMain.setNavigationIcon(R.drawable.ic_menu);
+                        materialMenu.animateIconState(MaterialMenuDrawable.IconState.BURGER);
+                        materialMenu.setVisible(true);
                         ((MainActivity)activity).actionBarContent(true);
                         toolbarMain.getMenu().clear();
                         toolbarMain.inflateMenu(R.menu.menu_add);
@@ -86,7 +88,9 @@ public class InitiateSearch {
                         search.setVisibility(View.GONE);
                         ((InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search.getWindowToken(), 0);
                         listView.setVisibility(View.GONE);
-                        toolbarMain.setNavigationIcon(R.drawable.ic_menu);
+//                        toolbarMain.setNavigationIcon(R.drawable.ic_menu);
+                        materialMenu.animateIconState(MaterialMenuDrawable.IconState.BURGER);
+                        materialMenu.setVisible(true);
                         ((MainActivity)activity).actionBarContent(true);
                         toolbarMain.getMenu().clear();
                         toolbarMain.inflateMenu(R.menu.menu_add);
@@ -144,7 +148,8 @@ public class InitiateSearch {
         } else {
             ((MainActivity)activity).actionBarContent(false);
             toolbarMain.getMenu().clear();
-            toolbarMain.setNavigationIcon(null);
+//            toolbarMain.setNavigationIcon(null);
+            materialMenu.setVisible(false);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 final Animator animator = ViewAnimationUtils.createCircularReveal(search,
                     search.getWidth() - (int) convertDpToPixel(56, activity),
