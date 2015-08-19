@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 builder.setNeutralButton("NEVER", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        PreferenceUtil.setShowDialog(MainActivity.this, true);
+                        PreferenceUtil.setShowDialog(MainActivity.this, false);
                     }
                 });
 

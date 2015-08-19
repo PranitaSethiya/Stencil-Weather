@@ -316,7 +316,8 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
                 @Override
                 protected void onPostExecute(WLocation wLocation) {
                     super.onPostExecute(wLocation);
-                    adding = false;
+                    if(wLocation == null)
+                        adding = false;
 
                 }
             }.execute(mLastLocation);
