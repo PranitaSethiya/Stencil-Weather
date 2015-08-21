@@ -226,7 +226,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void closeGraphDrawer() {
-        //TODO graph
         slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         materialMenu.animateIconState(MaterialMenuDrawable.IconState.BURGER);
         toolbar.getMenu().clear();
