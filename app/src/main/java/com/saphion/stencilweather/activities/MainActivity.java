@@ -32,7 +32,12 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -83,6 +88,8 @@ import com.saphion.stencilweather.R;
 import com.saphion.stencilweather.adapters.RecyclerViewAdapter;
 import com.saphion.stencilweather.adapters.ShareItemViewAdapter;
 import com.saphion.stencilweather.adapters.WeatherCardAdapter;
+import com.saphion.stencilweather.fragments.ForecastFragment;
+import com.saphion.stencilweather.fragments.GraphFragment;
 import com.saphion.stencilweather.fragments.WeatherFragment;
 import com.saphion.stencilweather.modules.WLocation;
 import com.saphion.stencilweather.tasks.GetLocationInfo;
@@ -311,10 +318,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         slidingLayout.setCoveredFadeColor(Color.TRANSPARENT);
         slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         slidingLayout.setTouchEnabled(false);
+        slidingLayout.setShadowHeight(0);
 
         InitiateSearch();
         HandleSearch();
         IsAdapterEmpty();
+
+        initiateGraph();
     }
 
 
@@ -334,6 +344,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onAnimationUpdate(ValueAnimator animator) {
                     findViewById(R.id.appbar).setBackgroundColor((Integer) animator.getAnimatedValue());
+                    findViewById(R.id.appbarGraph).setBackgroundColor((Integer) animator.getAnimatedValue());
                 }
 
             });
@@ -1280,6 +1291,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             super.onPostExecute(result);
+        }
+
+    }
+
+
+    //Graph functions
+    public void initiateGraph(){
+
+        ViewPager graphViewPager = (ViewPager) findViewById(R.id.viewpagerGraph);
+
+        final TabAdapter adapter = new TabAdapter(getSupportFragmentManager());
+        adapter.addFragment(GraphFragment.newInstance(), "Hourly");
+        adapter.addFragment(GraphFragment.newInstance(), "Daily");
+        graphViewPager.setAdapter(adapter);
+
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabsGraph);
+        tabLayout.setupWithViewPager(graphViewPager);
+        graphViewPager.setOffscreenPageLimit(2);
+    }
+
+    class TabAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragments = new ArrayList<>();
+        private final List<String> mFragmentsTitle = new ArrayList<>();
+
+        public TabAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragments.add(fragment);
+            mFragmentsTitle.add(title);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragments.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentsTitle.get(position);
         }
 
     }

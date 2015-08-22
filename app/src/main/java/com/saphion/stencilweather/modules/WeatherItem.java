@@ -1,6 +1,8 @@
 package com.saphion.stencilweather.modules;
 
-public class WeatherItem {
+import com.orm.SugarRecord;
+
+public class WeatherItem extends SugarRecord<WLocation> {
 
 	private String uniqueID;
 	private String name;
@@ -9,9 +11,10 @@ public class WeatherItem {
 	private Integer position;
 	private Integer condID;
 	private String unit;
+	private String timestamp;
 
 	public WeatherItem(String uniqueID, String name, Integer temp, String condition,
-					   Integer position, Integer condID, String unit) {
+                       Integer position, Integer condID, String unit, String timestamp) {
 		this.uniqueID = uniqueID;
 		this.name = name;
 		this.temp = temp;
@@ -19,7 +22,8 @@ public class WeatherItem {
 		this.position = position;
 		this.condID = condID;
 		this.unit = unit;
-	}
+        this.timestamp = timestamp;
+    }
 
 	public WeatherItem(WeatherItem i) {
 		this.name = i.getName();
@@ -29,6 +33,7 @@ public class WeatherItem {
 		this.condID = i.getCondID();
 		this.unit = i.getUnit();
 		this.uniqueID = i.getUniqueID();
+        this.timestamp = i.getTimestamp();
 	}
 
 	public void setName(String name) {
@@ -90,4 +95,25 @@ public class WeatherItem {
 	public void setUniqueID(String uniqueID) {
 		this.uniqueID = uniqueID;
 	}
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    @Override
+    public String toString() {
+        return "[WeatherItem] " +
+                "uniqueID = " + uniqueID +
+        "name = " + name +
+        "temp = " + temp +
+        "condition = " + condition +
+        "position = " + position +
+        "condID = " + condID +
+        "unit = " + unit +
+        "timestamp = " + timestamp;
+    }
 }

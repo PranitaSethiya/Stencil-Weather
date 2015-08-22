@@ -121,10 +121,11 @@ public class ForecastActivity extends AppCompatActivity{
         tabLayout.setupWithViewPager(viewPager);
 
         // Iterate over all tabs and set the custom view
-        int tabColor = getResources().getColor(R.color.colorSecondaryText);
+//        int tabColor = getResources().getColor(R.color.colorSecondaryText);
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
-            tab.setCustomView(adapter.getTabView(i));
+            if(tab != null)
+                tab.setCustomView(adapter.getTabView(i));
         }
 
         adapter.setTabColor(prevSelected, getResources().getColor(R.color.colorPrimaryText));

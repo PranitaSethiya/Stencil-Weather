@@ -9,7 +9,7 @@
     android:gravity="bottom"
     sothree:umanoInitialState="hidden"
     sothree:umanoPanelHeight="0dp"
-    sothree:umanoShadowHeight="4dp"
+    sothree:umanoShadowHeight="0.01dp"
     sothree:umanoCollapsedHeight="1dp">
 
     <LinearLayout
@@ -124,11 +124,17 @@
                 android:id="@+id/tabsGraph"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                app:tabMode="fixed" />
+                app:tabMode="fixed"
+                app:tabTextColor="@color/trans_white"
+                app:tabSelectedTextColor="@color/white" />
 
         </android.support.design.widget.AppBarLayout>
 
-        <include layout="@layout/graph_layout"/>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpagerGraph"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/forecast_frag_viewpager_background" />
     </LinearLayout>
 
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>
