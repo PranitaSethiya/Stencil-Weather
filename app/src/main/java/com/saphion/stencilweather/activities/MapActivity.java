@@ -523,7 +523,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
         for (int index = 0; index < mLocation.size(); index++) {
 
             wi.add(new WeatherItem(mLocation.get(index).getUniqueID(), mLocation.get(index).getName(), temp[k],
-                    conditions[k], index, conds[k], "C", timestamp));
+                    conditions[k], index, conds[k], "C", ""));
             k = (k + 1) % temp.length;
 
         }
@@ -870,7 +870,7 @@ public class MapActivity extends AppCompatActivity implements View.OnClickListen
 
                 WeatherItem mwi = new WeatherItem(location.getUniqueID(), location.getName(), temp[temp.length - 1],
                         conditions[conditions.length - 1], wi.size(),
-                        conds[conds.length - 1], "C", timestamp);
+                        conds[conds.length - 1], "C", "");
                 long result = location.checkAndSave();
 
                 if(result != -1) {
