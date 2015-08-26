@@ -313,6 +313,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        findViewById(R.id.llSettings).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getBaseContext(), SettingsActivity.class));
+                        overridePendingTransition(R.anim.slide_in_left,
+                                R.anim.slide_out_right);
+                        finish();
+            }
+        });
+
         //sliding pane
         slidingLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
         slidingLayout.setCoveredFadeColor(Color.TRANSPARENT);

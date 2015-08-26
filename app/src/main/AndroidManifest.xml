@@ -58,19 +58,24 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.saphion.stencilweather.activities.MainActivity" />
         </activity>
+        <activity
+            android:name=".activities.SplashActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activities.MapActivity"
+            android:theme="@style/MyNoActionBarShadowTheme" />
 
-        <activity android:name=".activities.SplashActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
-
-        <activity android:name=".activities.MapActivity"
-            android:theme="@style/MyNoActionBarShadowTheme"/>
-
-        <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="@string/google_maps_key"/>
-
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="@string/google_maps_key" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
     </application>
 
 </manifest>
-
