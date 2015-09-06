@@ -101,4 +101,7 @@
 
     <color name="map_blue">#4285F4</color>
     <color name="awesome_black">#224a4a4a</color>
+
+
+    <color name="blue_grey">#455A64</color>
 </resources>
