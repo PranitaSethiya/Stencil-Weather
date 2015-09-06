@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/nav_background" />
+
+    <LinearLayout
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#9d000000"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:theme="@style/CustomActionBar" />
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardGeneral"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_margin="4dp"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    card_view:cardBackgroundColor="#00b5ce"
+                    card_view:cardCornerRadius="2dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/ivGearIcon"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginStart="20dp"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_setting_light"
+                            android:tint="@color/white" />
+
+
+                        <com.devspark.robototextview.widget.RobotoTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_toEndOf="@+id/ivGearIcon"
+                            android:layout_toRightOf="@+id/ivGearIcon"
+                            android:text="General"
+                            android:textColor="#fff"
+                            android:textSize="18sp"
+                            app:fontFamily="roboto"
+                            app:textWeight="normal" />
+
+
+                        <View
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginRight="-20dp"
+                            android:layout_marginTop="-20dp"
+                            android:background="@drawable/yellow_hollow_circle" />
+
+                        <View
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginRight="-30dp"
+                            android:layout_marginTop="-30dp"
+                            android:background="@drawable/yellow_hollow_circle" />
+
+                    </RelativeLayout>
+
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardUnits"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_margin="4dp"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    card_view:cardBackgroundColor="#55717f"
+                    card_view:cardCornerRadius="2dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/ivUnitsIcon"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginStart="20dp"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_math_compass"
+                            android:tint="@color/white" />
+
+
+                        <com.devspark.robototextview.widget.RobotoTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_toEndOf="@+id/ivUnitsIcon"
+                            android:layout_toRightOf="@+id/ivUnitsIcon"
+                            android:text="Units"
+                            android:textColor="#fff"
+                            android:textSize="18sp"
+                            app:fontFamily="roboto"
+                            app:textWeight="normal" />
+
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:id="@+id/circle1"
+                            android:layout_marginRight="20dp"
+                            android:alpha="1"
+                            android:src="@drawable/blue_circle" />
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:alpha="0.8"
+                            android:id="@+id/circle2"
+                            android:layout_alignLeft="@+id/circle1"
+                            android:layout_marginLeft="-10dp"
+                            android:layout_marginTop="2dp"
+                            android:layout_below="@+id/circle1"
+                            android:src="@drawable/blue_circle" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:alpha="0.6"
+                            android:id="@+id/circle3"
+                            android:layout_marginTop="-15dp"
+                            android:layout_alignLeft="@+id/circle2"
+                            android:layout_marginLeft="30dp"
+                            android:layout_below="@+id/circle2"
+                            android:src="@drawable/blue_circle" />
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:alpha="0.4"
+                            android:id="@+id/circle4"
+                            android:layout_alignLeft="@+id/circle3"
+                            android:layout_marginLeft="-20dp"
+                            android:layout_below="@+id/circle3"
+                            android:src="@drawable/blue_circle" />
+
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:alpha="0.3"
+                            android:id="@+id/circle5"
+                            android:layout_alignLeft="@+id/circle3"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginBottom="-4dp"
+                            android:src="@drawable/blue_circle" />
+
+                    </RelativeLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardNotifications"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_margin="4dp"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    card_view:cardBackgroundColor="#ce2929"
+                    card_view:cardCornerRadius="2dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/ivNotification"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginStart="20dp"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_bell_ring_outline"
+                            android:tint="@color/white" />
+
+
+                        <com.devspark.robototextview.widget.RobotoTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_toEndOf="@+id/ivNotification"
+                            android:layout_toRightOf="@+id/ivNotification"
+                            android:text="Notification"
+                            android:textColor="#fff"
+                            android:textSize="18sp"
+                            app:fontFamily="roboto"
+                            app:textWeight="normal" />
+
+
+                        <View
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginRight="-20dp"
+                            android:layout_marginTop="-20dp"
+                            android:alpha="100"
+                            android:background="@drawable/trans_white_circle" />
+
+                        <View
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginRight="-30dp"
+                            android:alpha="20"
+                            android:layout_marginBottom="-30dp"
+                            android:background="@drawable/trans_white_circle" />
+
+                    </RelativeLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardFAQs"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_margin="4dp"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    card_view:cardBackgroundColor="#7eb83e"
+                    card_view:cardCornerRadius="2dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/ivFAQ"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginStart="20dp"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_help"
+                            android:tint="@color/white" />
+
+
+                        <com.devspark.robototextview.widget.RobotoTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_toEndOf="@+id/ivFAQ"
+                            android:layout_toRightOf="@+id/ivFAQ"
+                            android:text="FAQs"
+                            android:textColor="#fff"
+                            android:textSize="18sp"
+                            app:fontFamily="roboto"
+                            app:textWeight="normal" />
+
+                        <View
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="-25dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginTop="-30dp"
+                            android:layout_marginBottom="-30dp"
+                            android:alpha="20"
+                            android:background="@drawable/trans_white_circle" />
+
+                        <View
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="-15dp"
+                            android:alpha="20"
+                            android:background="@drawable/trans_white_circle" />
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentRight="true"
+                            android:tint="#ce2929"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="5dp"
+                            android:src="@drawable/ic_help"/>
+
+                    </RelativeLayout>
+
+                </android.support.v7.widget.CardView>
+
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</RelativeLayout>
