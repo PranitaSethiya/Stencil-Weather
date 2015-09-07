@@ -36,164 +36,264 @@
                 android:padding="15dp">
 
                 <android.support.v7.widget.CardView
-                    android:id="@+id/cardGeneral"
+                    android:id="@+id/cardGeneralContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="wrap_content"
                     android:layout_margin="4dp"
-                    android:clickable="true"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    card_view:cardBackgroundColor="#00b5ce"
+                    card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="2dp">
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
-                        <ImageView
-                            android:id="@+id/ivGearIcon"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginStart="20dp"
-                            android:padding="10dp"
-                            android:src="@drawable/ic_setting_light"
-                            android:tint="@color/white" />
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/cardGeneral"
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:clickable="true"
+                            android:foreground="?android:attr/selectableItemBackground"
+                            card_view:cardBackgroundColor="#00b5ce"
+                            card_view:cardCornerRadius="2dp">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <ImageView
+                                    android:id="@+id/ivGearIcon"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginStart="20dp"
+                                    android:padding="10dp"
+                                    android:src="@drawable/ic_setting_light"
+                                    android:tint="@color/white" />
 
 
-                        <com.devspark.robototextview.widget.RobotoTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginStart="10dp"
-                            android:layout_toEndOf="@+id/ivGearIcon"
-                            android:layout_toRightOf="@+id/ivGearIcon"
-                            android:text="General"
-                            android:textColor="#fff"
-                            android:textSize="18sp"
-                            app:fontFamily="roboto"
-                            app:textWeight="normal" />
+                                <com.devspark.robototextview.widget.RobotoTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_toEndOf="@+id/ivGearIcon"
+                                    android:layout_toRightOf="@+id/ivGearIcon"
+                                    android:text="General"
+                                    android:textColor="#fff"
+                                    android:textSize="18sp"
+                                    app:fontFamily="roboto"
+                                    app:textWeight="normal" />
 
 
-                        <View
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_marginRight="-20dp"
-                            android:layout_marginTop="-20dp"
-                            android:background="@drawable/yellow_hollow_circle" />
+                                <View
+                                    android:layout_width="70dp"
+                                    android:layout_height="70dp"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_marginRight="-20dp"
+                                    android:layout_marginTop="-20dp"
+                                    android:background="@drawable/yellow_hollow_circle" />
 
-                        <View
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_marginRight="-30dp"
-                            android:layout_marginTop="-30dp"
-                            android:background="@drawable/yellow_hollow_circle" />
+                                <View
+                                    android:layout_width="100dp"
+                                    android:layout_height="100dp"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_marginRight="-30dp"
+                                    android:layout_marginTop="-30dp"
+                                    android:background="@drawable/yellow_hollow_circle" />
 
-                    </RelativeLayout>
+                            </RelativeLayout>
+                        </android.support.v7.widget.CardView>
 
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:orientation="vertical">
+
+                            <com.devspark.robototextview.widget.RobotoTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_margin="10dp"
+                                android:text="Refresh on launch?"
+                                android:textColor="@color/colorTernaryText"
+                                android:textSize="18sp"
+                                app:fontFamily="roboto"
+                                app:textWeight="medium" />
+
+                            <RadioGroup
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <RadioButton
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginRight="5dp"
+                                    android:text="Yes" />
+
+                                <RadioButton
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="No" />
+
+                            </RadioGroup>
+
+                            <com.devspark.robototextview.widget.RobotoTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_margin="10dp"
+                                android:text="Language"
+                                android:textColor="@color/colorTernaryText"
+                                android:textSize="18sp"
+                                app:fontFamily="roboto"
+                                app:textWeight="medium" />
+
+
+                            <Spinner
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:entries="@array/languages" />
+
+
+                            <Button
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:layout_margin="5dp"
+                                android:backgroundTint="@color/main_button_red_selected"
+                                android:text="Become a translator"
+                                android:textColor="@color/white" />
+
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
 
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
-                    android:id="@+id/cardUnits"
+                    android:id="@+id/cardUnitsContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="wrap_content"
                     android:layout_margin="4dp"
-                    android:clickable="true"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    card_view:cardBackgroundColor="#55717f"
+                    card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="2dp">
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
-                        <ImageView
-                            android:id="@+id/ivUnitsIcon"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginStart="20dp"
-                            android:padding="10dp"
-                            android:src="@drawable/ic_math_compass"
-                            android:tint="@color/white" />
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/cardUnits"
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp"
+                            android:clickable="true"
+                            android:foreground="?android:attr/selectableItemBackground"
+                            card_view:cardBackgroundColor="#55717f"
+                            card_view:cardCornerRadius="2dp">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <ImageView
+                                    android:id="@+id/ivUnitsIcon"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginStart="20dp"
+                                    android:padding="10dp"
+                                    android:src="@drawable/ic_math_compass"
+                                    android:tint="@color/white" />
 
 
-                        <com.devspark.robototextview.widget.RobotoTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginStart="10dp"
-                            android:layout_toEndOf="@+id/ivUnitsIcon"
-                            android:layout_toRightOf="@+id/ivUnitsIcon"
-                            android:text="Units"
-                            android:textColor="#fff"
-                            android:textSize="18sp"
-                            app:fontFamily="roboto"
-                            app:textWeight="normal" />
+                                <com.devspark.robototextview.widget.RobotoTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_toEndOf="@+id/ivUnitsIcon"
+                                    android:layout_toRightOf="@+id/ivUnitsIcon"
+                                    android:text="Units"
+                                    android:textColor="#fff"
+                                    android:textSize="18sp"
+                                    app:fontFamily="roboto"
+                                    app:textWeight="normal" />
 
 
-                        <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignParentTop="true"
-                            android:id="@+id/circle1"
-                            android:layout_marginRight="20dp"
-                            android:alpha="1"
-                            android:src="@drawable/blue_circle" />
+                                <ImageView
+                                    android:id="@+id/circle1"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_marginRight="20dp"
+                                    android:alpha="1"
+                                    android:src="@drawable/blue_circle" />
 
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:alpha="0.8"
-                            android:id="@+id/circle2"
-                            android:layout_alignLeft="@+id/circle1"
-                            android:layout_marginLeft="-10dp"
-                            android:layout_marginTop="2dp"
-                            android:layout_below="@+id/circle1"
-                            android:src="@drawable/blue_circle" />
+                                <ImageView
+                                    android:id="@+id/circle2"
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:layout_alignLeft="@+id/circle1"
+                                    android:layout_below="@+id/circle1"
+                                    android:layout_marginLeft="-10dp"
+                                    android:layout_marginTop="2dp"
+                                    android:alpha="0.8"
+                                    android:src="@drawable/blue_circle" />
 
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:alpha="0.6"
-                            android:id="@+id/circle3"
-                            android:layout_marginTop="-15dp"
-                            android:layout_alignLeft="@+id/circle2"
-                            android:layout_marginLeft="30dp"
-                            android:layout_below="@+id/circle2"
-                            android:src="@drawable/blue_circle" />
+                                <ImageView
+                                    android:id="@+id/circle3"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_alignLeft="@+id/circle2"
+                                    android:layout_below="@+id/circle2"
+                                    android:layout_marginLeft="30dp"
+                                    android:layout_marginTop="-15dp"
+                                    android:alpha="0.6"
+                                    android:src="@drawable/blue_circle" />
 
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:alpha="0.4"
-                            android:id="@+id/circle4"
-                            android:layout_alignLeft="@+id/circle3"
-                            android:layout_marginLeft="-20dp"
-                            android:layout_below="@+id/circle3"
-                            android:src="@drawable/blue_circle" />
+                                <ImageView
+                                    android:id="@+id/circle4"
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:layout_alignLeft="@+id/circle3"
+                                    android:layout_below="@+id/circle3"
+                                    android:layout_marginLeft="-20dp"
+                                    android:alpha="0.4"
+                                    android:src="@drawable/blue_circle" />
 
-                        <ImageView
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
-                            android:alpha="0.3"
-                            android:id="@+id/circle5"
-                            android:layout_alignLeft="@+id/circle3"
-                            android:layout_alignParentBottom="true"
-                            android:layout_marginBottom="-4dp"
-                            android:src="@drawable/blue_circle" />
+                                <ImageView
+                                    android:id="@+id/circle5"
+                                    android:layout_width="14dp"
+                                    android:layout_height="14dp"
+                                    android:layout_alignLeft="@+id/circle3"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_marginBottom="-4dp"
+                                    android:alpha="0.3"
+                                    android:src="@drawable/blue_circle" />
 
-                    </RelativeLayout>
+                            </RelativeLayout>
 
+                        </android.support.v7.widget.CardView>
+
+                        <include layout="@layout/layout_units"/>
+
+                    </LinearLayout>
                 </android.support.v7.widget.CardView>
 
                 <android.support.v7.widget.CardView
@@ -252,9 +352,9 @@
                             android:layout_height="100dp"
                             android:layout_alignParentRight="true"
                             android:layout_alignParentTop="true"
+                            android:layout_marginBottom="-30dp"
                             android:layout_marginRight="-30dp"
                             android:alpha="20"
-                            android:layout_marginBottom="-30dp"
                             android:background="@drawable/trans_white_circle" />
 
                     </RelativeLayout>
@@ -305,10 +405,10 @@
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:layout_alignParentRight="true"
-                            android:layout_marginRight="-25dp"
                             android:layout_centerVertical="true"
-                            android:layout_marginTop="-30dp"
                             android:layout_marginBottom="-30dp"
+                            android:layout_marginRight="-25dp"
+                            android:layout_marginTop="-30dp"
                             android:alpha="20"
                             android:background="@drawable/trans_white_circle" />
 
@@ -325,10 +425,10 @@
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:layout_alignParentRight="true"
-                            android:tint="#ce2929"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="5dp"
-                            android:src="@drawable/ic_help"/>
+                            android:src="@drawable/ic_help"
+                            android:tint="#ce2929" />
 
                     </RelativeLayout>
 
