@@ -1,24 +1,12 @@
 package com.saphion.stencilweather.activities;
 
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Color;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -26,11 +14,16 @@ import android.widget.TextView;
 import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.saphion.stencilweather.R;
 
-import java.util.List;
-
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
     private Toolbar toolbar;
     private MaterialMenuDrawable materialMenu;
+
+    View cardDetailsGeneral, cardGeneral, cardGeneralContainer;
+    View cardUnitsContainer, cardUnits, cardDetailsUnits;
+    View cardNotificationContainer, cardNotifications, cardDetailsNotifications;
+    View cardFAQsContainer, cardFAQs, cardDetailsFAQs;
+
+    int expandedView = -1; //-1 for none
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,23 +45,131 @@ public class SettingsActivity extends AppCompatActivity {
 
         materialMenu = new MaterialMenuDrawable(this, Color.WHITE, MaterialMenuDrawable.Stroke.THIN);
         materialMenu.setIconState(MaterialMenuDrawable.IconState.ARROW);
+
         toolbar.setNavigationIcon(materialMenu);
 
+        initializeViews();
 
         setupSettingsScreen2();
 
     }
 
-    private void setupSettingsScreen2() {
-        ((TextView)findViewById(R.id.tvPrefTempVal)).setTextColor(getResources().getColor(R.color.primary_light_blue));
-        ((TextView)findViewById(R.id.tvPrefTempTitle)).setTextColor(getResources().getColor(R.color.my_grey));
-        ((TextView)findViewById(R.id.tvPrefPrecipitationVal)).setTextColor(getResources().getColor(R.color.primary_light_blue));
-        ((TextView)findViewById(R.id.tvPrefPrecipitationTitle)).setTextColor(getResources().getColor(R.color.primary_light_blue));
-        ((TextView)findViewById(R.id.tvPrefWindVal)).setTextColor(getResources().getColor(R.color.primary_light_blue));
-        ((TextView)findViewById(R.id.tvPrefWindTitle)).setTextColor(getResources().getColor(R.color.primary_light_blue));
-        ((TextView)findViewById(R.id.tvPrefPressureVal)).setTextColor(getResources().getColor(R.color.primary_light_blue));
-        ((TextView)findViewById(R.id.tvPrefPressureTitle)).setTextColor(getResources().getColor(R.color.primary_light_blue));
-        ((TextView)findViewById(R.id.tvPrefTimeVal)).setTextColor(getResources().getColor(R.color.primary_light_blue));
-        ((TextView)findViewById(R.id.tvPrefTimeTitle)).setTextColor(getResources().getColor(R.color.primary_light_blue));
+    private void initializeViews() {
+        cardDetailsGeneral = findViewById(R.id.containerGeneralDetails);
+        cardGeneral = findViewById(R.id.cardGeneral);
+        cardGeneralContainer = findViewById(R.id.cardGeneralContainer);
+
+        cardUnitsContainer = findViewById(R.id.cardUnitsContainer);
+        cardUnits = findViewById(R.id.cardUnits);
+        cardDetailsUnits = findViewById(R.id.cardDetailsUnits);
+
+
+        cardNotificationContainer = findViewById(R.id.cardNotificationContainer);
+        cardNotifications = findViewById(R.id.cardNotifications);
+        cardDetailsNotifications = findViewById(R.id.cardDetailsNotifications);
+
+        cardFAQsContainer = findViewById(R.id.cardFAQsContainer);
+        cardFAQs = findViewById(R.id.cardFAQs);
+        cardDetailsFAQs = findViewById(R.id.cardDetailsFAQs);
+
+        cardGeneral.setOnClickListener(this);
+        cardUnits.setOnClickListener(this);
+        cardNotifications.setOnClickListener(this);
+        cardFAQs.setOnClickListener(this);
     }
+
+    private void setupSettingsScreen2() {
+        ((TextView) findViewById(R.id.tvPrefTempVal)).setTextColor(getResources().getColor(R.color.primary_light_blue));
+        ((TextView) findViewById(R.id.tvPrefTempTitle)).setTextColor(getResources().getColor(R.color.my_grey));
+        ((TextView) findViewById(R.id.tvPrefPrecipitationVal)).setTextColor(getResources().getColor(R.color.primary_light_blue));
+        ((TextView) findViewById(R.id.tvPrefPrecipitationTitle)).setTextColor(getResources().getColor(R.color.my_grey));
+        ((TextView) findViewById(R.id.tvPrefWindVal)).setTextColor(getResources().getColor(R.color.primary_light_blue));
+        ((TextView) findViewById(R.id.tvPrefWindTitle)).setTextColor(getResources().getColor(R.color.my_grey));
+        ((TextView) findViewById(R.id.tvPrefPressureVal)).setTextColor(getResources().getColor(R.color.primary_light_blue));
+        ((TextView) findViewById(R.id.tvPrefPressureTitle)).setTextColor(getResources().getColor(R.color.my_grey));
+        ((TextView) findViewById(R.id.tvPrefTimeVal)).setTextColor(getResources().getColor(R.color.primary_light_blue));
+        ((TextView) findViewById(R.id.tvPrefTimeTitle)).setTextColor(getResources().getColor(R.color.my_grey));
+    }
+
+    @Override
+    public void onClick(View view) {
+        materialMenu.animateIconState(MaterialMenuDrawable.IconState.X);
+        switch (view.getId()) {
+            case R.id.cardGeneral:
+
+                cardGeneralContainer.setVisibility(View.VISIBLE);
+                cardUnitsContainer.setVisibility(View.GONE);
+                cardNotificationContainer.setVisibility(View.GONE);
+                cardFAQsContainer.setVisibility(View.GONE);
+
+                cardGeneral.setEnabled(false);
+
+                cardDetailsGeneral.setVisibility(View.VISIBLE);
+
+                break;
+            case R.id.cardUnits:
+
+                cardGeneralContainer.setVisibility(View.GONE);
+                cardUnitsContainer.setVisibility(View.VISIBLE);
+                cardNotificationContainer.setVisibility(View.GONE);
+                cardFAQsContainer.setVisibility(View.GONE);
+
+                cardUnits.setEnabled(false);
+
+                cardDetailsUnits.setVisibility(View.VISIBLE);
+                break;
+            case R.id.cardNotifications:
+
+                cardGeneralContainer.setVisibility(View.GONE);
+                cardUnitsContainer.setVisibility(View.GONE);
+                cardNotificationContainer.setVisibility(View.VISIBLE);
+                cardFAQsContainer.setVisibility(View.GONE);
+
+                cardNotifications.setEnabled(false);
+
+                cardDetailsNotifications.setVisibility(View.VISIBLE);
+                break;
+            case R.id.cardFAQs:
+
+                cardGeneralContainer.setVisibility(View.GONE);
+                cardUnitsContainer.setVisibility(View.GONE);
+                cardNotificationContainer.setVisibility(View.GONE);
+                cardFAQsContainer.setVisibility(View.VISIBLE);
+
+                cardFAQs.setEnabled(false);
+
+                cardDetailsFAQs.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if(materialMenu.getIconState() == MaterialMenuDrawable.IconState.X){
+                    materialMenu.animateIconState(MaterialMenuDrawable.IconState.ARROW);
+                    cardGeneralContainer.setVisibility(View.VISIBLE);
+                    cardUnitsContainer.setVisibility(View.VISIBLE);
+                    cardNotificationContainer.setVisibility(View.VISIBLE);
+                    cardFAQsContainer.setVisibility(View.VISIBLE);
+
+                    cardGeneral.setEnabled(true);
+                    cardUnits.setEnabled(true);
+                    cardNotifications.setEnabled(true);
+                    cardFAQs.setEnabled(true);
+
+                    cardDetailsGeneral.setVisibility(View.GONE);
+                    cardDetailsUnits.setVisibility(View.GONE);
+                    cardDetailsNotifications.setVisibility(View.GONE);
+                    cardDetailsFAQs.setVisibility(View.GONE);
+                } else {
+                    finish();
+                }
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }
