@@ -84,5 +84,22 @@
 
     </array>
 
+    <array name="test_locations">
+
+        <item>Riverside</item>
+        <item>Dehradun</item>
+        <item>Pune</item>
+
+    </array>
+    <array name="notification_priority">
+
+        <item>Max: Max Priority, Always on top</item>
+        <item>High: Icon, Notification on top</item>
+        <item>Default</item>
+        <item>Low: Less Priority</item>
+        <item>Min: No icon</item>
+
+    </array>
+
 
 </resources>

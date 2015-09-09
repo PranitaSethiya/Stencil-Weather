@@ -15,15 +15,12 @@ import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.saphion.stencilweather.R;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
-    private Toolbar toolbar;
-    private MaterialMenuDrawable materialMenu;
-
     View cardDetailsGeneral, cardGeneral, cardGeneralContainer;
     View cardUnitsContainer, cardUnits, cardDetailsUnits;
     View cardNotificationContainer, cardNotifications, cardDetailsNotifications;
     View cardFAQsContainer, cardFAQs, cardDetailsFAQs;
-
-    int expandedView = -1; //-1 for none
+    private Toolbar toolbar;
+    private MaterialMenuDrawable materialMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +73,11 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         cardUnits.setOnClickListener(this);
         cardNotifications.setOnClickListener(this);
         cardFAQs.setOnClickListener(this);
+
+        cardDetailsGeneral.setVisibility(View.GONE);
+        cardDetailsUnits.setVisibility(View.GONE);
+        cardDetailsNotifications.setVisibility(View.GONE);
+        cardDetailsFAQs.setVisibility(View.GONE);
     }
 
     private void setupSettingsScreen2() {
@@ -147,29 +149,37 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                if(materialMenu.getIconState() == MaterialMenuDrawable.IconState.X){
-                    materialMenu.animateIconState(MaterialMenuDrawable.IconState.ARROW);
-                    cardGeneralContainer.setVisibility(View.VISIBLE);
-                    cardUnitsContainer.setVisibility(View.VISIBLE);
-                    cardNotificationContainer.setVisibility(View.VISIBLE);
-                    cardFAQsContainer.setVisibility(View.VISIBLE);
-
-                    cardGeneral.setEnabled(true);
-                    cardUnits.setEnabled(true);
-                    cardNotifications.setEnabled(true);
-                    cardFAQs.setEnabled(true);
-
-                    cardDetailsGeneral.setVisibility(View.GONE);
-                    cardDetailsUnits.setVisibility(View.GONE);
-                    cardDetailsNotifications.setVisibility(View.GONE);
-                    cardDetailsFAQs.setVisibility(View.GONE);
-                } else {
-                    finish();
-                }
+                back();
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void back() {
+        if (materialMenu.getIconState() == MaterialMenuDrawable.IconState.X) {
+            materialMenu.animateIconState(MaterialMenuDrawable.IconState.ARROW);
+            cardGeneralContainer.setVisibility(View.VISIBLE);
+            cardUnitsContainer.setVisibility(View.VISIBLE);
+            cardNotificationContainer.setVisibility(View.VISIBLE);
+            cardFAQsContainer.setVisibility(View.VISIBLE);
+
+            cardGeneral.setEnabled(true);
+            cardUnits.setEnabled(true);
+            cardNotifications.setEnabled(true);
+            cardFAQs.setEnabled(true);
+
+            cardDetailsGeneral.setVisibility(View.GONE);
+            cardDetailsUnits.setVisibility(View.GONE);
+            cardDetailsNotifications.setVisibility(View.GONE);
+            cardDetailsFAQs.setVisibility(View.GONE);
+        } else {
+            finish();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        back();
+    }
 }

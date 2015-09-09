@@ -32,6 +32,7 @@
             <LinearLayout xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
                 android:orientation="vertical"
                 android:padding="15dp">
 
@@ -381,12 +382,148 @@
                         </android.support.v7.widget.CardView>
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:id="@+id/cardDetailsNotifications">
+                            android:id="@+id/cardDetailsNotifications"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:orientation="vertical">
+
+                            <com.devspark.robototextview.widget.RobotoTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_margin="10dp"
+                                android:text="Enable Weather Notification?"
+                                android:textColor="@color/colorTernaryText"
+                                android:textSize="18sp"
+                                app:fontFamily="roboto"
+                                app:textWeight="medium" />
+
+                            <RadioGroup
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <RadioButton
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:checked="true"
+                                    android:layout_marginRight="5dp"
+                                    android:text="Yes" />
+
+                                <RadioButton
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="No" />
+
+                            </RadioGroup>
+
+                            <LinearLayout
+                                android:id="@+id/cardEnabledNotifications"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
+
+                                <com.devspark.robototextview.widget.RobotoTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_margin="10dp"
+                                    android:text="Location"
+                                    android:textColor="@color/colorTernaryText"
+                                    android:textSize="18sp"
+                                    app:fontFamily="roboto"
+                                    app:textWeight="medium" />
 
 
+                                <Spinner
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginRight="5dp"
+                                    android:entries="@array/test_locations" />
+
+
+                                <com.devspark.robototextview.widget.RobotoTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_margin="10dp"
+                                    android:text="Icon Type?"
+                                    android:textColor="@color/colorTernaryText"
+                                    android:textSize="18sp"
+                                    app:fontFamily="roboto"
+                                    app:textWeight="medium" />
+
+                                <RadioGroup
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <RadioButton
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="5dp"
+                                        android:layout_marginRight="5dp"
+                                        android:checked="true"
+                                        android:text="Temperature" />
+
+                                    <RadioButton
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Weather Condition" />
+
+                                </RadioGroup>
+
+                                <com.devspark.robototextview.widget.RobotoTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_margin="10dp"
+                                    android:text="Notification Icon"
+                                    android:textColor="@color/colorTernaryText"
+                                    android:textSize="18sp"
+                                    app:fontFamily="roboto"
+                                    app:textWeight="medium" />
+
+
+                                <Spinner
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginRight="5dp"
+                                    android:entries="@array/test_locations" />
+
+
+                                <CheckBox
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="10dp"
+                                    android:textColor="@color/colorTernaryText"
+                                    android:textSize="18sp"
+                                    android:text="On going Notification"/>
+
+                                <com.devspark.robototextview.widget.RobotoTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:layout_margin="10dp"
+                                    android:text="Notification Priority"
+                                    android:textColor="@color/colorTernaryText"
+                                    android:textSize="18sp"
+                                    app:fontFamily="roboto"
+                                    app:textWeight="medium" />
+
+
+                                <Spinner
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginRight="5dp"
+                                    android:entries="@array/notification_priority" />
+
+                            </LinearLayout>
 
                         </LinearLayout>
 
@@ -479,11 +616,10 @@
                         </android.support.v7.widget.CardView>
 
                         <LinearLayout
+                            android:id="@+id/cardDetailsFAQs"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:id="@+id/cardDetailsFAQs">
-
+                            android:orientation="vertical">
 
 
                         </LinearLayout>
