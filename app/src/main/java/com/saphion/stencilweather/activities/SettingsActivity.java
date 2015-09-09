@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.saphion.stencilweather.R;
@@ -53,5 +54,21 @@ public class SettingsActivity extends AppCompatActivity {
         materialMenu.setIconState(MaterialMenuDrawable.IconState.ARROW);
         toolbar.setNavigationIcon(materialMenu);
 
+
+        setupSettingsScreen2();
+
+    }
+
+    private void setupSettingsScreen2() {
+        ((TextView)findViewById(R.id.tvPrefTempVal)).setTextColor(getResources().getColor(R.color.primary_light_blue));
+        ((TextView)findViewById(R.id.tvPrefTempTitle)).setTextColor(getResources().getColor(R.color.my_grey));
+        ((TextView)findViewById(R.id.tvPrefPrecipitationVal)).setTextColor(getResources().getColor(R.color.primary_light_blue));
+        ((TextView)findViewById(R.id.tvPrefPrecipitationTitle)).setTextColor(getResources().getColor(R.color.primary_light_blue));
+        ((TextView)findViewById(R.id.tvPrefWindVal)).setTextColor(getResources().getColor(R.color.primary_light_blue));
+        ((TextView)findViewById(R.id.tvPrefWindTitle)).setTextColor(getResources().getColor(R.color.primary_light_blue));
+        ((TextView)findViewById(R.id.tvPrefPressureVal)).setTextColor(getResources().getColor(R.color.primary_light_blue));
+        ((TextView)findViewById(R.id.tvPrefPressureTitle)).setTextColor(getResources().getColor(R.color.primary_light_blue));
+        ((TextView)findViewById(R.id.tvPrefTimeVal)).setTextColor(getResources().getColor(R.color.primary_light_blue));
+        ((TextView)findViewById(R.id.tvPrefTimeTitle)).setTextColor(getResources().getColor(R.color.primary_light_blue));
     }
 }

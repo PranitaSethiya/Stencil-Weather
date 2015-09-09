@@ -201,7 +201,7 @@
                             android:layout_height="80dp"
                             android:clickable="true"
                             android:foreground="?android:attr/selectableItemBackground"
-                            card_view:cardBackgroundColor="#55717f"
+                            card_view:cardBackgroundColor="@color/my_grey"
                             card_view:cardCornerRadius="2dp">
 
                             <RelativeLayout
