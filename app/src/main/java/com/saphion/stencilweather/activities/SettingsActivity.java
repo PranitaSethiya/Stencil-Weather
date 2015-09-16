@@ -5,10 +5,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.balysv.materialmenu.MaterialMenuDrawable;
@@ -52,6 +55,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void initializeViews() {
+
         cardDetailsGeneral = findViewById(R.id.containerGeneralDetails);
         cardGeneral = findViewById(R.id.cardGeneral);
         cardGeneralContainer = findViewById(R.id.cardGeneralContainer);
@@ -79,6 +83,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         cardDetailsNotifications.setVisibility(View.GONE);
         cardDetailsFAQs.setVisibility(View.GONE);
     }
+
 
     private void setupSettingsScreen2() {
         ((TextView) findViewById(R.id.tvPrefTempVal)).setTextColor(getResources().getColor(R.color.primary_light_blue));
@@ -130,6 +135,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 cardNotifications.setEnabled(false);
 
                 cardDetailsNotifications.setVisibility(View.VISIBLE);
+
+
+
                 break;
             case R.id.cardFAQs:
 
@@ -143,6 +151,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 cardDetailsFAQs.setVisibility(View.VISIBLE);
                 break;
         }
+
+//        svSettings.requestDisallowInterceptTouchEvent(true);
+//        isBlockedScrollView = false;
     }
 
     @Override
@@ -173,6 +184,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             cardDetailsUnits.setVisibility(View.GONE);
             cardDetailsNotifications.setVisibility(View.GONE);
             cardDetailsFAQs.setVisibility(View.GONE);
+
+//            svSettings.requestDisallowInterceptTouchEvent(false);
+//            isBlockedScrollView = true;
         } else {
             finish();
         }

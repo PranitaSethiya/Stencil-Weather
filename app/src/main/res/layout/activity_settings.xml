@@ -27,6 +27,7 @@
 
         <ScrollView
             android:layout_width="match_parent"
+            android:id="@+id/svSettings"
             android:layout_height="match_parent">
 
             <LinearLayout xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -381,10 +382,12 @@
 
                         </android.support.v7.widget.CardView>
 
+
+
                         <LinearLayout
                             android:id="@+id/cardDetailsNotifications"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_margin="10dp"
                             android:orientation="vertical">
 
