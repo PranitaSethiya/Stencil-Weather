@@ -5,9 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -21,7 +19,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     View cardDetailsGeneral, cardGeneral, cardGeneralContainer;
     View cardUnitsContainer, cardUnits, cardDetailsUnits;
     View cardNotificationContainer, cardNotifications, cardDetailsNotifications;
-    View cardFAQsContainer, cardFAQs, cardDetailsFAQs;
+    View cardCustomizeContainer, cardCustomize, cardDetailsCustomize;
     private Toolbar toolbar;
     private MaterialMenuDrawable materialMenu;
 
@@ -56,6 +54,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     private void initializeViews() {
 
+
         cardDetailsGeneral = findViewById(R.id.containerGeneralDetails);
         cardGeneral = findViewById(R.id.cardGeneral);
         cardGeneralContainer = findViewById(R.id.cardGeneralContainer);
@@ -69,19 +68,31 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         cardNotifications = findViewById(R.id.cardNotifications);
         cardDetailsNotifications = findViewById(R.id.cardDetailsNotifications);
 
-        cardFAQsContainer = findViewById(R.id.cardFAQsContainer);
-        cardFAQs = findViewById(R.id.cardFAQs);
-        cardDetailsFAQs = findViewById(R.id.cardDetailsFAQs);
+        cardCustomizeContainer = findViewById(R.id.cardCustomizeContainer);
+        cardCustomize = findViewById(R.id.cardCustomize);
+        cardDetailsCustomize = findViewById(R.id.cardDetailsCustomize);
 
         cardGeneral.setOnClickListener(this);
         cardUnits.setOnClickListener(this);
         cardNotifications.setOnClickListener(this);
-        cardFAQs.setOnClickListener(this);
+        cardCustomize.setOnClickListener(this);
 
         cardDetailsGeneral.setVisibility(View.GONE);
         cardDetailsUnits.setVisibility(View.GONE);
         cardDetailsNotifications.setVisibility(View.GONE);
-        cardDetailsFAQs.setVisibility(View.GONE);
+        cardDetailsCustomize.setVisibility(View.GONE);
+
+    }
+
+
+
+    private void requestDisallowParentInterceptTouchEvent(View __v, Boolean __disallowIntercept) {
+        while (__v.getParent() != null && __v.getParent() instanceof View) {
+            if (__v.getParent() instanceof ScrollView) {
+                __v.getParent().requestDisallowInterceptTouchEvent(__disallowIntercept);
+            }
+            __v = (View) __v.getParent();
+        }
     }
 
 
@@ -107,7 +118,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 cardGeneralContainer.setVisibility(View.VISIBLE);
                 cardUnitsContainer.setVisibility(View.GONE);
                 cardNotificationContainer.setVisibility(View.GONE);
-                cardFAQsContainer.setVisibility(View.GONE);
+                cardCustomizeContainer.setVisibility(View.GONE);
 
                 cardGeneral.setEnabled(false);
 
@@ -119,7 +130,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 cardGeneralContainer.setVisibility(View.GONE);
                 cardUnitsContainer.setVisibility(View.VISIBLE);
                 cardNotificationContainer.setVisibility(View.GONE);
-                cardFAQsContainer.setVisibility(View.GONE);
+                cardCustomizeContainer.setVisibility(View.GONE);
 
                 cardUnits.setEnabled(false);
 
@@ -130,7 +141,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 cardGeneralContainer.setVisibility(View.GONE);
                 cardUnitsContainer.setVisibility(View.GONE);
                 cardNotificationContainer.setVisibility(View.VISIBLE);
-                cardFAQsContainer.setVisibility(View.GONE);
+                cardCustomizeContainer.setVisibility(View.GONE);
 
                 cardNotifications.setEnabled(false);
 
@@ -139,16 +150,16 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
 
                 break;
-            case R.id.cardFAQs:
+            case R.id.cardCustomize:
 
                 cardGeneralContainer.setVisibility(View.GONE);
                 cardUnitsContainer.setVisibility(View.GONE);
                 cardNotificationContainer.setVisibility(View.GONE);
-                cardFAQsContainer.setVisibility(View.VISIBLE);
+                cardCustomizeContainer.setVisibility(View.VISIBLE);
 
-                cardFAQs.setEnabled(false);
+                cardCustomize.setEnabled(false);
 
-                cardDetailsFAQs.setVisibility(View.VISIBLE);
+                cardDetailsCustomize.setVisibility(View.VISIBLE);
                 break;
         }
 
@@ -173,17 +184,17 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             cardGeneralContainer.setVisibility(View.VISIBLE);
             cardUnitsContainer.setVisibility(View.VISIBLE);
             cardNotificationContainer.setVisibility(View.VISIBLE);
-            cardFAQsContainer.setVisibility(View.VISIBLE);
+            cardCustomizeContainer.setVisibility(View.VISIBLE);
 
             cardGeneral.setEnabled(true);
             cardUnits.setEnabled(true);
             cardNotifications.setEnabled(true);
-            cardFAQs.setEnabled(true);
+            cardCustomize.setEnabled(true);
 
             cardDetailsGeneral.setVisibility(View.GONE);
             cardDetailsUnits.setVisibility(View.GONE);
             cardDetailsNotifications.setVisibility(View.GONE);
-            cardDetailsFAQs.setVisibility(View.GONE);
+            cardDetailsCustomize.setVisibility(View.GONE);
 
 //            svSettings.requestDisallowInterceptTouchEvent(false);
 //            isBlockedScrollView = true;

@@ -1,24 +1,15 @@
 package com.saphion.stencilweather.tasks;
 
-import android.location.Location;
 import android.util.Log;
 
 import com.saphion.stencilweather.activities.MainActivity;
 import com.saphion.stencilweather.modules.WLocation;
 import com.saphion.stencilweather.utilities.RestUtils;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 

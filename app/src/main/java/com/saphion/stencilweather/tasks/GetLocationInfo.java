@@ -5,7 +5,6 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.saphion.stencilweather.utilities.RestUtils;
 
-import org.apache.http.client.ClientProtocolException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
