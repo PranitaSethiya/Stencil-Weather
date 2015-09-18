@@ -74,42 +74,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.8dp"
-                android:layout_above="@+id/llCustomize"
-                android:background="@color/colorDivider" />
-
-            <LinearLayout
-                android:id="@+id/llCustomize"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
                 android:layout_above="@+id/llSettings"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="10dp"
-                    android:padding="8.5dp"
-                    android:src="@drawable/ic_auto_fix"
-                    android:tint="#aa000000" />
-
-                <com.devspark.robototextview.widget.RobotoTextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Customize"
-                    android:textColor="#c8000000"
-                    android:textSize="14sp"
-                    app:fontFamily="roboto"
-                    app:textWeight="medium" />
-
-
-            </LinearLayout>
+                android:background="@color/colorDivider" />
 
             <LinearLayout
                 android:id="@+id/llSettings"
