@@ -137,17 +137,20 @@
                             <RadioGroup
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:id="@+id/rgRefresh"
                                 android:orientation="horizontal">
 
                                 <RadioButton
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="5dp"
+                                    android:id="@+id/rbRefreshYes"
                                     android:layout_marginRight="5dp"
                                     android:text="Yes" />
 
                                 <RadioButton
                                     android:layout_width="wrap_content"
+                                    android:id="@+id/rbRefreshNo"
                                     android:layout_height="wrap_content"
                                     android:text="No" />
 
@@ -178,7 +181,7 @@
                                 android:layout_height="50dp"
                                 android:layout_margin="5dp"
                                 android:backgroundTint="@color/main_button_red_selected"
-                                android:text="Become a translator"
+                                android:text="ADD A LANGUAGE"
                                 android:textColor="@color/white" />
 
 
@@ -640,27 +643,26 @@
                         android:layout_height="wrap_content">
 
                         <LinearLayout
-
-                            android:layout_width="wrap_content"
+                            android:id="@+id/cardDetailsCustomize"
+                            android:layout_width="match_parent"
+                            android:visibility="gone"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
                             <com.devspark.robototextview.widget.RobotoTextView
-                                android:id="@+id/tvColorSubtitle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="20dp"
-                                android:layout_marginRight="20dp"
+                                android:layout_centerVertical="true"
+                                android:layout_marginTop="25dp"
+                                android:layout_marginLeft="25dp"
                                 android:text="@string/choose_background_type"
                                 android:textColor="@color/colorTernaryText"
                                 android:textSize="18sp"
                                 app:fontFamily="roboto"
-                                app:textWeight="medium"
-                                app:typeface="roboto_condensed_light" />
+                                app:textWeight="medium" />
 
                             <include
                                 layout="@layout/color_selection"
-                                android:id="@+id/cardDetailsCustomize"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
 
