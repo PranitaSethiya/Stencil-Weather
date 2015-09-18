@@ -15,12 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
 import android.view.animation.BounceInterpolator;
-import android.view.animation.OvershootInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.balysv.materialmenu.MaterialMenuDrawable;
@@ -71,11 +71,11 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         initializeViews();
 
         setupSettingsScreen2();
-        setupSettingsScreen3();
+        setupSettingsScreen4();
 
     }
 
-    private void setupSettingsScreen3() {
+    private void setupSettingsScreen4() {
 
         automatic = (RadioButton) findViewById(R.id.rbAutomatic);
         manual = (RadioButton) findViewById(R.id.rbManual);
@@ -254,16 +254,109 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
 
     private void setupSettingsScreen2() {
-        ((TextView) findViewById(R.id.tvPrefTempVal)).setTextColor(getResources().getColor(R.color.primary_light_blue));
+
+        final TextView tvPrefTemp = (TextView) findViewById(R.id.tvPrefTempVal);
+        final TextView tvPrefPrecipitation = (TextView) findViewById(R.id.tvPrefPrecipitationVal);
+        final TextView tvPrefWind = (TextView) findViewById(R.id.tvPrefWindVal);
+        final TextView tvPrefPressure = (TextView) findViewById(R.id.tvPrefPressureVal);
+        final TextView tvPrefTime = (TextView) findViewById(R.id.tvPrefTimeVal);
+
+
+        tvPrefTemp.setTextColor(getResources().getColor(R.color.primary_light_blue));
         ((TextView) findViewById(R.id.tvPrefTempTitle)).setTextColor(getResources().getColor(R.color.my_grey));
-        ((TextView) findViewById(R.id.tvPrefPrecipitationVal)).setTextColor(getResources().getColor(R.color.primary_light_blue));
+        tvPrefPrecipitation.setTextColor(getResources().getColor(R.color.primary_light_blue));
         ((TextView) findViewById(R.id.tvPrefPrecipitationTitle)).setTextColor(getResources().getColor(R.color.my_grey));
-        ((TextView) findViewById(R.id.tvPrefWindVal)).setTextColor(getResources().getColor(R.color.primary_light_blue));
+        tvPrefWind.setTextColor(getResources().getColor(R.color.primary_light_blue));
         ((TextView) findViewById(R.id.tvPrefWindTitle)).setTextColor(getResources().getColor(R.color.my_grey));
-        ((TextView) findViewById(R.id.tvPrefPressureVal)).setTextColor(getResources().getColor(R.color.primary_light_blue));
+        tvPrefPressure.setTextColor(getResources().getColor(R.color.primary_light_blue));
         ((TextView) findViewById(R.id.tvPrefPressureTitle)).setTextColor(getResources().getColor(R.color.my_grey));
-        ((TextView) findViewById(R.id.tvPrefTimeVal)).setTextColor(getResources().getColor(R.color.primary_light_blue));
+        tvPrefTime.setTextColor(getResources().getColor(R.color.primary_light_blue));
         ((TextView) findViewById(R.id.tvPrefTimeTitle)).setTextColor(getResources().getColor(R.color.my_grey));
+
+
+        View.OnClickListener unitListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RotateAnimation anim = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                int duration = 200;
+                anim.setDuration(duration);
+                anim.setFillAfter(true);
+                switch (view.getId()) {
+                    case R.id.prefTempContainer:
+                        tvPrefTemp.startAnimation(anim);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                int nextVal = PreferenceUtil.getNextValue(PreferenceUtil.getTemperatureUnit(getBaseContext()), Constant.TEMPERATURE_UNITS);
+                                tvPrefTemp.setText(
+                                        Constant.TEMPERATURE_UNITS[nextVal]);
+                                PreferenceUtil.setTemperatureUnit(getBaseContext(), nextVal);
+                            }
+                        }, duration / 2);
+                        break;
+                    case R.id.prefPrecipitationContainer:
+                        tvPrefPrecipitation.startAnimation(anim);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                int nextVal = PreferenceUtil.getNextValue(PreferenceUtil.getPrecipitationUnit(getBaseContext()), Constant.PRECIPITATION_UNITS);
+                                tvPrefPrecipitation.setText(
+                                        Constant.PRECIPITATION_UNITS[nextVal]);
+                                PreferenceUtil.setPrecipitationUnit(getBaseContext(), nextVal);
+                            }
+                        }, duration / 2);
+                        break;
+                    case R.id.prefPressureContainer:
+                        tvPrefPressure.startAnimation(anim);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                int nextVal = PreferenceUtil.getNextValue(PreferenceUtil.getPressureUnit(getBaseContext()), Constant.PRESSURE_UNITS);
+                                tvPrefPressure.setText(
+                                        Constant.PRESSURE_UNITS[nextVal]);
+                                PreferenceUtil.setPressureUnit(getBaseContext(), nextVal);
+                            }
+                        }, duration / 2);
+                        break;
+                    case R.id.prefTimeContainer:
+                        tvPrefTime.startAnimation(anim);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                int nextVal = PreferenceUtil.getNextValue(PreferenceUtil.getTimeUnit(getBaseContext()), Constant.TIME_UNITS);
+                                tvPrefTime.setText(
+                                        Constant.TIME_UNITS[nextVal]);
+                                PreferenceUtil.setTimeUnit(getBaseContext(), nextVal);
+                            }
+                        }, duration / 2);
+                        break;
+                    case R.id.prefWindContainer:
+                        tvPrefWind.startAnimation(anim);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                int nextVal = PreferenceUtil.getNextValue(PreferenceUtil.getWindUnit(getBaseContext()), Constant.WIND_UNITS);
+                                tvPrefWind.setText(
+                                        Constant.WIND_UNITS[nextVal]);
+                                PreferenceUtil.setWindUnit(getBaseContext(), nextVal);
+                            }
+                        }, duration / 2);
+                        break;
+                }
+            }
+        };
+        findViewById(R.id.prefTempContainer).setOnClickListener(unitListener);
+        findViewById(R.id.prefPrecipitationContainer).setOnClickListener(unitListener);
+        findViewById(R.id.prefWindContainer).setOnClickListener(unitListener);
+        findViewById(R.id.prefPressureContainer).setOnClickListener(unitListener);
+        findViewById(R.id.prefTimeContainer).setOnClickListener(unitListener);
+
+        tvPrefTemp.setText(Constant.TEMPERATURE_UNITS[PreferenceUtil.getTemperatureUnit(getBaseContext())]);
+        tvPrefPrecipitation.setText(Constant.PRECIPITATION_UNITS[PreferenceUtil.getPrecipitationUnit(getBaseContext())]);
+        tvPrefWind.setText(Constant.WIND_UNITS[PreferenceUtil.getWindUnit(getBaseContext())]);
+        tvPrefPressure.setText(Constant.PRESSURE_UNITS[PreferenceUtil.getPressureUnit(getBaseContext())]);
+        tvPrefTime.setText(Constant.TIME_UNITS[PreferenceUtil.getTimeUnit(getBaseContext())]);
+
     }
 
     @Override
