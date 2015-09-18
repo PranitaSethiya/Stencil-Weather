@@ -172,6 +172,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
+                                android:id="@+id/spLanguages"
                                 android:layout_marginRight="5dp"
                                 android:entries="@array/languages" />
 
@@ -179,6 +180,7 @@
                             <Button
                                 android:layout_width="match_parent"
                                 android:layout_height="50dp"
+                                android:id="@+id/bAddLanguage"
                                 android:layout_marginTop="15dp"
                                 android:layout_marginBottom="5dp"
                                 android:layout_marginLeft="5dp"

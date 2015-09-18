@@ -76,6 +76,30 @@ public class PreferenceUtil {
     }
 
     public static void setShowDialog(Context mContext, boolean value) {
-        PreferenceManager.getDefaultSharedPreferences(mContext).edit().putBoolean("show_dialog", value).commit();
+        saveBool(mContext, "show_dialog", value);
     }
+
+    public static int getLanguage(Context mContext){
+        return PreferenceManager.getDefaultSharedPreferences(mContext).getInt("app_language", 0);
+    }
+
+    public static void setLanguage(Context mContext, int value){
+        PreferenceManager.getDefaultSharedPreferences(mContext).edit().putInt("app_language", value).commit();
+    }
+
+    public static void setRefreshOnLaunch(Context mContext, boolean value) {
+        saveBool(mContext, "refresh_on_launch", value);
+    }
+
+
+    /**
+     * Self use functions
+     */
+
+
+    private static void saveBool(Context mContext, String key, Boolean value){
+        PreferenceManager.getDefaultSharedPreferences(mContext).edit().putBoolean(key, value).commit();
+    }
+ //TODO may be later
+//    private static boolean getBool(Context mContext)
 }
