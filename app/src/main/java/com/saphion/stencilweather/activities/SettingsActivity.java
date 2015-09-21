@@ -95,20 +95,20 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         final RadioButton rbYes = (RadioButton) findViewById(R.id.rbRefreshYes);
         final RadioButton rbNo = (RadioButton) findViewById(R.id.rbRefreshNo);
 
-        rbYes.setChecked(compoundButton.getId() == R.id.rbRefreshYes);
-        rbNo.setChecked(compoundButton.getId() != R.id.rbRefreshYes);
+        RadioGroup rgRefresh = (RadioGroup) findViewById(R.id.rgRefresh);
 
-        CompoundButton.OnCheckedChangeListener checkListener = new CompoundButton.OnCheckedChangeListener() {
+        rbYes.setChecked(PreferenceUtil.getRefreshOnLaunch(getBaseContext()));
+        rbNo.setChecked(!PreferenceUtil.getRefreshOnLaunch(getBaseContext()));
+
+        rgRefresh.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                PreferenceUtil.setRefreshOnLaunch(getBaseContext(), compoundButton.getId() == R.id.rbRefreshYes);
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                PreferenceUtil.setRefreshOnLaunch(getBaseContext(), radioGroup.getId() == R.id.rbRefreshYes);
             }
-        };
-        rbYes.setOnCheckedChangeListener(checkListener);
-        rbNo.setOnCheckedChangeListener(checkListener);
+        });
 
         Button addLanguage = (Button) findViewById(R.id.bAddLanguage);
-
+        //TODO add dialog for translation later
     }
 
     private void setupSettingsScreen2() {

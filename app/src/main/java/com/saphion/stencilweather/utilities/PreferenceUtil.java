@@ -2,6 +2,7 @@ package com.saphion.stencilweather.utilities;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.saphion.stencilweather.activities.MainActivity;
 
@@ -91,6 +92,10 @@ public class PreferenceUtil {
         saveBool(mContext, "refresh_on_launch", value);
     }
 
+    public static boolean getRefreshOnLaunch(Context mContext) {
+        return PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("refresh_on_launch", true);
+    }
+
 
     /**
      * Self use functions
@@ -99,6 +104,7 @@ public class PreferenceUtil {
 
     private static void saveBool(Context mContext, String key, Boolean value){
         PreferenceManager.getDefaultSharedPreferences(mContext).edit().putBoolean(key, value).commit();
+        Log.d("Stencil", "saving " + key + " value: " + value);
     }
  //TODO may be later
 //    private static boolean getBool(Context mContext)
